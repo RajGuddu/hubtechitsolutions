@@ -1,0 +1,9 @@
+CRITICAL - 2023-03-27 11:52:23 --> Invalid file: about.php
+#0 C:\xampp\htdocs\ci4\hubtech\system\View\View.php(198): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('about.php')
+#1 C:\xampp\htdocs\ci4\hubtech\system\Common.php(1089): CodeIgniter\View\View->render('about', Array, true)
+#2 C:\xampp\htdocs\ci4\hubtech\app\Controllers\Home.php(25): view('about')
+#3 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(825): App\Controllers\Home->about_us()
+#4 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+#5 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\xampp\htdocs\ci4\hubtech\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}

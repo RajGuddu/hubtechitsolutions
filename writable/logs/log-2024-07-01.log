@@ -1,0 +1,11 @@
+CRITICAL - 2024-07-01 12:07:22 --> Attempt to read property "course_full_name" on null
+#0 /home3/jeansuco/hubtechitsolutions.com/app/Views/course-detail.php(10): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Attempt to read...', '/home3/jeansuco...', 10)
+#1 /home3/jeansuco/hubtechitsolutions.com/system/View/View.php(210): include('/home3/jeansuco...')
+#2 /home3/jeansuco/hubtechitsolutions.com/system/View/View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 /home3/jeansuco/hubtechitsolutions.com/system/Common.php(1089): CodeIgniter\View\View->render('course-detail', Array, true)
+#4 /home3/jeansuco/hubtechitsolutions.com/app/Controllers/Home.php(40): view('course-detail', Array)
+#5 /home3/jeansuco/hubtechitsolutions.com/system/CodeIgniter.php(825): App\Controllers\Home->course_details('diploma-in-comp...')
+#6 /home3/jeansuco/hubtechitsolutions.com/system/CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+#7 /home3/jeansuco/hubtechitsolutions.com/system/CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 /home3/jeansuco/hubtechitsolutions.com/index.php(37): CodeIgniter\CodeIgniter->run()
+#9 {main}

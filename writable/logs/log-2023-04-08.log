@@ -1,0 +1,27 @@
+CRITICAL - 2023-04-08 12:48:05 --> Invalid file: admin/course/add_edit_course.php
+#0 C:\xampp\htdocs\ci4\hubtech\system\View\View.php(198): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('admin/course/ad...')
+#1 C:\xampp\htdocs\ci4\hubtech\system\Common.php(1089): CodeIgniter\View\View->render('admin/course/ad...', Array, true)
+#2 C:\xampp\htdocs\ci4\hubtech\app\Controllers\Admin.php(811): view('admin/course/ad...', Array)
+#3 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(825): App\Controllers\Admin->add_edit_course()
+#4 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+#5 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\xampp\htdocs\ci4\hubtech\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2023-04-08 13:29:56 --> syntax error, unexpected ''description'' (T_CONSTANT_ENCAPSED_STRING), expecting ']'
+#0 C:\xampp\htdocs\ci4\hubtech\system\Router\Router.php(175): CodeIgniter\Router\Router->autoRoute('admin/add_edit_...')
+#1 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(719): CodeIgniter\Router\Router->handle('admin/add_edit_...')
+#2 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#3 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\ci4\hubtech\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2023-04-08 13:57:39 --> Undefined property: stdClass::$page
+#0 C:\xampp\htdocs\ci4\hubtech\app\Views\admin\course\courses_index.php(52): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined prope...', 'C:\\xampp\\htdocs...', 52, Array)
+#1 C:\xampp\htdocs\ci4\hubtech\system\View\View.php(210): include('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\ci4\hubtech\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 C:\xampp\htdocs\ci4\hubtech\system\Common.php(1089): CodeIgniter\View\View->render('admin/course/co...', Array, true)
+#4 C:\xampp\htdocs\ci4\hubtech\app\Controllers\Admin.php(755): view('admin/course/co...', Array)
+#5 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(825): App\Controllers\Admin->courses()
+#6 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+#7 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\ci4\hubtech\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 {main}

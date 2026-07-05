@@ -1,0 +1,75 @@
+CRITICAL - 2026-05-24 01:01:46 --> Uncaught TypeError: abs(): Argument #1 ($num) must be of type int|float, string given in C:\xampp\htdocs\ci4\hubtechitsolutions\system\Debug\Exceptions.php:298
+Stack trace:
+#0 C:\xampp\htdocs\ci4\hubtechitsolutions\system\Debug\Exceptions.php(298): abs('BAD_REQUEST_ERR...')
+#1 C:\xampp\htdocs\ci4\hubtechitsolutions\system\Debug\Exceptions.php(102): CodeIgniter\Debug\Exceptions->determineCodes(Object(Razorpay\Api\Errors\BadRequestError))
+#2 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Razorpay\Api\Errors\BadRequestError))
+#3 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2026-05-24 01:02:55 --> Uncaught TypeError: abs(): Argument #1 ($num) must be of type int|float, string given in C:\xampp\htdocs\ci4\hubtechitsolutions\system\Debug\Exceptions.php:298
+Stack trace:
+#0 C:\xampp\htdocs\ci4\hubtechitsolutions\system\Debug\Exceptions.php(298): abs('BAD_REQUEST_ERR...')
+#1 C:\xampp\htdocs\ci4\hubtechitsolutions\system\Debug\Exceptions.php(102): CodeIgniter\Debug\Exceptions->determineCodes(Object(Razorpay\Api\Errors\BadRequestError))
+#2 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Razorpay\Api\Errors\BadRequestError))
+#3 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2026-05-24 01:04:50 --> Uncaught TypeError: abs(): Argument #1 ($num) must be of type int|float, string given in C:\xampp\htdocs\ci4\hubtechitsolutions\system\Debug\Exceptions.php:298
+Stack trace:
+#0 C:\xampp\htdocs\ci4\hubtechitsolutions\system\Debug\Exceptions.php(298): abs('BAD_REQUEST_ERR...')
+#1 C:\xampp\htdocs\ci4\hubtechitsolutions\system\Debug\Exceptions.php(102): CodeIgniter\Debug\Exceptions->determineCodes(Object(Razorpay\Api\Errors\BadRequestError))
+#2 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Razorpay\Api\Errors\BadRequestError))
+#3 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2026-05-24 01:06:41 --> Uncaught TypeError: abs(): Argument #1 ($num) must be of type int|float, string given in C:\xampp\htdocs\ci4\hubtechitsolutions\system\Debug\Exceptions.php:298
+Stack trace:
+#0 C:\xampp\htdocs\ci4\hubtechitsolutions\system\Debug\Exceptions.php(298): abs('BAD_REQUEST_ERR...')
+#1 C:\xampp\htdocs\ci4\hubtechitsolutions\system\Debug\Exceptions.php(102): CodeIgniter\Debug\Exceptions->determineCodes(Object(Razorpay\Api\Errors\BadRequestError))
+#2 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Razorpay\Api\Errors\BadRequestError))
+#3 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2026-05-24 01:09:17 --> Uncaught TypeError: abs(): Argument #1 ($num) must be of type int|float, string given in C:\xampp\htdocs\ci4\hubtechitsolutions\system\Debug\Exceptions.php:298
+Stack trace:
+#0 C:\xampp\htdocs\ci4\hubtechitsolutions\system\Debug\Exceptions.php(298): abs('BAD_REQUEST_ERR...')
+#1 C:\xampp\htdocs\ci4\hubtechitsolutions\system\Debug\Exceptions.php(102): CodeIgniter\Debug\Exceptions->determineCodes(Object(Razorpay\Api\Errors\BadRequestError))
+#2 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Razorpay\Api\Errors\BadRequestError))
+#3 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2026-05-24 01:18:36 --> Undefined constant "App\Controllers\RAZORPAY_KEY_ID"
+#0 C:\xampp\htdocs\ci4\hubtechitsolutions\system\CodeIgniter.php(825): App\Controllers\Home->enroll_internship()
+#1 C:\xampp\htdocs\ci4\hubtechitsolutions\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+#2 C:\xampp\htdocs\ci4\hubtechitsolutions\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\xampp\htdocs\ci4\hubtechitsolutions\index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2026-05-24 02:21:32 --> Too few arguments to function App\Models\Common_model::insertRecord(), 1 passed in C:\xampp\htdocs\ci4\hubtechitsolutions\app\Controllers\Home.php on line 257 and exactly 2 expected
+#0 C:\xampp\htdocs\ci4\hubtechitsolutions\app\Controllers\Home.php(257): App\Models\Common_model->insertRecord(Array)
+#1 C:\xampp\htdocs\ci4\hubtechitsolutions\system\CodeIgniter.php(825): App\Controllers\Home->enroll_internship()
+#2 C:\xampp\htdocs\ci4\hubtechitsolutions\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+#3 C:\xampp\htdocs\ci4\hubtechitsolutions\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\ci4\hubtechitsolutions\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2026-05-24 02:24:23 --> CodeIgniter\Security\Security::derandomize(): Argument #1 ($token) must be of type string, null given, called in C:\xampp\htdocs\ci4\hubtechitsolutions\system\Security\Security.php on line 284
+#0 C:\xampp\htdocs\ci4\hubtechitsolutions\system\Security\Security.php(284): CodeIgniter\Security\Security->derandomize(NULL)
+#1 C:\xampp\htdocs\ci4\hubtechitsolutions\system\Filters\CSRF.php(53): CodeIgniter\Security\Security->verify(Object(CodeIgniter\HTTP\IncomingRequest))
+#2 C:\xampp\htdocs\ci4\hubtechitsolutions\system\Filters\Filters.php(173): CodeIgniter\Filters\CSRF->before(Object(CodeIgniter\HTTP\IncomingRequest), NULL)
+#3 C:\xampp\htdocs\ci4\hubtechitsolutions\system\CodeIgniter.php(386): CodeIgniter\Filters\Filters->run('enrollment-paym...', 'before')
+#4 C:\xampp\htdocs\ci4\hubtechitsolutions\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\ci4\hubtechitsolutions\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2026-05-24 02:27:20 --> Undefined constant "App\Traits\RAZORPAY_KEY_ID"
+#0 C:\xampp\htdocs\ci4\hubtechitsolutions\app\Controllers\Home.php(290): App\Controllers\Home->verifyPayment(Array)
+#1 C:\xampp\htdocs\ci4\hubtechitsolutions\system\CodeIgniter.php(825): App\Controllers\Home->enrollment_payment_verify()
+#2 C:\xampp\htdocs\ci4\hubtechitsolutions\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+#3 C:\xampp\htdocs\ci4\hubtechitsolutions\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\ci4\hubtechitsolutions\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2026-05-24 03:06:00 --> Email: sendWithMail throwed mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set()
+ERROR - 2026-05-24 03:12:23 --> Email: sendWithMail throwed mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set()

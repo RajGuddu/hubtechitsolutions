@@ -1,0 +1,18 @@
+CRITICAL - 2023-01-23 09:47:53 --> Invalid file: admin/index.php
+#0 C:\xampp\htdocs\ci4\hubtech\system\View\View.php(198): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('admin/index.php')
+#1 C:\xampp\htdocs\ci4\hubtech\system\Common.php(1089): CodeIgniter\View\View->render('admin/index', Array, true)
+#2 C:\xampp\htdocs\ci4\hubtech\app\Controllers\Admin.php(19): view('admin/index', Array)
+#3 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(825): App\Controllers\Admin->index()
+#4 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+#5 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\xampp\htdocs\ci4\hubtech\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2023-01-23 09:50:18 --> Invalid file: admin/dashboard.php
+#0 C:\xampp\htdocs\ci4\hubtech\system\View\View.php(198): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('admin/dashboard...')
+#1 C:\xampp\htdocs\ci4\hubtech\system\Common.php(1089): CodeIgniter\View\View->render('admin/dashboard', Array, true)
+#2 C:\xampp\htdocs\ci4\hubtech\app\Controllers\Admin.php(19): view('admin/dashboard', Array)
+#3 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(825): App\Controllers\Admin->index()
+#4 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+#5 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\xampp\htdocs\ci4\hubtech\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}

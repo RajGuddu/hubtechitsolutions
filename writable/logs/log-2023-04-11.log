@@ -1,0 +1,9 @@
+CRITICAL - 2023-04-11 12:11:01 --> syntax error, unexpected '<', expecting end of file
+#0 C:\xampp\htdocs\ci4\hubtech\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#1 C:\xampp\htdocs\ci4\hubtech\system\Common.php(1089): CodeIgniter\View\View->render('admin/course/ad...', Array, true)
+#2 C:\xampp\htdocs\ci4\hubtech\app\Controllers\Admin.php(863): view('admin/course/ad...', Array)
+#3 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(825): App\Controllers\Admin->add_edit_course('1')
+#4 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+#5 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\xampp\htdocs\ci4\hubtech\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}

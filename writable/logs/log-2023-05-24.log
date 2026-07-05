@@ -1,0 +1,7 @@
+CRITICAL - 2023-05-24 23:24:02 --> Call to undefined method CodeIgniter\Database\MySQLi\Connection::orWhere()
+#0 /home/zepackin/hubtechitsolutions.com/staging/app/Controllers/Admin.php(1112): App\Models\Admin_model->get_admissions_list()
+#1 /home/zepackin/hubtechitsolutions.com/staging/system/CodeIgniter.php(825): App\Controllers\Admin->admission_list()
+#2 /home/zepackin/hubtechitsolutions.com/staging/system/CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController()
+#3 /home/zepackin/hubtechitsolutions.com/staging/system/CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest()
+#4 /home/zepackin/hubtechitsolutions.com/staging/index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}

@@ -1,0 +1,11 @@
+CRITICAL - 2023-02-18 02:21:56 --> Undefined variable: user
+#0 C:\xampp\htdocs\ci4\hubtech\app\Views\admin\users\add_group.php(15): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined varia...', 'C:\\xampp\\htdocs...', 15, Array)
+#1 C:\xampp\htdocs\ci4\hubtech\system\View\View.php(210): include('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\ci4\hubtech\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 C:\xampp\htdocs\ci4\hubtech\system\Common.php(1089): CodeIgniter\View\View->render('admin/users/add...', Array, true)
+#4 C:\xampp\htdocs\ci4\hubtech\app\Controllers\Admin.php(259): view('admin/users/add...', Array)
+#5 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(825): App\Controllers\Admin->addgroup()
+#6 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+#7 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\ci4\hubtech\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 {main}

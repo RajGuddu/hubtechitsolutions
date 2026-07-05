@@ -1,0 +1,22 @@
+CRITICAL - 2023-04-23 11:23:32 --> Trying to get property 'what_learn' of non-object
+#0 C:\xampp\htdocs\ci4\hubtech\app\Views\admin\course\add_edit_course.php(257): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Trying to get p...', 'C:\\xampp\\htdocs...', 257, Array)
+#1 C:\xampp\htdocs\ci4\hubtech\system\View\View.php(210): include('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\ci4\hubtech\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 C:\xampp\htdocs\ci4\hubtech\system\Common.php(1089): CodeIgniter\View\View->render('admin/course/ad...', Array, true)
+#4 C:\xampp\htdocs\ci4\hubtech\app\Controllers\Admin.php(884): view('admin/course/ad...', Array)
+#5 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(825): App\Controllers\Admin->add_edit_course('1')
+#6 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+#7 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\ci4\hubtech\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 {main}
+CRITICAL - 2023-04-23 11:45:21 --> Undefined variable: active6
+#0 C:\xampp\htdocs\ci4\hubtech\app\Views\admin\course\add_edit_course.php(53): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined varia...', 'C:\\xampp\\htdocs...', 53, Array)
+#1 C:\xampp\htdocs\ci4\hubtech\system\View\View.php(210): include('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\ci4\hubtech\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 C:\xampp\htdocs\ci4\hubtech\system\Common.php(1089): CodeIgniter\View\View->render('admin/course/ad...', Array, true)
+#4 C:\xampp\htdocs\ci4\hubtech\app\Controllers\Admin.php(893): view('admin/course/ad...', Array)
+#5 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(825): App\Controllers\Admin->add_edit_course('1')
+#6 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+#7 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\ci4\hubtech\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 {main}

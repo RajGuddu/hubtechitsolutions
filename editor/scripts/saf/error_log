@@ -1,0 +1,13 @@
+[18-May-2019 08:23:10 Etc/GMT] PHP Warning:  include(../../../manager/includes/database.php): failed to open stream: No such file or directory in /home/webpazmn/public_html/virat.org.in/demo/editor/scripts/saf/hyperlink.php on line 2
+[18-May-2019 08:23:10 Etc/GMT] PHP Warning:  include(../../../manager/includes/database.php): failed to open stream: No such file or directory in /home/webpazmn/public_html/virat.org.in/demo/editor/scripts/saf/hyperlink.php on line 2
+[18-May-2019 08:23:10 Etc/GMT] PHP Warning:  include(): Failed opening '../../../manager/includes/database.php' for inclusion (include_path='.:/opt/alt/php70/usr/share/pear') in /home/webpazmn/public_html/virat.org.in/demo/editor/scripts/saf/hyperlink.php on line 2
+[18-May-2019 08:23:10 Etc/GMT] PHP Warning:  include(../../../manager/includes/functions.php): failed to open stream: No such file or directory in /home/webpazmn/public_html/virat.org.in/demo/editor/scripts/saf/hyperlink.php on line 3
+[18-May-2019 08:23:10 Etc/GMT] PHP Warning:  include(../../../manager/includes/functions.php): failed to open stream: No such file or directory in /home/webpazmn/public_html/virat.org.in/demo/editor/scripts/saf/hyperlink.php on line 3
+[18-May-2019 08:23:10 Etc/GMT] PHP Warning:  include(): Failed opening '../../../manager/includes/functions.php' for inclusion (include_path='.:/opt/alt/php70/usr/share/pear') in /home/webpazmn/public_html/virat.org.in/demo/editor/scripts/saf/hyperlink.php on line 3
+[18-May-2019 08:23:10 Etc/GMT] PHP Warning:  include(../../../manager/includes/common.php): failed to open stream: No such file or directory in /home/webpazmn/public_html/virat.org.in/demo/editor/scripts/saf/hyperlink.php on line 4
+[18-May-2019 08:23:10 Etc/GMT] PHP Warning:  include(../../../manager/includes/common.php): failed to open stream: No such file or directory in /home/webpazmn/public_html/virat.org.in/demo/editor/scripts/saf/hyperlink.php on line 4
+[18-May-2019 08:23:10 Etc/GMT] PHP Warning:  include(): Failed opening '../../../manager/includes/common.php' for inclusion (include_path='.:/opt/alt/php70/usr/share/pear') in /home/webpazmn/public_html/virat.org.in/demo/editor/scripts/saf/hyperlink.php on line 4
+[18-May-2019 08:23:10 Etc/GMT] PHP Fatal error:  Uncaught Error: Call to undefined function mysql_query() in /home/webpazmn/public_html/virat.org.in/demo/editor/scripts/saf/hyperlink.php:458
+Stack trace:
+#0 {main}
+  thrown in /home/webpazmn/public_html/virat.org.in/demo/editor/scripts/saf/hyperlink.php on line 458

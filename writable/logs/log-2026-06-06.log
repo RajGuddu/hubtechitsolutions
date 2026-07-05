@@ -1,0 +1,22 @@
+CRITICAL - 2026-06-06 22:34:28 --> Undefined property: stdClass::$gender
+#0 C:\xampp\htdocs\ci4\hubtechitsolutions\app\Views\admin\internship\internstulist.php(64): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined prope...', 'C:\\xampp\\htdocs...', 64)
+#1 C:\xampp\htdocs\ci4\hubtechitsolutions\system\View\View.php(210): include('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\ci4\hubtechitsolutions\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 C:\xampp\htdocs\ci4\hubtechitsolutions\system\Common.php(1089): CodeIgniter\View\View->render('admin/internshi...', Array, true)
+#4 C:\xampp\htdocs\ci4\hubtechitsolutions\app\Controllers\Internship.php(26): view('admin/internshi...', Array)
+#5 C:\xampp\htdocs\ci4\hubtechitsolutions\system\CodeIgniter.php(825): App\Controllers\Internship->index()
+#6 C:\xampp\htdocs\ci4\hubtechitsolutions\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Internship))
+#7 C:\xampp\htdocs\ci4\hubtechitsolutions\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\ci4\hubtechitsolutions\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 {main}
+CRITICAL - 2026-06-06 22:48:48 --> Undefined property: stdClass::$college_name
+#0 C:\xampp\htdocs\ci4\hubtechitsolutions\app\Views\admin\internship\internstulist.php(70): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined prope...', 'C:\\xampp\\htdocs...', 70)
+#1 C:\xampp\htdocs\ci4\hubtechitsolutions\system\View\View.php(210): include('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\ci4\hubtechitsolutions\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 C:\xampp\htdocs\ci4\hubtechitsolutions\system\Common.php(1089): CodeIgniter\View\View->render('admin/internshi...', Array, true)
+#4 C:\xampp\htdocs\ci4\hubtechitsolutions\app\Controllers\Internship.php(26): view('admin/internshi...', Array)
+#5 C:\xampp\htdocs\ci4\hubtechitsolutions\system\CodeIgniter.php(825): App\Controllers\Internship->index()
+#6 C:\xampp\htdocs\ci4\hubtechitsolutions\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Internship))
+#7 C:\xampp\htdocs\ci4\hubtechitsolutions\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\ci4\hubtechitsolutions\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 {main}

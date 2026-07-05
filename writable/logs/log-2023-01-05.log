@@ -1,0 +1,43 @@
+CRITICAL - 2023-01-05 01:48:51 --> Invalid file: errors/error_404.php
+#0 C:\xampp\htdocs\ci4\mygateway\system\View\View.php(198): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('errors/error_40...')
+#1 C:\xampp\htdocs\ci4\mygateway\system\Common.php(1089): CodeIgniter\View\View->render('errors/error_40...', Array, true)
+#2 C:\xampp\htdocs\ci4\mygateway\app\Config\Routes.php(39): view('errors/error_40...')
+#3 C:\xampp\htdocs\ci4\mygateway\system\CodeIgniter.php(842): CodeIgniter\Router\RouteCollection->Config\{closure}('Controller or i...')
+#4 C:\xampp\htdocs\ci4\mygateway\system\CodeIgniter.php(334): CodeIgniter\CodeIgniter->display404errors(Object(CodeIgniter\Exceptions\PageNotFoundException))
+#5 C:\xampp\htdocs\ci4\mygateway\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-01-05 01:49:25 --> Undefined variable: code
+#0 C:\xampp\htdocs\ci4\mygateway\app\Views\errors\cli\error_404.php(5): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined varia...', 'C:\\xampp\\htdocs...', 5, Array)
+#1 C:\xampp\htdocs\ci4\mygateway\system\View\View.php(210): include('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\ci4\mygateway\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 C:\xampp\htdocs\ci4\mygateway\system\Common.php(1089): CodeIgniter\View\View->render('errors/cli/erro...', Array, true)
+#4 C:\xampp\htdocs\ci4\mygateway\app\Config\Routes.php(39): view('errors/cli/erro...')
+#5 C:\xampp\htdocs\ci4\mygateway\system\CodeIgniter.php(842): CodeIgniter\Router\RouteCollection->Config\{closure}('Controller or i...')
+#6 C:\xampp\htdocs\ci4\mygateway\system\CodeIgniter.php(334): CodeIgniter\CodeIgniter->display404errors(Object(CodeIgniter\Exceptions\PageNotFoundException))
+#7 C:\xampp\htdocs\ci4\mygateway\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2023-01-05 02:45:23 --> Argument 1 passed to CodeIgniter\Router\RouteCollection::get() must be of the type string, array given, called in C:\xampp\htdocs\ci4\mygateway\app\Config\Routes.php on line 69
+#0 C:\xampp\htdocs\ci4\mygateway\app\Config\Routes.php(69): CodeIgniter\Router\RouteCollection->get(Array, Object(Closure))
+#1 C:\xampp\htdocs\ci4\mygateway\system\CodeIgniter.php(706): require('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\ci4\mygateway\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#3 C:\xampp\htdocs\ci4\mygateway\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\ci4\mygateway\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2023-01-05 06:48:48 --> Undefined property: App\Controllers\Signup::$data
+#0 C:\xampp\htdocs\ci4\mygateway\app\Controllers\Signup.php(64): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined prope...', 'C:\\xampp\\htdocs...', 64, Array)
+#1 C:\xampp\htdocs\ci4\mygateway\system\CodeIgniter.php(825): App\Controllers\Signup->bahamian()
+#2 C:\xampp\htdocs\ci4\mygateway\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Signup))
+#3 C:\xampp\htdocs\ci4\mygateway\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\ci4\mygateway\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2023-01-05 23:07:11 --> Email: sendWithMail throwed mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set()
+ERROR - 2023-01-05 23:07:21 --> Email: sendWithMail throwed mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set()
+ERROR - 2023-01-05 23:11:51 --> Email: sendWithMail throwed mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set()
+ERROR - 2023-01-05 23:12:17 --> Email: sendWithMail throwed mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set()
+ERROR - 2023-01-05 23:14:38 --> Email: sendWithMail throwed mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set()
+ERROR - 2023-01-05 23:14:41 --> Email: sendWithMail throwed mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set()
+ERROR - 2023-01-05 23:16:28 --> Email: sendWithMail throwed mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set()
+ERROR - 2023-01-05 23:17:01 --> Email: sendWithMail throwed mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set()
+ERROR - 2023-01-05 23:17:23 --> Email: sendWithMail throwed mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set()
+ERROR - 2023-01-05 23:17:41 --> Email: sendWithMail throwed mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set()
+ERROR - 2023-01-05 23:17:45 --> Email: sendWithMail throwed mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set()

@@ -1,0 +1,58 @@
+CRITICAL - 2023-04-27 06:13:07 --> Call to undefined function App\Controllers\ucword()
+#0 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(825): App\Controllers\Home->course_details('diploma-in-comp...')
+#1 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+#2 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\xampp\htdocs\ci4\hubtech\index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2023-04-27 08:51:20 --> Cannot use object of type stdClass as array
+#0 C:\xampp\htdocs\ci4\hubtech\system\View\View.php(210): include()
+#1 C:\xampp\htdocs\ci4\hubtech\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#2 C:\xampp\htdocs\ci4\hubtech\system\Common.php(1089): CodeIgniter\View\View->render('course-detail', Array, true)
+#3 C:\xampp\htdocs\ci4\hubtech\app\Controllers\Home.php(33): view('course-detail', Array)
+#4 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(825): App\Controllers\Home->course_details('diploma-in-comp...')
+#5 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+#6 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\xampp\htdocs\ci4\hubtech\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2023-04-27 10:56:10 --> syntax error, unexpected ')', expecting identifier (T_STRING) or variable (T_VARIABLE) or '{' or '$'
+#0 C:\xampp\htdocs\ci4\hubtech\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#1 C:\xampp\htdocs\ci4\hubtech\system\Common.php(1089): CodeIgniter\View\View->render('course-detail', Array, true)
+#2 C:\xampp\htdocs\ci4\hubtech\app\Controllers\Home.php(33): view('course-detail', Array)
+#3 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(825): App\Controllers\Home->course_details('diploma-in-comp...')
+#4 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+#5 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\xampp\htdocs\ci4\hubtech\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2023-04-27 11:05:51 --> Trying to get property 'course_full_name' of non-object
+#0 C:\xampp\htdocs\ci4\hubtech\app\Views\course-detail.php(9): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Trying to get p...', 'C:\\xampp\\htdocs...', 9, Array)
+#1 C:\xampp\htdocs\ci4\hubtech\system\View\View.php(210): include('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\ci4\hubtech\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 C:\xampp\htdocs\ci4\hubtech\system\Common.php(1089): CodeIgniter\View\View->render('course-detail', Array, true)
+#4 C:\xampp\htdocs\ci4\hubtech\app\Controllers\Home.php(33): view('course-detail', Array)
+#5 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(825): App\Controllers\Home->course_details('contact-us.html')
+#6 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+#7 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\ci4\hubtech\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 {main}
+CRITICAL - 2023-04-27 11:07:00 --> Trying to get property 'course_full_name' of non-object
+#0 C:\xampp\htdocs\ci4\hubtech\app\Views\course-detail.php(9): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Trying to get p...', 'C:\\xampp\\htdocs...', 9, Array)
+#1 C:\xampp\htdocs\ci4\hubtech\system\View\View.php(210): include('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\ci4\hubtech\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 C:\xampp\htdocs\ci4\hubtech\system\Common.php(1089): CodeIgniter\View\View->render('course-detail', Array, true)
+#4 C:\xampp\htdocs\ci4\hubtech\app\Controllers\Home.php(33): view('course-detail', Array)
+#5 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(825): App\Controllers\Home->course_details('contact-us.html')
+#6 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+#7 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\ci4\hubtech\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 {main}
+CRITICAL - 2023-04-27 11:07:15 --> Undefined variable: syllabus
+#0 C:\xampp\htdocs\ci4\hubtech\app\Views\course-detail.php(85): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined varia...', 'C:\\xampp\\htdocs...', 85, Array)
+#1 C:\xampp\htdocs\ci4\hubtech\system\View\View.php(210): include('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\ci4\hubtech\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 C:\xampp\htdocs\ci4\hubtech\system\Common.php(1089): CodeIgniter\View\View->render('course-detail', Array, true)
+#4 C:\xampp\htdocs\ci4\hubtech\app\Controllers\Home.php(33): view('course-detail', Array)
+#5 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(825): App\Controllers\Home->course_details('diploma-in-comp...')
+#6 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+#7 C:\xampp\htdocs\ci4\hubtech\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\ci4\hubtech\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 {main}

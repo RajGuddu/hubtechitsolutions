@@ -1,0 +1,25 @@
+CRITICAL - 2022-12-25 08:01:55 --> Undefined variable: matches
+#0 C:\xampp\htdocs\ci4\mygateway\system\Helpers\url_helper.php(559): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined varia...', 'C:\\xampp\\htdocs...', 559, Array)
+#1 C:\xampp\htdocs\ci4\mygateway\app\Filters\AuthCheckFilter.php(31): url_is('/admin')
+#2 C:\xampp\htdocs\ci4\mygateway\app\Filters\AuthCheckFilter.php(17): App\Filters\AuthCheckFilter->check_privilege()
+#3 C:\xampp\htdocs\ci4\mygateway\system\Filters\Filters.php(173): App\Filters\AuthCheckFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), NULL)
+#4 C:\xampp\htdocs\ci4\mygateway\system\CodeIgniter.php(386): CodeIgniter\Filters\Filters->run('admin/123', 'before')
+#5 C:\xampp\htdocs\ci4\mygateway\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\xampp\htdocs\ci4\mygateway\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-12-25 08:15:30 --> Call to undefined function App\Filters\p()
+#0 C:\xampp\htdocs\ci4\mygateway\app\Filters\AuthCheckFilter.php(17): App\Filters\AuthCheckFilter->check_privilege()
+#1 C:\xampp\htdocs\ci4\mygateway\system\Filters\Filters.php(173): App\Filters\AuthCheckFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), NULL)
+#2 C:\xampp\htdocs\ci4\mygateway\system\CodeIgniter.php(386): CodeIgniter\Filters\Filters->run('admin/123', 'before')
+#3 C:\xampp\htdocs\ci4\mygateway\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\ci4\mygateway\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-12-25 09:13:54 --> syntax error, unexpected 'helper' (T_STRING)
+#0 C:\xampp\htdocs\ci4\mygateway\system\Autoloader\Autoloader.php(241): CodeIgniter\Autoloader\Autoloader->includeFile('C:\\xampp\\htdocs...')
+#1 C:\xampp\htdocs\ci4\mygateway\system\Autoloader\Autoloader.php(219): CodeIgniter\Autoloader\Autoloader->loadInNamespace('App\\Filters\\Aut...')
+#2 [internal function]: CodeIgniter\Autoloader\Autoloader->loadClass('App\\Filters\\Aut...')
+#3 C:\xampp\htdocs\ci4\mygateway\system\Filters\Filters.php(166): spl_autoload_call('App\\Filters\\Aut...')
+#4 C:\xampp\htdocs\ci4\mygateway\system\CodeIgniter.php(386): CodeIgniter\Filters\Filters->run('admin/25', 'before')
+#5 C:\xampp\htdocs\ci4\mygateway\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\xampp\htdocs\ci4\mygateway\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
