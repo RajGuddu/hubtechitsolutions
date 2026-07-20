@@ -77,3 +77,8 @@ defined('EXIT_USER_INPUT')     || define('EXIT_USER_INPUT', 7); // invalid user 
 defined('EXIT_DATABASE')       || define('EXIT_DATABASE', 8); // database error
 defined('EXIT__AUTO_MIN')      || define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
 defined('EXIT__AUTO_MAX')      || define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
+
+defined('IMAGE_PATH')      || define('IMAGE_PATH', 'public/assets/upload/images/'); 
+defined('WEBSITE_NAME')      || define('WEBSITE_NAME', 'Hub Techsolutions'); 
+defined('ADMIN_EMAIL_ID')  || define('ADMIN_EMAIL_ID', 'test152@yopmail.com'); 
+defined('REACH_US_EMAIL')  || define('REACH_US_EMAIL', 'test152@yopmail.com'); 

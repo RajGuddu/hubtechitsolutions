@@ -143,4 +143,34 @@
             return $out;
         }
     }
+    if(!function_exists('get_intern_stu_status')){
+        function get_intern_stu_status($status){
+            $statusTxt = '<span class="badge bg-warning">Pending</span>';
+            if($status == 1){
+                $statusTxt = '<span class="badge bg-success">Approved</span>';
+            }
+            return $statusTxt;
+        }
+    }
+    if(!function_exists('get_intern_program_status')){
+        function get_intern_program_status($status){
+            switch ($status){
+                case 1:
+                    return '<span class="badge bg-success text-light mb-1 d-inline-block">Payment Completed</span>';
+                    break;
+                case 2:
+                    return '<span class="badge bg-primary text-light mb-1 d-inline-block">Exam In Progress</span>';
+                    break;
+                case 3:
+                    return '<span class="badge bg-success text-light mb-1 d-inline-block">Exam Completed (Passed)</span>';
+                    break;
+                case 4:
+                    return '<span class="badge bg-success text-light mb-1 d-inline-block">Exam Completed (Failed)</span>';
+                    break;
+                default:
+                    return '<span class="badge bg-warning text-light mb-1 d-inline-block">Application Incomplete</span>';
+                    break;
+            }
+        }
+    }
 ?>

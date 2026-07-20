@@ -26,7 +26,7 @@
   <link rel="shortcut icon" href="<?=base_url('public/assets/images/favicon.png')?>" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"/>
   <!-- plugins:js -->
-  <script src="<?=base_url('public/assets/Admin/vendors/js/vendor.bundle.base.js') ?>"></script>
+  <!-- <script src="<?php //base_url('public/assets/Admin/vendors/js/vendor.bundle.base.js') ?>"></script> -->
   <!-- endinject -->
 </head>
 <body>
@@ -246,7 +246,7 @@
   <!-- container-scroller -->
 
   <!-- plugins:js -->
-  <!-- <script src="<?php //echo base_url('public/assets/Admin/vendors/js/vendor.bundle.base.js') ?>"></script> -->
+  <script src="<?php echo base_url('public/assets/Admin/vendors/js/vendor.bundle.base.js') ?>"></script>
   <!-- endinject -->
   <!-- Plugin js for this page -->
   <script src="<?=base_url('public/assets/Admin/vendors/chart.js/Chart.min.js') ?>"></script>
@@ -258,9 +258,9 @@
 
   <!-- End plugin js for this page -->
   <!-- inject:js -->
-  <script src="<?=base_url('public/assets/Admin/js/off-canvas.js') ?>"></script>
+  <!-- <script src="<?=base_url('public/assets/Admin/js/off-canvas.js') ?>"></script> -->
   <script src="<?=base_url('public/assets/Admin/js/hoverable-collapse.js') ?>"></script>
-  <script src="<?=base_url('public/assets/Admin/js/template.js') ?>"></script>
+  <!-- <script src="<?=base_url('public/assets/Admin/js/template.js') ?>"></script> -->
   <script src="<?=base_url('public/assets/Admin/js/settings.js') ?>"></script>
   <script src="<?=base_url('public/assets/Admin/js/todolist.js') ?>"></script>
   <!-- endinject -->
@@ -272,6 +272,7 @@
   <script src="<?=base_url('public/assets/Admin/js/typeahead.js') ?>"></script>
   <script src="<?=base_url('public/assets/Admin/js/select2.js') ?>"></script>
   <!-- End custom js for this page-->
+  <?= $this->renderSection('scripts') ?>
 </body>
 
 </html>

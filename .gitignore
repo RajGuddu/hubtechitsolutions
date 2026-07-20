@@ -1,18 +1,51 @@
-*/config/development
-*/logs/log-*.php
-!*/logs/index.html
-*/cache/*
-!system/cache/*
-!*/cache/index.html
-!*/cache/.htaccess
+#---------------------------------------
+# CodeIgniter 4
+#---------------------------------------
 
-user_guide_src/build/*
-user_guide_src/cilexer/build/*
-user_guide_src/cilexer/dist/*
-user_guide_src/cilexer/pycilexer.egg-info/*
+# Environment file
+.env
 
-#codeigniter 3
-application/logs/*
-!application/logs/index.html
-!application/logs/.htaccess
-/vendor/
+# Vendor (agar Composer se install hota hai)
+vendor/
+
+# Writable folder
+writable/cache/*
+!writable/cache/index.html
+!writable/cache/.htaccess
+
+writable/logs/*
+!writable/logs/index.html
+!writable/logs/.htaccess
+
+writable/session/*
+!writable/session/index.html
+!writable/session/.htaccess
+
+writable/debugbar/*
+!writable/debugbar/index.html
+!writable/debugbar/.htaccess
+
+writable/uploads/*
+!writable/uploads/index.html
+!writable/uploads/.htaccess
+
+writable/temp/*
+!writable/temp/index.html
+!writable/temp/.htaccess
+
+writable/uploads/*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Node
+node_modules/
+
+# Build files
+npm-debug.log*
+yarn-error.log*

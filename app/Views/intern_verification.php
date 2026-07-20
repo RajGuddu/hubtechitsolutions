@@ -82,7 +82,7 @@
                             </tr>
                             <tr>
                                 <?php /* <td colspan="2" class="text-center"><button type="button" class="btn btn-success btn-lg px-5" onclick="alert('Download feature is currently under development.')">Download Letter</button></td> */ ?>
-                                <td colspan="2" class="text-center"><a href="<?=base_url('download-intern-letter/'.$certDtls->ie_id)?>" class="btn btn-success btn-lg px-5" >Download Letter</a></td>
+                                <td colspan="2" class="text-center"><a href="<?=base_url('download-intern-letter/'.$certDtls->ia_id)?>" class="btn btn-success btn-lg px-5" >Download Letter</a></td>
                             </tr>
                         </tbody>
                     </table>

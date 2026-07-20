@@ -27,7 +27,10 @@ class Filters extends BaseConfig
         'NoAccessFilter' => \App\Filters\NoAccessFilter::class,
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
-        'auth'          => JWTAuthenticationFilter::class // add this line
+        'auth'          => JWTAuthenticationFilter::class, // add this line
+        'InternAlreadyLoggedIn' => \App\Filters\InternAlreadyLoggedInFilter::class,
+        'InternAuthCheck' => \App\Filters\InternAuthCheckFilter::class,
+        'internProfileComplete' => \App\Filters\internProfileComplete::class,
     ];
 
     /**

@@ -25,6 +25,7 @@
 
     <!-- Site Stylesheet -->
     <link rel="stylesheet" href="<?=base_url('public/assets/css/app.css') ?>">
+    <link rel="stylesheet" href="<?=base_url('public/assets/css/style.css') ?>">
     <!-- Modernizer JS -->
     <script src="<?=base_url('public/assets/js/vendor/modernizr.min.js') ?>"></script>
     <!-- Jquery Js -->
@@ -47,6 +48,18 @@
         $course_category = $common_model->getAllRecord('tbl_course_category',['status'=>'1']);
         $settings = $common_model->get_setting(1);
         ?>
+        <style>
+            .header-top .header-info .dropdown-menu li a {
+    color: #333 !important;
+    display: block;
+    padding: 8px 15px;
+}
+
+.header-top .header-info .dropdown-menu li a:hover {
+    color: #fff !important;
+    background: #0d6efd;
+}
+        </style>
         <header class="edu-header header-style-1 header-fullwidth">
             <div class="header-top-bar">
                 <div class="container-fluid">
@@ -59,29 +72,8 @@
                         <div class="header-top-right">
                             <ul class="header-info">
                                 <!-- <li><a href="#">Login</a></li> -->
-                                 <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Login
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li>
-                                            <a class="dropdown-item" href="<?=base_url('internship/login')?>">
-                                                Internship Student
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="<?=base_url('student/login')?>">
-                                                Center Student
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="<?=base_url('franchise/login')?>">
-                                                Franchise
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li><a href="#">Register</a></li>
+                                 
+                                <!-- <li><a href="#">Register</a></li> -->
                                 <li><a href="tel:+91<?=$settings->phone?>"><i class="icon-phone"></i>Call: +91 <?=$settings->phone?></a></li>
                                 <li><a href="mailto:<?=$settings->email?>" target="_blank"><i class="icon-envelope"></i>Email: <?=$settings->email?></a></li>
                                 <li class="social-icon">
@@ -140,6 +132,28 @@
                                        
 									   </ul>
                                     </li>
+                                    <li class="has-droupdown"><a href="javascript:void(0)">Login</a>
+                                        <ul class="submenu">
+                                            <?php if(session()->has('internIsLoggedIn')){ ?>
+                                                <li><a href="<?=base_url('internship/dashboard')?>">Internship Dashboard</a></li>
+                                                <li><a href="<?=base_url('internship/logout')?>" onclick="return confirm('Are u sure?')">Logout</a></li>
+                                            <?php }else{ ?>
+                                                <li><a href="<?=base_url('internship/login')?>">Internship Student</a></li>
+                                                <li><a href="javascript:void(0)" onclick="return confirm('Under development')">Center Student</a></li>
+                                                <li><a href="javascript:void(0)" onclick="return confirm('Under development')">Franchise</a></li>
+                                            <?php } ?>
+                                       
+									   </ul>
+                                    </li>
+                                    <li class="has-droupdown"><a href="#">Register</a>
+                                        <ul class="submenu">
+                                            
+                                            <li><a href="javascript:void(0)" onclick="return confirm('Under development')">Internship Student</a></li>
+                                            <li><a href="javascript:void(0)" onclick="return confirm('Under development')">Center Student</a></li>
+                                            <li><a href="javascript:void(0)" onclick="return confirm('Under development')">Franchise</a></li>
+                                       
+									   </ul>
+                                    </li>
                                     <!-- <li><a href="#">Blog</a></li>
 									<li><a href="#">FAQ</a></li> -->
                                     <li><a href="<?=base_url('contact-us'); ?>">Contact</a></li>
@@ -148,7 +162,7 @@
                         </div>
                         <div class="header-right">
                             <ul class="header-action">
-                                <li class="search-bar">
+                                <!-- <li class="search-bar">
                                     <div class="input-group">
                                         <input type="text" class="form-control" placeholder="Search">
                                         <button class="search-btn" type="button"><i class="icon-2"></i></button>
@@ -158,7 +172,7 @@
                                     <a href="javascript:void(0)" class="search-trigger">
                                         <i class="icon-2"></i>
                                     </a>
-                                </li>
+                                </li> -->
                                 
                                 <li class="header-btn">
                                     <a href="<?=base_url('enroll-internship'); ?>" class="edu-btn btn-medium">Apply Internship <i class="icon-4"></i></a>
@@ -205,8 +219,22 @@
                             
                             </ul>
                         </li>
-                        <li><a href="#">Blog</a></li>
-                            <li><a href="#">FAQ</a></li>
+                        <li class="has-droupdown"><a href="#">Login</a>
+                            <ul class="submenu">
+                                <li><a href="course-one.html">Internship Student</a></li>
+                                <li><a href="course-two.html">Center Student</a></li>
+                                <li><a href="course-three.html">Franchise</a></li>
+                            </ul>
+                        </li>
+                        <li class="has-droupdown"><a href="#">Register</a>
+                            <ul class="submenu">
+                                <li><a href="course-one.html">Internship Student</a></li>
+                                <li><a href="course-two.html">Center Student</a></li>
+                                <li><a href="course-three.html">Franchise</a></li>
+                            </ul>
+                        </li>
+                        <!-- <li><a href="#">Blog</a></li>
+                        <li><a href="#">FAQ</a></li> -->
                         <li><a href="#">Contact</a></li>
                     </ul>
                 </div>

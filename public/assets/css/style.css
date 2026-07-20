@@ -1,0 +1,54 @@
+
+.list-group-item.active{
+    background-color:#80082b !important;
+    border-color:#80082b !important;
+    color:#fff !important;
+}
+
+.list-group-item.active i{
+    color:#fff !important;
+}
+.bg-linear{
+    background:linear-gradient(135deg,#80082b,#0c2778);
+}
+.internship-form .form-control,
+.internship-form .form-select,
+.internship-form input[type="date"],
+.internship-form input[type="text"],
+.internship-form input[type="email"],
+.internship-form input[type="number"],
+.internship-form input[type="tel"],
+.internship-form input[type="file"],
+.internship-form textarea{
+    height:50px;
+    padding:0 16px;
+    font-size:16px;
+    border:1px solid #ced4da;
+    border-radius:6px;
+    background:#fff;
+    box-shadow:none;
+}
+.internship-form .form-select{
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") !important;
+    background-repeat:no-repeat;
+    background-position:right .75rem center;
+    background-size:16px 12px;
+}
+
+.internship-form textarea.form-control{
+    height:auto !important;
+    min-height:auto !important;
+}
+
+.internship-form .form-control:focus,
+.internship-form .form-select:focus{
+    border-color:#0d6efd;
+    box-shadow:0 0 0 .2rem rgba(13,110,253,.15);
+}
+.internship-form .btn{
+    font-size:16px;
+    font-weight:600;
+    padding:12px 24px;
+    min-height:50px;
+    border-radius:6px;
+}

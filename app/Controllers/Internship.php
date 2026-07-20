@@ -16,43 +16,246 @@ class Internship extends BaseController
         $this->commonmodel = model('App\Models\Common_model', false);
         $this->servicemodel = model('App\Models\Service_model', false);
     }
-    
-    public function index($ie_id=null)
-    {
-        if($this->request->getMethod() == 'post'){
-           session()->set(
-                'intern_student_search',
-                trim($this->request->getPost('search'))
-            ); 
+    public function login(){
+        $data = [];
+        // echo password_hash('654321', PASSWORD_DEFAULT); exit;
+        // echo session('stu_name'); exit;
+        if($this->request->getMethod() === 'post'){
+            $validation = $this->validate([
+                'email'=>[
+                    'rules'=>'required|is_not_unique[tbl_internship_enrollment.email]',
+                    'errors'=>['required'=>'Email is required',
+                                'is_not_unique'=>'This Email is not registered in our system']
+                ],
+                'password'=>[
+                    'rules'=>'required|min_length[6]|max_length[16]',
+                    'errors'=>['required'=>'Password is required',
+                                'min_length'=>'Password must have atleast 6 character in length',
+                                'max_length'=>'Password must not have characters more than 16 in length']
+                ],
+            ]);
+            if(!$validation){
+                $data['validation'] = $this->validator; 
+            }else{
+                $email = $this->request->getPost('email');
+                $password = $this->request->getPost('password');
+                $user_info = $this->commonmodel->getOneRecord('tbl_internship_enrollment',['email'=>$email, 'can_login'=>1]);
+                if(empty($user_info)){
+                    session()->setFlashdata('alert_error','Invalid User State.');
+                    return redirect()->to(base_url('internship/login'))->withInput();
+                }
+                $check_password = password_verify($password, $user_info->password);
+                if(!$check_password){
+                    session()->setFlashdata('alert_error','Incorrect Password');
+                    return redirect()->to(base_url('internship/login'))->withInput();
+                }else{
+                    session()->set(array(
+                        'ie_id' => $user_info->ie_id,
+                        'stu_name' => $user_info->stu_name,
+                        'email' => $user_info->email,
+                        'phone' => $user_info->phone,
+                        'image' => $user_info->image,
+                        'status' => $user_info->status,
+                        'profile_completed' => $user_info->profile_completed,
+                        'internIsLoggedIn' => true,
+                    ));
+                    if($user_info->profile_completed)
+                        return redirect()->to(base_url('/internship/dashboard'));
+                    else    
+                        return redirect()->to(base_url('/internship/profile'));
+                }
+            }
         }
-        $totRecord = $this->servicemodel->get_internship_students('', $count=1);
-        $rec_limit = 10;
-        $page_config = array(
-            'tot_record' => $totRecord,
-            'rec_limit' => $rec_limit,
-            'btn_limit' => 5,
-            'current_page' => (isset($_GET['page']) && $_GET['page'] != '')?$_GET['page']:0,
-            'url' => current_url(),
-            'url_param' => 'page',
-            'colspan' => 13,
-        );
-        $cp_data = custom_pagination($page_config);
-        // print_r($cp_data); exit;
-        $limit = $cp_data['limit'];
-        $offset = $cp_data['offset'];
-        $this->data['pagination'] = $cp_data['pagination_html'];
-        $this->data['records'] = $this->servicemodel->get_internship_students('','',$limit, $offset);
-        if($ie_id == null && isset($this->data['records'][0]->ie_id)){
-            $ie_id = $this->data['records'][0]->ie_id;
-        }
-        $this->data['record'] = $this->servicemodel->get_internship_students($ie_id);
-        $this->data['caption'] = $cp_data['caption'];
-        return view("admin/internship/internstulist",$this->data);
-        
+        echo view('include/header', $data);
+        echo view('internship/login', $data);
+        echo view('include/footer', $data);
     }
-    public function reset_search(){
-        session()->remove('intern_student_search');
+    public function dashboard(){
+        $ie_id = session('ie_id');
+        $data['profile'] = $this->commonmodel->getOneRecord('tbl_internship_enrollment',['ie_id'=>$ie_id]);
+        $data['totApplied'] = $this->commonmodel->getAllRecordCount('tbl_internship_applications',['ie_id'=>$ie_id]);
+        $data['totIncmp'] = $this->commonmodel->getAllRecordCount('tbl_internship_applications',['ie_id'=>$ie_id,'status != '=>3]);
+        $data['totCmp'] = $this->commonmodel->getAllRecordCount('tbl_internship_applications',['ie_id'=>$ie_id,'status'=>3]);
+        
+        echo view('include/header', $data);
+        echo view('internship/dashboard', $data);
+        echo view('include/footer', $data);
+    }
+    public function profile(){
+        $ie_id = session('ie_id');
+        $profile = $this->commonmodel->getOneRecord('tbl_internship_enrollment',['ie_id'=>$ie_id]);
+        if($this->request->getMethod() === 'post'){
+            // print_r($_POST); exit;
+            $rules = [
+                
+                'stu_name'=>[
+                    'rules'=>'required|alpha_numeric_space',
+                    'errors'=>['required'=>'Your Full name is required',
+                                'alpha_numeric_space'=>'Please enter valid name.']
+                ],
+                /*'address'=>[
+                    'rules'=>'required|alpha_numeric_space',
+                    'errors'=>['required'=>'Your Address is required',
+                                'alpha_numeric_space'=>'Please enter valid Address.']
+                ],*/
+                'email'=>[
+                    'rules'=>'required|valid_email|is_unique[tbl_internship_enrollment.email,ie_id,'.$ie_id.']',
+                    'errors'=>['required'=>'Email is required',
+                                'valid_email'=>'You must enter a valid email',
+                                'is_unique'=>'This email is already registered in our system',
+                            ]
+                ],
+                'phone'=>[
+                    'rules'=>'required|is_natural|min_length[10]|max_length[10]',
+                    'errors'=>['required'=>'Mobile No is required',
+                                'is_natural'=>'The Mobile No must only contain digits.',
+                                'min_length'=>'Mobile No must be 10 digit in length',
+                                'max_length'=>'Mobile No must not have more than 10 digit in length']
+                ],
+                'dob' => [
+                    'rules' =>  'required',
+                    'errors' => [
+                        'required'   => 'Date of Birth is required.',
+                        'valid_date' => 'Please enter a valid date.',
+                    ]
+                ],
+                'gender' => ['rules' => 'required'],
+                'aadhar' => ['rules' => 'required|min_length[12]|max_length[12]']
+                /*
+                'password'=>[
+                    'rules'=>'required|min_length[6]|regex_match[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/]',
+                    'errors'=>['required'=>'Password is required',
+                                'min_length'=>'Password must have atleast 6 character in length',
+                                // 'max_length'=>'Password must not have characters more than 16 in length',
+                                'regex_match' => 'The password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.',
+                                ]
+                ],
+                'cpassword'=>[
+                    'rules'=>'required|matches[password]',
+                    'errors'=>['required'=>'Confirm Password is required',
+                                'matches'=>'Confirm Password not matches to password']
+                ], */
+                //'g-recaptcha-response'=>['rules'=>'required','errors'=>['required'=>'recaptcha is required']]
+            ];
+            if($profile->image == null){
+                $rules['image'] = [
+                    'rules'=>'uploaded[image]|max_size[image,1024]|ext_in[image,png,jpg,jpeg,bmp,gif]',
+                    // 'rules'=>'max_size[lsn_file,10240]|ext_in[lsn_file,pdf]',
+                    'errors'=>[
+                    'uploaded'=>'Image is required.',
+                    'max_size'=>'Image must not have size more than 1 MB in length.',
+                    'ext_in'=>'Only Image file(png,jpg,jpeg,bmp,gif) upload!',
+                    ]
+                ];
+            }else{
+                $rules['image'] = [
+                    'rules'=>'max_size[image,1024]|ext_in[image,png,jpg,jpeg,bmp,gif]',
+                    // 'rules'=>'max_size[lsn_file,10240]|ext_in[lsn_file,pdf]',
+                    'errors'=>[
+                    'max_size'=>'Image must not have size more than 1 MB in length.',
+                    'ext_in'=>'Only Image file(png,jpg,jpeg,bmp,gif) upload!',
+                    ]
+                ];
+            }
+            
+            $validation = $this->validate($rules);
+            if(!$validation){
+                $data['validation'] = $this->validator; 
+            }else{
+                $post = array();
+                if($_FILES['image']['name'] != ''){
+                    if($img = $this->request->getFile('image')){ 
+                        $imgname = $img->getName();
+                        if($img->isValid() && !$img->hasMoved()){
+                            $ext = explode('.',$imgname);
+                            $ext = end($ext);
+                            $newName = 'int_stu_'.time().'.'.$ext;
+                            $img->move('./public/assets/upload/images/',$newName);
+                            
+                            $post['image'] = $newName;
+                        }
+                    }
+                }
+                $post['stu_name']       = trim($this->request->getPost('stu_name'));
+                $post['email']          = $this->request->getPost('email');
+                // $post['address']        = trim($this->request->getPost('address'));
+                $post['phone']          = $this->request->getPost('phone');
+                $post['dob']            = date('Y-m-d', strtotime($this->request->getPost('dob')));
+                $post['genger']         = $this->request->getPost('gender');
+                $post['aadhar']       = $this->request->getPost('aadhar');
+                $post['f_name']       = $this->request->getPost('f_name');
+                $post['m_name']       = $this->request->getPost('m_name');
+                $post['full_address'] = json_encode(
+                    [
+                        'add' => $this->request->getPost('address'),
+                        'dist' => $this->request->getPost('district'),
+                        'state' => $this->request->getPost('state'),
+                        'pincode' => $this->request->getPost('pincode'),
+                    ]
+                );
+                $post['academic'] = json_encode(
+                    [
+                        'board1' => $this->request->getPost('board1'),
+                        'passyear1' => $this->request->getPost('passyear1'),
+                        'percentage1' => $this->request->getPost('percentage1'),
+                        'board2' => $this->request->getPost('board2'),
+                        'passyear2' => $this->request->getPost('passyear2'),
+                        'percentage2' => $this->request->getPost('percentage2'),
+                    ]
+                );
+                $post['status']        = 1;
+                $post['profile_completed'] = 1;
+                // do{
+                //     $No1 = mt_rand(10000, 10500);
+                //     $is_exist = $this->commonmodel->getAllRecordCount('tbl_members',['member_code'=>$No1]);
+                // } while($is_exist);
+                // $post['member_code'] = $No1;
+                $updated = $this->commonmodel->updateRecord('tbl_internship_enrollment', $post, ['ie_id'=>$ie_id]); 
+                if($updated){
+                    $user_info = $this->commonmodel->getOneRecord('tbl_internship_enrollment',['ie_id'=>$ie_id]);
+                    session()->set(array(
+                        'stu_name' => $user_info->stu_name,
+                        'email' => $user_info->email,
+                        'phone' => $user_info->phone,
+                        'image' => $user_info->image,
+                        'status' => $user_info->status,
+                        'profile_completed' => $user_info->profile_completed,
+                        'internIsLoggedIn' => true,
+                    ));
+                    session()->setFlashdata(['message'=>'Profile completed successfully. you can access internship course','type'=>'success']);
+                }else{
+                    session()->setFlashdata(['message'=>'Something went wrong. Please Try After Sometimes...','type'=>'danger']);
+                }
+                
+                return redirect()->to(base_url('/internship/profile'));
 
-        return redirect()->to(base_url('admin/intern-students'));
+            }
+        }
+        $data['profile'] = $profile;
+        echo view('include/header', $data);
+        echo view('internship/profile', $data);
+        echo view('include/footer', $data);
+    }
+    public function edit_profile($ie_id){
+        if($this->commonmodel->updateRecord('tbl_internship_enrollment',['profile_completed'=>0, 'status'=>0],['ie_id'=>$ie_id])){
+            session()->set('profile_completed', 0);
+            session()->set('status', 0);
+            session()->setFlashdata(['message'=>'You can edit your profile.','type'=>'success']);
+        }else{
+            session()->setFlashdata(['message'=>'Something went wrong. Please Try After Sometimes...','type'=>'danger']);
+        }
+        return redirect()->to(base_url('/internship/profile'));
+    }
+    public function courses(){
+        $ie_id = session('ie_id');
+
+        $data['records'] = $this->servicemodel->get_applied_internship_courses($ie_id);
+        echo view('include/header', $data);
+        echo view('internship/courses', $data);
+        echo view('include/footer', $data);
+    }
+    public function logout(){
+        session()->destroy();
+        return redirect()->to(base_url('internship/login'))->with('alert_error','You have successfully logged out!');
     }
 }

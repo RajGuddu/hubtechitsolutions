@@ -1,7 +1,0 @@
-CRITICAL - 2023-04-30 11:58:01 --> Undefined variable $setting
-#0 /home/zepackin/hubtechitsolutions.com/app/Controllers/Home.php(125): CodeIgniter\Debug\Exceptions->errorHandler()
-#1 /home/zepackin/hubtechitsolutions.com/system/CodeIgniter.php(825): App\Controllers\Home->testmail()
-#2 /home/zepackin/hubtechitsolutions.com/system/CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController()
-#3 /home/zepackin/hubtechitsolutions.com/system/CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest()
-#4 /home/zepackin/hubtechitsolutions.com/index.php(37): CodeIgniter\CodeIgniter->run()
-#5 {main}

@@ -6,12 +6,13 @@ use App\Libraries\Hash;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use App\Traits\RazorpayTrait;
+use App\Traits\MailTrait;
 use App\Controllers\MpdfController;
 use Mpdf\Mpdf;
 
 class Home extends BaseController
 {
-    use RazorpayTrait;
+    use RazorpayTrait, MailTrait;
     public $service_model;
     public $common_model;
     public function __construct()
@@ -152,11 +153,11 @@ class Home extends BaseController
                   ]
                   ],
               'email' =>[
-                  'rules'=>'required|valid_email',
+                  'rules'=>'required|valid_email|is_unique[tbl_internship_enrollment.email]',
                   'errors'=>[
                       'required'=>'Email is required',
                       'valid_email'=>'You must enter a valid email',
-                    //   'is_unique'=>'Email already taken'
+                      'is_unique'=>'Email already taken'
                   ]
                   ],
               
@@ -305,85 +306,164 @@ class Home extends BaseController
             $amount = $_POST['amount'];
             $tempStudtls = json_decode($this->common_model->getOneRecord('tbl_temp_enrollment',['te_id'=>$te_id])->form_details);
 
-            do{
-                $randomNo = rand(1000,9999);
-                $enrollId = 'ENR' . date('Ymd') . $randomNo;
-                $is_exist = $this->common_model->getAllRecordCount('tbl_internship_enrollment',['enroll_id'=>$enrollId]);
-            }while($is_exist);
+            $hashPassword = password_hash('123456', PASSWORD_DEFAULT);
 
             $enrStudtls = array(
-                'enroll_id' => $enrollId,
                 'stu_name' => $tempStudtls->stu_name,
                 'email' => $tempStudtls->email,
+                'password' => $hashPassword,
                 'phone' => $tempStudtls->phone,
-                'uni_roll_no' => $tempStudtls->uni_roll_no,
-                'uni_reg_no' => $tempStudtls->uni_reg_no,
                 'genger' => $tempStudtls->gender,
-                'class' => $tempStudtls->class,
-                'mjc_id' => $tempStudtls->mjc_id,
-                'session' => $tempStudtls->session,
-                'semester' => $tempStudtls->semester,
-                'clg_id' => $tempStudtls->clg_id,
-                'ic_id' => $tempStudtls->ic_id,
-                'duration' => $tempStudtls->duration,
-                'terms' => $tempStudtls->terms ?? 1,
-                'payment_id' => $_POST['paymentId'],
-                'order_id' => $_POST['orderId'],
-                'amount' => $amount,
-                'status' => 1,
-                'added_at' => date('Y-m-d H:i:s')
+                'status' => 0,
+                'can_login' => 1,
+                'profile_completed' => 0,
+                'email_verified' => 1,
+                'email_verified_at' => date('Y-m-d H:i:s'),
+                'added_at' => date('Y-m-d H:i:s'),
             );
 
-            $inserted = $this->common_model->insertRecord('tbl_internship_enrollment', $enrStudtls);
-            if($inserted){
+            $ie_id = $this->common_model->insertRecord('tbl_internship_enrollment', $enrStudtls);
+            if($ie_id){
                 $this->common_model->deleteRecord('tbl_temp_enrollment',['te_id'=>$te_id]);
-                session()->setFlashdata(
-                    'success',
-                    'Congratulations! Your internship registration and payment have been completed successfully. Your Enrollment Number: '.$enrollId.'. Please keep this number safe for tracking and future reference. The Enrollment Number has also been sent to your registered email address.'
+
+                //insert into 'tbl_internship_applications'
+                do{
+                    $randomNo = rand(1000,9999);
+                    $enrollId = 'ENR' . date('Ymd') . $randomNo;
+                    $is_exist = $this->common_model->getAllRecordCount('tbl_internship_applications',['enroll_id'=>$enrollId]);
+                }while($is_exist);
+                $internCourse = $this->common_model->getOneRecord('tbl_intern_course',['ic_id'=>$tempStudtls->ic_id]);
+                
+                $internAppData = array(
+                    'ie_id' => $ie_id,
+                    'enroll_id' => $enrollId,
+                    'uni_roll_no' => $tempStudtls->uni_roll_no,
+                    'uni_reg_no' => $tempStudtls->uni_reg_no,
+                    'class' => $tempStudtls->class,
+                    'mjc_id' => $tempStudtls->mjc_id,
+                    'session' => $tempStudtls->session,
+                    'semester' => $tempStudtls->semester,
+                    'clg_id' => $tempStudtls->clg_id,
+                    'ic_id' => $tempStudtls->ic_id,
+                    // 'duration' => $tempStudtls->duration,
+                    'terms' => $tempStudtls->terms ?? 1,
+                    'attendence' => mt_rand(80, 95),
+                    'status' => 1, // Payment Completed
+                    'payment_status' => 'Success',
+                    'razor_payment_id' => $_POST['paymentId'],
+                    'razor_order_id' => $_POST['orderId'],
+                    'amount' => $amount,
+                    'exam_duration' => $internCourse->exam_duration,
+                    'added_at' => date('Y-m-d H:i:s')
                 );
+                $ia_id = $this->common_model->insertRecord('tbl_internship_applications',$internAppData);
+                if($ia_id){
+                    $paymentTransactionData = array(
+                        'ia_id' => $ia_id,
+                        'enroll_id' => $enrollId,
+                        'paid_amount' => $amount,
+                        'payment_mode' => 'Online Razorpay',
+                        'payment_status' => 'Success',
+                        'razor_payment_id' => $_POST['paymentId'],
+                        'added_at' => date('Y-m-d H:i:s')
+                    );
+                    $this->common_model->insertRecord('tbl_payment_transaction',$paymentTransactionData);
+                }
+                // session()->setFlashdata(
+                //     'success',
+                //     'Congratulations! Your internship registration and payment have been completed successfully. Your Enrollment Number: '.$enrollId.'. Please keep this number safe for tracking and future reference. The Enrollment Number has also been sent to your registered email address.'
+                // );
                 $mpdfController = new MpdfController();
-                $pdfContent = $mpdfController->get_offer_letter_pdf($inserted);
-                $msg = '
-                    <h2>Internship Registration Successful</h2>
-                    <hr>
-                    <p>Dear '.$tempStudtls->stu_name.',</p>
-                    <p>Your internship registration and payment have been completed successfully.</p>
-                    <p><strong>Enrollment Number:</strong> '.$enrollId.'</p>
-                    <p>Please keep this Enrollment Number safe for future reference and communication.</p>
-                    <p><strong>Your Internship Offer Letter is attached to this email.</strong> Please review it carefully and keep it for your records.</p>
-                    <p>Thank you for registering with us.</p>
-                    <br>
-                    <p>Regards,<br>
-                    Hubtech IT Solutions</p>
-                ';
-                $email = \Config\Services::email();
+                $pdfContent = $mpdfController->get_offer_letter_pdf($ia_id);
 
-                // $email->setFrom('htdev@yopmail.com', 'Hubtech It Solutions');
-                $email->setTo($tempStudtls->email);
-                //$email->setTo('test136@yopmail.com');
-                
-                $email->setSubject('Internship Registration Successful');
-                $email->setMessage($msg);
+                //email to user
+                $mailData = array(
+                    'name' => $formData->name ?? 'Student',
+                    'heading' => 'Internship Payment Successful 🎉',
+                    'content' => '
+                        <p style="color:#555;font-size:15px;">
+                            We are pleased to inform you that your internship payment has been <strong>successfully processed</strong>.
+                        </p>
 
-                //attachment
-                $email->attach(
-                    $pdfContent,
-                    'attachment',
-                    'Internship_Offer_Letter.pdf',
-                    'application/pdf'
+                        <p style="color:#555;font-size:15px;">
+                            Your internship is now active on your dashboard. Please log in to access all details and resources.
+                        </p>
+
+                        <p style="color:#555;font-size:15px;">
+                            <strong>Payment & Enrollment Details:</strong>
+                        </p>
+                    ',
+                    'details' => [
+                        'Name' => $tempStudtls->stu_name ?? 'Student',
+                        'Email/Username' => $tempStudtls->email ?? '',
+                        'Password' => '123456',
+                        'Course / Internship' => ucwords($internCourse->ic_name ?? 'Internship Program'),
+                        'Payment Status' => 'Success',
+                        'Transaction ID' => $_POST['paymentId'] ?? 'N/A',
+                        'Amount Paid' => $amount ?? 'N/A',
+                        'Payment Date' => date('d M-Y')
+                    ]
                 );
+
+                $mailConfig['subject'] = 'Internship Payment Successful';
+                $mailConfig['mailto'] = $tempStudtls->email ?? 'test@yopmail.com';
+                $mailConfig['attachment'] = [
+                    'content' => $pdfContent,
+                    'filename' => 'Internship_Offer_Letter.pdf',
+                    'mime' => 'application/pdf'
+                ];
+                $this->mail_to_user($mailConfig, $mailData);
+
+                //email to admin
+                $mailData = array(
+                    'heading' => 'Internship Payment Received',
+                    'content' => 'A user has successfully completed the internship payment. 
+                                    <p style="color: #555555; font-size: 15px;">
+                                        <strong>Payment Details:</strong>
+                                    </p>',
+                    'details' => [
+                        'Name' => $tempStudtls->stu_name ?? 'Student',
+                        'Email' => $tempStudtls->email ?? '',
+                        'Course / Internship' => ucwords($internCourse->ic_name ?? 'Internship Program'),
+                        'Amount Paid' => $amount ?? 'N/A',
+                        'Transaction ID' => $_POST['paymentId'] ?? 'N/A',
+                        'Payment Date' => date('d M-Y')
+                    ]
+                );
+
+                $mailConfig['subject'] = 'New Internship Payment Received';
+                $this->mail_to_admin($mailConfig, $mailData);
                 
-                $email->send();
-            }else{
-                session()->setFlashdata(
-                    'err',
-                    'Unable to complete your internship registration. Payment was unsuccessful or an error occurred. Please try again.'
+                return redirect()->to(
+                    base_url('intern-pay-success') . '?' . http_build_query([
+                        'application_id' => $enrollId,
+                        'username' => $tempStudtls->email,
+                        'password' => '123456',
+                    ])
                 );
+
+                exit;
             }
-            return redirect()->to(base_url('intern-certificate-verification?cert_no='.$enrollId));
+            // return redirect()->to(base_url('intern-certificate-verification?cert_no='.$enrollId));
+        }else{
+            session()->setFlashdata(
+                'err',
+                'Unable to complete your internship registration. Payment was unsuccessful or an error occurred. Please try again.'
+            );
         }
         
         return redirect()->to(base_url('/enroll-internship'));
+    }
+    public function internPaySuccess(){
+        $data = [
+            'application_id' => $this->request->getGet('application_id'),
+            'username'       => $this->request->getGet('username'),
+            'password'       => $this->request->getGet('password'),
+        ];
+
+        echo view('include/header', $data);
+        echo view('intern_pay_success', $data);
+        echo view('include/footer', $data);
     }
     public function intern_certificate_verification(){
         $data['title'] = 'Hubtech | Internship Certificate Verification';
@@ -399,8 +479,8 @@ class Home extends BaseController
         echo view('intern_verification', $data);
         echo view('include/footer', $data);
     }
-    public function download_intern_letter($ie_id){
-        $student = $this->service_model->get_one_internship_student_detail($ie_id);
+    public function download_intern_letter($ia_id){
+        $student = $this->service_model->get_one_internship_course_detail($ia_id);
         if (!$student) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
@@ -432,6 +512,101 @@ class Home extends BaseController
         $mpdfController->_get_offer_letter_pdf(6);
     }
     public function testmail(){
+        $mpdfController = new MpdfController();
+        $pdfContent = $mpdfController->get_offer_letter_pdf(6);
+        //mail to user
+        $mailData = array(
+            'name' => 'Student Kumar',
+            'heading' => 'Internship Payment Successful 🎉',
+            'content' => '
+                <p style="color:#555;font-size:15px;">
+                    We are pleased to inform you that your internship payment has been <strong>successfully processed</strong>.
+                </p>
+
+                <p style="color:#555;font-size:15px;">
+                    Your internship is now active on your dashboard. Please log in to access all details and resources.
+                </p>
+
+                <p style="color:#555;font-size:15px;">
+                    <strong>Payment & Enrollment Details:</strong>
+                </p>
+            ',
+            'details' => [
+                'Name' => 'Student Kumar',
+                'Email/Username' => 'test152@yopmail.com',
+                'Password' => 123456,
+                'Course / Internship' => 'Internship Program',
+                'Payment Status' => 'Success',
+                'Transaction ID' => 'N/A',
+                'Amount Paid' => '300',
+                'Payment Date' => date('d M-Y')
+            ]
+        );
+
+        $mailConfig['subject'] = 'Internship Payment Successful';
+        $mailConfig['mailto'] = 'test152@yopmail.com';
+        $mailConfig['attachment'] = [
+            'content' => $pdfContent,
+            'filename' => 'Internship_Offer_Letter.pdf',
+            'mime' => 'application/pdf'
+        ];
+        $send = $this->mail_to_user($mailConfig, $mailData);
+        //mail to admin
+        $mailData = array(
+            'heading' => 'Internship Payment Received',
+            'content' => 'A user has successfully completed the internship payment. 
+                            <p style="color: #555555; font-size: 15px;">
+                                <strong>Payment Details:</strong>
+                            </p>',
+            'details' => [
+                'Name' => 'Student Kumar',
+                'Email' => 'test152@yopmail.com',
+                'Course / Internship' => 'Internship Program',
+                'Amount Paid' => '300',
+                'Transaction ID' => 'N/A',
+                'Payment Date' => date('d M-Y')
+            ]
+        );
+
+        $mailConfig['subject'] = 'New Internship Payment Received';
+        //$send = $this->mail_to_admin($mailConfig, $mailData);
+
+        
+
+        /*$msg = '
+            <h2>Internship Registration Successful</h2>
+            <hr>
+            <p>Dear Md Raj Guddu,</p>
+            <p>Your internship registration and payment have been completed successfully.</p>
+            <p><strong>Enrollment Number:</strong> 1234567890</p>
+            <p>Please keep this Enrollment Number safe for future reference and communication.</p>
+            <p>Thank you for registering with us.</p>
+            <br>
+            <p>Regards,<br>
+            Hubtech IT Solutions</p>
+        ';
+        $email = \Config\Services::email();
+
+        // $email->setFrom('info@hubtechitsolutions.in', 'Hubtech It Solutions');
+        $email->setTo('test152@yopmail.com');
+        //$email->setTo('test136@yopmail.com');
+        
+        $email->setSubject('Internship Registration Successfull');
+        $email->setMessage($msg);
+        $email->attach(
+            $pdfContent,
+            'attachment',
+            'Internship_Offer_Letter.pdf',
+            'application/pdf'
+        );*/
+        
+        if($send){
+            echo 'mail send';
+        }else{
+            echo 'mail not send';
+        }
+    }
+    public function testmail_(){
         $mpdfController = new MpdfController();
         $pdfContent = $mpdfController->get_offer_letter_pdf(6);
         $msg = '

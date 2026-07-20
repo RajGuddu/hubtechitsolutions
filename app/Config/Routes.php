@@ -50,14 +50,31 @@ $routes->match(['get','post'],'home/save_contact_us', 'Home::save_contact_us');
 $routes->match(['get','post'],'certificate-verification', 'Home::certificate_verification');
 $routes->match(['get','post'],'enroll-internship', 'Home::enroll_internship');
 $routes->match(['get','post'],'enrollment-payment-verify', 'Home::enrollment_payment_verify');
+$routes->get('intern-pay-success', 'Home::internPaySuccess');
+
 $routes->match(['get','post'],'intern-certificate-verification', 'Home::intern_certificate_verification');
 $routes->match(['get','post'],'download-intern-letter/(:num)', 'Home::download_intern_letter/$1');
 
 //test route
 $routes->get('testmail', 'Home::testmail');
 $routes->get('testpdf', 'Home::testpdf');
+$routes->get('update', 'Test::update');
 
-//
+//internship Student
+$routes->group('internship', ['filter' => 'InternAuthCheck'], function($routes){
+    $routes->get('dashboard', 'Internship::dashboard');
+    $routes->match(['get','post'], 'profile', 'Internship::profile');
+    $routes->get('edit_profile/(:num)', 'Internship::edit_profile/$1');
+    $routes->group('', ['filter' => 'internProfileComplete'], function($routes){
+        $routes->get('courses', 'Internship::courses');
+    });
+    $routes->get('logout', 'Internship::logout');
+});
+$routes->group('internship', ['filter' => 'InternAlreadyLoggedIn'], function($routes){
+    //Add all routes need protected after logged in
+    $routes->get('login', 'Internship::login');
+});
+
 //Filter on route group
 $routes->group('', ['filter' => 'AuthCheck'], function($routes){
     //Add all routes need protected by this filter
@@ -136,9 +153,10 @@ $routes->group('', ['filter' => 'AuthCheck'], function($routes){
     $routes->match(['get','post'],'/admin/center_cu/(:num)', 'Admin::center_cu/$1');
 
     /*************************Internship Management**************************** */
-    $routes->match(['get','post'],'/admin/intern-students', 'Internship::index');
-    $routes->match(['get','post'],'/admin/intern-students/(:num)', 'Internship::index/$1');
-    $routes->get('admin/intern-students/reset-search', 'Internship::reset_search');
+    $routes->match(['get','post'],'/admin/intern-students', 'Admin\Internship::index');
+    $routes->match(['get','post'],'/admin/intern-students/(:num)', 'Admin\Internship::index/$1');
+    $routes->get('admin/intern-students/reset-search', 'Admin\Internship::reset_search');
+    $routes->get('admin/get_offer_letter_pdf/(:num)', 'MpdfController::get_offer_letter_pdf_for_modal/$1');
 
 
     $routes->get('/admin/certificate_list', 'Admin::certificate_list');
