@@ -113,7 +113,7 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Percentage / CGPA</label>
-                            <input type="number" name="percentage1" class="form-control" value="<?=set_value('percentage1', $academic->percentage1 ?? '') ?>">
+                            <input type="text" name="percentage1" class="form-control" value="<?=set_value('percentage1', $academic->percentage1 ?? '') ?>">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Qualification</label>
@@ -132,7 +132,7 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Percentage / CGPA</label>
-                            <input type="number" name="percentage2" class="form-control" value="<?=set_value('percentage2', $academic->percentage2 ?? '') ?>">
+                            <input type="text" name="percentage2" class="form-control" value="<?=set_value('percentage2', $academic->percentage2 ?? '') ?>">
                         </div>
                     </div>
                     <hr class="my-4">

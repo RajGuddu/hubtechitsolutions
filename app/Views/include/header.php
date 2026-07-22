@@ -206,36 +206,56 @@
                         <li><a href="<?=base_url()?>">Home</a>
         
                         </li>
-                        <li><a href="#">About Us</a>
+                        <li><a href="<?=base_url('/about-us')?>">About Us</a>
                         </li>
 
                         <li class="has-droupdown"><a href="#">Our Courses</a>
                             <ul class="submenu">
-                                <li><a href="course-one.html">Course Style 1</a></li>
+                                <?php if(!empty($course_category)){
+                                foreach($course_category as $cate){ ?>
+                                <li><a href="<?=base_url('courses').'?category='.$cate->ccat_id?>"><?=ucwords($cate->course_category_name)?></a></li>
+                                <?php } }?>
+                                <!-- <li><a href="course-one.html">Course Style 1</a></li>
                                 <li><a href="course-two.html">Course Style 2</a></li>
                                 <li><a href="course-three.html">Course Style 3</a></li>
                                 <li><a href="course-four.html">Course Style 4</a></li>
-                                <li><a href="course-five.html">Course Style 5</a></li>
+                                <li><a href="course-five.html">Course Style 5</a></li> -->
                             
                             </ul>
                         </li>
-                        <li class="has-droupdown"><a href="#">Login</a>
+                        <li class="has-droupdown"><a href="#">Certificate Verification</a>
                             <ul class="submenu">
-                                <li><a href="course-one.html">Internship Student</a></li>
-                                <li><a href="course-two.html">Center Student</a></li>
-                                <li><a href="course-three.html">Franchise</a></li>
+                                
+                                <li><a href="<?=base_url('intern-certificate-verification')?>">Internship Student</a></li>
+                                <li><a href="<?=base_url('certificate-verification')?>">Center Student</a></li>
+                                <!-- <li><a href="course-four.html">Course Style 4</a></li>
+                                <li><a href="course-five.html">Course Style 5</a></li> -->
+                            
+                            </ul>
+                        </li>
+                        <li class="has-droupdown"><a href="javascript:void(0)">Login</a>
+                            <ul class="submenu">
+                                <?php if(session()->has('internIsLoggedIn')){ ?>
+                                    <li><a href="<?=base_url('internship/dashboard')?>">Internship Dashboard</a></li>
+                                    <li><a href="<?=base_url('internship/logout')?>" onclick="return confirm('Are u sure?')">Logout</a></li>
+                                <?php }else{ ?>
+                                    <li><a href="<?=base_url('internship/login')?>">Internship Student</a></li>
+                                    <li><a href="javascript:void(0)" onclick="return confirm('Under development')">Center Student</a></li>
+                                    <li><a href="javascript:void(0)" onclick="return confirm('Under development')">Franchise</a></li>
+                                <?php } ?>
+                            
                             </ul>
                         </li>
                         <li class="has-droupdown"><a href="#">Register</a>
                             <ul class="submenu">
-                                <li><a href="course-one.html">Internship Student</a></li>
-                                <li><a href="course-two.html">Center Student</a></li>
-                                <li><a href="course-three.html">Franchise</a></li>
+                                <li><a href="javascript:void(0)">Internship Student</a></li>
+                                <li><a href="javascript:void(0)">Center Student</a></li>
+                                <li><a href="javascript:void(0)">Franchise</a></li>
                             </ul>
                         </li>
                         <!-- <li><a href="#">Blog</a></li>
                         <li><a href="#">FAQ</a></li> -->
-                        <li><a href="#">Contact</a></li>
+                        <li><a href="<?=base_url('contact-us'); ?>">Contact</a></li>
                     </ul>
                 </div>
             </div>

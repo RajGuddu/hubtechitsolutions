@@ -139,20 +139,20 @@ class Internship extends BaseController
             ];
             if($profile->image == null){
                 $rules['image'] = [
-                    'rules'=>'uploaded[image]|max_size[image,1024]|ext_in[image,png,jpg,jpeg,bmp,gif]',
+                    'rules'=>'uploaded[image]|max_size[image,100]|ext_in[image,png,jpg,jpeg,bmp,gif]',
                     // 'rules'=>'max_size[lsn_file,10240]|ext_in[lsn_file,pdf]',
                     'errors'=>[
                     'uploaded'=>'Image is required.',
-                    'max_size'=>'Image must not have size more than 1 MB in length.',
+                    'max_size'=>'The image must not be larger than 100 KB.',
                     'ext_in'=>'Only Image file(png,jpg,jpeg,bmp,gif) upload!',
                     ]
                 ];
             }else{
                 $rules['image'] = [
-                    'rules'=>'max_size[image,1024]|ext_in[image,png,jpg,jpeg,bmp,gif]',
+                    'rules'=>'max_size[image,100]|ext_in[image,png,jpg,jpeg,bmp,gif]',
                     // 'rules'=>'max_size[lsn_file,10240]|ext_in[lsn_file,pdf]',
                     'errors'=>[
-                    'max_size'=>'Image must not have size more than 1 MB in length.',
+                    'max_size'=>'The image must not be larger than 100 KB.',
                     'ext_in'=>'Only Image file(png,jpg,jpeg,bmp,gif) upload!',
                     ]
                 ];

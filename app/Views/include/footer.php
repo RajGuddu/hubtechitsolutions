@@ -5,13 +5,19 @@
             
         <!-- Mobile Sticky Buttons -->
         <div class="mobile-action-bar d-md-none">
-            <a href="<?= base_url('enroll-internship') ?>" class="apply-btn">
+            <a href="<?= base_url('enroll-internship') ?>" class="mobile-apply-btn">
                 Apply Internship
             </a>
 
-            <a href="<?= base_url('student-login') ?>" class="login-btn">
+            <?php if(session()->has('internIsLoggedIn')){ ?>
+            <a href="<?= base_url('internship/dashboard') ?>" class="mobile-login-btn">
+                Dashboard
+            </a>
+            <?php }else{ ?>
+            <a href="<?= base_url('internship/login') ?>" class="mobile-login-btn">
                 Login
             </a>
+            <?php } ?>
         </div>
 
 
@@ -43,8 +49,8 @@
                                     <ul class="footer-link link-hover">
                                         <li><a href="<?=base_url('about-us')?>">About</a></li>
                                         <li><a href="<?=base_url('courses')?>">Courses</a></li>
-                                        <li><a href="team-one.html">Instructor</a></li>
-                                        <li><a href="event-grid.html">Blog</a></li>
+                                        <li><a href="<?=base_url('intern-certificate-verification')?>">Internship Student Verification</a></li>
+                                        <li><a href="<?=base_url('certificate-verification')?>">Center Student Verification</a></li>
                                         <li><a href="<?=base_url('contact-us')?>">Contact</a></li>
                                         
                                     </ul>
@@ -79,7 +85,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="inner text-center">
-                                <p>Copyright <?=date('Y')?> <a href="https://1.envato.market/5bQ022" target="_blank">ht solutions</a> All Rights Reserved</p>
+                                <p>Copyright <?=date('Y')?> <a href="<?=base_url()?>" target="_blank">ht solutions</a> All Rights Reserved</p>
                             </div>
                         </div>
                     </div>

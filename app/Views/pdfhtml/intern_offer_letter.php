@@ -20,7 +20,7 @@
                 (A Unit of Swami Educational Society)<br>
                 Reg. No.: 2372/11<br>
                 Maharaja Hata, Katira Road, Arrah - 802301, Bihar<br>
-                info@hubtechitsolutions.in | +91 93342 97522<br>
+                info@hubtechitsolutions.in | +91 93866 93039<br>
                 www.hubtechitsolutions.in
             </td>
         </tr>
