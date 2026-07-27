@@ -59,6 +59,8 @@ $routes->match(['get','post'],'download-intern-letter/(:num)', 'Home::download_i
 $routes->get('testmail', 'Home::testmail');
 $routes->get('testpdf', 'Home::testpdf');
 $routes->get('update', 'Test::update');
+$routes->get('refund', 'Test::refund');
+$routes->get('update_refund', 'Test::update_refund');
 
 //internship Student
 $routes->group('internship', ['filter' => 'InternAuthCheck'], function($routes){
@@ -67,6 +69,7 @@ $routes->group('internship', ['filter' => 'InternAuthCheck'], function($routes){
     $routes->get('edit_profile/(:num)', 'Internship::edit_profile/$1');
     $routes->group('', ['filter' => 'internProfileComplete'], function($routes){
         $routes->get('courses', 'Internship::courses');
+        $routes->get('update_refund_status/(:num)', 'Internship::update_refund_status/$1');
     });
     $routes->get('logout', 'Internship::logout');
 });
@@ -157,6 +160,8 @@ $routes->group('', ['filter' => 'AuthCheck'], function($routes){
     $routes->match(['get','post'],'/admin/intern-students/(:num)', 'Admin\Internship::index/$1');
     $routes->get('admin/intern-students/reset-search', 'Admin\Internship::reset_search');
     $routes->get('admin/get_offer_letter_pdf/(:num)', 'MpdfController::get_offer_letter_pdf_for_modal/$1');
+    $routes->match(['get','post'],'/admin/refund_amount', 'Admin\Internship::refund_amount');
+    $routes->get('admin/update_refund_status/(:num)', 'Admin\Internship::update_refund_status/$1');
 
 
     $routes->get('/admin/certificate_list', 'Admin::certificate_list');

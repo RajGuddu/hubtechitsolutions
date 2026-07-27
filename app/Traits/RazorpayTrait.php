@@ -3,6 +3,7 @@
 namespace App\Traits;
 require_once APPPATH . 'ThirdParty/Razorpay/Razorpay.php';
 use Razorpay\Api\Api;
+use Razorpay\Api\Errors\Base;
 trait RazorpayTrait
 {
     public function makePayment($razorConfig)
@@ -86,6 +87,58 @@ trait RazorpayTrait
         } else {
             return [
                 'success' => false
+            ];
+        }
+    }
+    
+    ///refund 
+    public function refundPayment($razorConfig){
+        define('RAZORPAY_KEY_ID', getenv('RAZORPAY_KEY_ID')); 
+        define('RAZORPAY_KEY_SECRET', getenv('RAZORPAY_KEY_SECRET'));
+        $payment_id = $razorConfig['payment_id'];
+        $amount = $razorConfig['amount'];
+            
+        try{
+            $api = new Api(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET);
+            $refund = $api->payment->fetch($payment_id)->refund([
+                'amount' => $amount
+            ]);
+            return [
+                'status' => true,
+                'data' => $refund->toArray()
+            ];
+
+        } catch (\Exception $e) {
+
+            // Log the error
+            log_message('error', $e->getMessage());
+
+            return [
+                'status'  => false,
+                'message' => $e->getMessage()
+            ];
+        } 
+    }
+    public function refund_status($refund_id){
+        define('RAZORPAY_KEY_ID', getenv('RAZORPAY_KEY_ID')); 
+        define('RAZORPAY_KEY_SECRET', getenv('RAZORPAY_KEY_SECRET'));
+            
+        try{
+            $api = new Api(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET);
+            $refund = $api->refund->fetch($refund_id);
+            return [
+                'status' => true,
+                'data' => $refund->toArray()
+            ];
+
+        } catch (\Exception $e) {
+
+            // Log the error
+            log_message('error', $e->getMessage());
+
+            return [
+                'status'  => false,
+                'message' => $e->getMessage()
             ];
         }
     }

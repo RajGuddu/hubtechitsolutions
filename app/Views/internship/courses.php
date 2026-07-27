@@ -13,6 +13,9 @@
                     <a href="javascript:void(0)" class="btn btn-primary btn-lg text-white px-4"
                         onclick="return confirm('Under development')">Add Course</a>
                 </div>
+                <?php if(session()->getFlashdata('message') !== NULL){
+                    echo alertBS(session()->getFlashdata('message'),session()->getFlashdata('type'));
+                } ?>
                 <div class="card-body">
                     <div class="row g-4">
 
@@ -57,18 +60,33 @@
                                 <div class="card-body">
 
                                     <p class="text-muted mb-3">
-                                        Learn HTML, CSS, JavaScript, PHP, Laravel and MySQL with real-time projects.
-                                        Complete the course, pass the examination and receive your internship
-                                        certificate.
+                                        This internship course provides practical learning and hands-on experience to help participants develop industry-relevant skills. Complete the course and assessment successfully to earn your internship certificate.
                                     </p>
-
-                                    <?= get_intern_program_status($list->status) ?>
+                                    <div class="d-flex align-items-center">
+                                        <div>
+                                        <?= get_intern_program_status($list->status) ?>
+                                        </div>
+                                        <?php if($list->status == 5){ ?>
+                                        <div class="ms-auto">
+                                            Refund Status: <span class="text-danger"><?=$list->refund_status?></span>
+                                        </div>
+                                        <?php } ?>
+                                    </div>
                                     <?php if($list->status == 1){ ?>
                                         <p class="text-danger mt-0 mb-1"><strong>Note:</strong> You have successfully applied for this course. Complete your studies and pass the examination to download your certificate.</p>
                                     <?php } ?>
+                                    <?php if($list->status == 5){ ?>
+                                        <p class="text-danger mt-0 mb-1"><strong>Note:</strong> Refund initiated successfully. The amount will be credited to your original payment method within 5–7 business days. Click "Refresh Status" to fetch the latest refund status.</p>
+                                        <p class="text-danger mt-0 mb-1"><strong>Refund Amount:</strong> ₹ <?=$list->refund_amount?></p>
+                                        <p class="text-danger mt-0 mb-1"><strong>Refund Reason:</strong> <?=$list->refund_reason?></p>
+                                    <?php } ?>
 
                                     <div class="d-flex gap-2 mt-3 flex-wrap">
-                                        
+                                        <?php if($list->status == 5){ ?>
+                                        <a href="<?=base_url('internship/update_refund_status/'.$list->ia_id)?>" class="btn btn-danger btn-lg" >
+                                            <i class="ri-refresh-line"></i> Refresh Status
+                                        </a>
+                                        <?php }else{ ?>
                                         <a href="javascript:void(0)" class="btn btn-primary btn-lg"
                                             onclick="return confirm('Under development')">
                                             <i class="ri-book-open-line"></i> Study
@@ -88,14 +106,14 @@
                                         </a>
                                         
                                         <?php }else{ ?>
-                                        <a href="#" class="btn btn-success">
+                                        <a href="#" class="btn btn-success btn-lg">
                                             <i class="bi bi-cash"></i> Pay Course Fee
                                         </a>
 
-                                        <a href="#" class="btn  btn-danger">
+                                        <a href="#" class="btn btn-danger btn-lg">
                                             <i class="bi bi-trash-fill"></i> Delete
                                         </a>
-                                        <?php } ?>
+                                        <?php } }?>
                                     </div>
 
                                 </div>

@@ -4,8 +4,12 @@ use App\Controllers\BaseController;
 use App\Libraries\Hash;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
+use App\Traits\RazorpayTrait;
+
 class Internship extends BaseController
 {
+    use RazorpayTrait;
+
     public $data;
     public $commonmodel;
     public $adminmodel;
@@ -56,5 +60,69 @@ class Internship extends BaseController
         session()->remove('intern_student_search');
 
         return redirect()->to(base_url('admin/intern-students'));
+    }
+    public function refund_amount(){
+        // print_r($_POST);
+        if($this->request->getMethod() == 'post'){
+            $ia_id = $this->request->getPost('ia_id');
+            $amount    = $this->request->getPost('amount');
+            $reason    = $this->request->getPost('reason');
+
+            $internApp = $this->commonmodel->getOneRecord('tbl_internship_applications', ['ia_id'=>$ia_id]);
+            if(!empty($internApp)){
+                $payment_id = $internApp->razor_payment_id;
+                $razorConfig['payment_id'] = $payment_id;
+                $razorConfig['amount'] = (int) $amount * 100;
+                $refund = $this->refundPayment($razorConfig);
+
+                if(isset($refund['status']) && $refund['status'] == true){
+                    $data = $refund['data'];
+                    $iaUpdateData = array(
+                        'status' => 5,
+                        'refund_id' => $data['id'],
+                        'refund_amount' => $amount,
+                        'refund_status' => $data['status'],
+                        'refund_reason' => $reason,
+                        'refund_date' => date('Y-m-d H:i:s', $data['created_at']),
+
+                    );
+                    $updated = $this->commonmodel->updateRecord('tbl_internship_applications', $iaUpdateData, ['ia_id'=>$ia_id]);
+                    if($updated){
+                        $this->commonmodel->updateRecord('tbl_payment_transaction', ['payment_status'=>'Refund'], ['ia_id'=>$ia_id,'razor_payment_id'=>$payment_id]);
+                    }
+                    session()->setFlashdata(['message'=>'Refund has been initiated successfully. Please click "Refresh Status" to sync the latest refund status from the payment gateway.','type'=>'success']);
+
+                }else{
+                    $message = $refund['message'];
+                    session()->setFlashdata(['message'=>$message,'type'=>'danger']);
+                }
+            }
+        }
+        return redirect()->to(base_url('admin/intern-students'));
+    }
+    public function update_refund_status($ia_id){
+        $internApp = $this->commonmodel->getOneRecord('tbl_internship_applications', ['ia_id'=>$ia_id]);
+        $ie_id = $internApp->ie_id ?? '';
+        if(!empty($internApp) && $internApp->refund_id != null){
+            $refund_id = $internApp->refund_id;
+            $refund = $this->refund_status($refund_id);
+
+            if(isset($refund['status']) && $refund['status'] == true){
+                $data = $refund['data'];
+                $iaUpdateData = array(
+                    'refund_status' => $data['status'],
+                    'refund_updated' => date('Y-m-d H:i:s'),
+
+                );
+                $updated = $this->commonmodel->updateRecord('tbl_internship_applications', $iaUpdateData, ['ia_id'=>$ia_id]);
+                
+                session()->setFlashdata(['message'=>'The refund status has been updated successfully.','type'=>'success']);
+
+            }else{
+                $message = $refund['message'];
+                session()->setFlashdata(['message'=>$message,'type'=>'danger']);
+            }
+        }
+        return redirect()->to(base_url('admin/intern-students/'.$ie_id));
     }
 }

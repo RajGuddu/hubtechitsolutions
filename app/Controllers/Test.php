@@ -4,8 +4,11 @@ use App\Controllers\BaseController;
 use App\Libraries\Hash;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
+use App\Traits\RazorpayTrait;
+
 class Test extends BaseController
 {
+    use RazorpayTrait;
     public $data;
     public $commonmodel;
     public $adminmodel;
@@ -15,6 +18,19 @@ class Test extends BaseController
         $this->data['title'] = 'Admin-Internship';
         $this->commonmodel = model('App\Models\Common_model', false);
         $this->servicemodel = model('App\Models\Service_model', false);
+    }
+    public function refund(){
+        // $payment_id = 'pay_TBkFMJFrSrNiqU';
+        $payment_id = 'pay_TGs5Bs0O6WW43l';
+        $razorConfig['payment_id'] = $payment_id;
+        $razorConfig['amount'] = (int) 5 * 100;
+        $refund = $this->refundPayment($razorConfig);
+        echo '<pre>';print_r($refund);
+    }
+    public function update_refund(){
+        $refund_id = 'rfnd_TIRUZSJbuTpuff';
+        $refund = $this->refund_status($refund_id);
+        echo '<pre>';print_r($refund);echo $refund['data']['id'];
     }
     public function update(){
         // echo '<pre>';

@@ -4,11 +4,9 @@
     .student-card {
         transition: all .2s;
     }
-
     .student-card:hover {
         background: #f8f9fa;
     }
-
     .student-card.active {
         background: #eef5ff;
         border-left: 5px solid #0d6efd !important;
@@ -41,7 +39,11 @@
                         </div>
                     </form>
                 </div>
+                
             </div>
+            <?php if(session()->getFlashdata('message') !== NULL){
+                echo alertBS(session()->getFlashdata('message'),session()->getFlashdata('type'));
+            } ?>
         </div>
     </div>
     <div class="row">
@@ -168,27 +170,38 @@
                                     <p class="mb-2">Session : <?=$course->session?></p>
                                     <p class="mb-2">Semester : <?=$course->semester?></p>
                                     <?= get_intern_program_status($course->status) ?>
+                                    
                                     <!-- Action Buttons -->
                                     <div class="d-flex justify-content-center gap-2 my-1">
-
-                                        <a href="javascript:void(0)"
-                                            class="btn btn-outline-primary btn-sm viewPdfBtn" data-bs-toggle="tooltip"
-                                            title="Download Letter" data-pdf="<?= base_url('admin/get_offer_letter_pdf/'.$course->ia_id) ?>" data-title="Offer Letter">
+                                        <?php if($course->status == 5){ ?>
+                                        <a href="<?=base_url('admin/update_refund_status/'.$course->ia_id)?>" class="btn btn-outline-danger btn-sm"
+                                            data-bs-toggle="tooltip" title="Refresh Status">
+                                            <i class="fa-solid fa-rotate"></i>
+                                        </a>
+                                        <div class="ms-auto">
+                                            <small>Refund Status: <span class="text-danger"><?=ucwords($course->refund_status)?></span></small>
+                                            <small>Refund Amount: <span class="text-danger">₹ <?=$course->refund_amount?></span></small>
+                                        </div>
+                                        <?php }else{ ?>
+                                        <a href="javascript:void(0)" class="btn btn-outline-primary btn-sm viewPdfBtn"
+                                            data-bs-toggle="tooltip" title="Download Letter"
+                                            data-pdf="<?= base_url('admin/get_offer_letter_pdf/'.$course->ia_id) ?>"
+                                            data-title="Offer Letter">
                                             <i class="fa-solid fa-file-lines"></i>
                                         </a>
-
-                                        <a href="javascript:void(0)"
-                                            class="btn btn-outline-success btn-sm" data-bs-toggle="tooltip"
-                                            title="Project">
+                                        <a href="javascript:void(0)" class="btn btn-outline-success btn-sm"
+                                            data-bs-toggle="tooltip" title="Project">
                                             <i class="fa-solid fa-folder-open"></i>
                                         </a>
-
-                                        <a href="javascript:void(0)"
-                                            class="btn btn-outline-danger btn-sm" data-bs-toggle="tooltip"
-                                            title="Download Certificate">
+                                        <a href="javascript:void(0)" class="btn btn-outline-success btn-sm"
+                                            data-bs-toggle="tooltip" title="Download Certificate">
                                             <i class="fa-solid fa-award"></i>
                                         </a>
-
+                                        <a href="javascript:void(0)" class="btn btn-outline-warning btn-sm btnRefund"
+                                            data-ia_id="<?= $course->ia_id; ?>" data-bs-toggle="tooltip" title="Refund">
+                                            <i class="fa-solid fa-money-bill-wave"></i>
+                                        </a>
+                                        <?php } ?>
                                     </div>
                                     <button class="btn btn-primary btn-sm w-100 student-details"
                                         data-student="<?= esc($studentData, 'attr') ?>">
@@ -200,9 +213,7 @@
                         <?php } }else{
                             echo '<p class="text-danger text-center">No record available!</p>';
                         } ?>
-
                     </div>
-
                     <?php }else{
                         echo '<small class="text-center text-danger">No Record Available</small>';
                     } ?>
@@ -299,43 +310,117 @@
         </div>
     </div>
 </div>
-
 <!-- PDF View Modal -->
 <div class="modal fade" id="pdfModal" tabindex="-1">
     <div class="modal-dialog modal-xl mt-0">
         <div class="modal-content">
-
             <div class="modal-header">
                 <h5 class="modal-title" id="modal-title">View PDF</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-
             <div class="modal-body p-0">
                 <iframe id="pdfFrame" src="" style="width:100%; height:80vh;"></iframe>
             </div>
-
+        </div>
+    </div>
+</div>
+<!-- Refund Modal -->
+<div class="modal fade" id="refundModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="<?=base_url('/admin/refund_amount')?>" method="post" id="refundForm" >
+                <?=csrf_field(); ?>
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fa-solid fa-money-bill-wave me-2"></i>
+                        Refund Request
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="ia_id" id="course_id">
+                    <div class="mb-2">
+                        <label class="form-label">Refund Amount<span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" name="amount" id="amount" min="1" step="0.01" >
+                        <div class="invalid-feedback" id="amount_error"></div>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Reason<span class="text-danger">*</span></label>
+                        <textarea class="form-control" name="reason" id="reason" rows="4" ></textarea>
+                        <div class="invalid-feedback" id="reason_error"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        Submit Refund
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 <?=$this->endSection() ?>
 <?= $this->section('scripts') ?>
 <script>
-    $(document).ready(function() {
+    $(function () {
+        // Open Modal
+        $(document).on('click', '.btnRefund', function () {
+            $('.form-control').removeClass('is-invalid');
+            $('.invalid-feedback').html('');
+            let course_id = $(this).data('ia_id');
+            $('#course_id').val(course_id);
+            $('#amount').val('');
+            $('#reason').val('');
+            $('#refundModal').modal('show');
+        });
+        // Submit Form
+        $('#refundForm').on('submit', function (e) {
+            let valid = true;
 
-        $('.viewPdfBtn').on('click', function() {
+            // Reset Errors
+            $('.form-control').removeClass('is-invalid');
+            $('.invalid-feedback').html('');
+
+            let amount = $.trim($('#amount').val());
+            let reason = $.trim($('#reason').val());
+
+            if (amount == '' || parseFloat(amount) <= 0) {
+                $('#amount').addClass('is-invalid');
+                $('#amount_error').html('Please enter a valid refund amount.');
+                valid = false;
+            }
+
+            if (reason == '') {
+                $('#reason').addClass('is-invalid');
+                $('#reason_error').html('Please enter refund reason.');
+                valid = false;
+            }
+            if (!valid) {
+                e.preventDefault();
+                return;
+            }
+
+            if (!confirm('Are you sure you want to submit this refund request?')) {
+                e.preventDefault();
+            }
+        });
+    });
+    $(document).ready(function () {
+        $('.viewPdfBtn').on('click', function () {
             var pdfUrl = $(this).data('pdf');
             var title = $(this).data('title');
             //alert(pdfUrl) ; return 0;
             $('#modal-title').text(title);
-            $('#pdfFrame').attr('src', pdfUrl + '?t=' + new Date().getTime()); 
-            $('#pdfModal').modal('show'); 
+            $('#pdfFrame').attr('src', pdfUrl + '?t=' + new Date().getTime());
+            $('#pdfModal').modal('show');
         });
-
-        
         $('#pdfModal').on('hidden.bs.modal', function () {
             $('#pdfFrame').attr('src', '');
         });
-
     });
     $(document).on('click', '.student-details', function (e) {
         // alert('Hi'); return false;
