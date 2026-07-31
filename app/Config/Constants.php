@@ -79,6 +79,7 @@ defined('EXIT__AUTO_MIN')      || define('EXIT__AUTO_MIN', 9); // lowest automat
 defined('EXIT__AUTO_MAX')      || define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 defined('IMAGE_PATH')      || define('IMAGE_PATH', 'public/assets/upload/images/'); 
+defined('PDF_PATH')      || define('PDF_PATH', 'public/assets/upload/pdf/'); 
 defined('WEBSITE_NAME')      || define('WEBSITE_NAME', 'Hub Techsolutions'); 
 defined('ADMIN_EMAIL_ID')  || define('ADMIN_EMAIL_ID', 'test152@yopmail.com'); 
 defined('REACH_US_EMAIL')  || define('REACH_US_EMAIL', 'test152@yopmail.com'); 

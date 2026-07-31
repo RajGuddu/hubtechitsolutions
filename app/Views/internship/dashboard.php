@@ -139,8 +139,13 @@
                         <div class="card-header bg-white">
                             <strong>Notice Board</strong>
                         </div>
+                        
                         <div class="card-body">
-                            
+                            <div class="alert alert-danger mb-3">
+                                <marquee behavior="scroll" direction="left" scrollamount="5">
+                                    🔔 महत्वपूर्ण सूचना: छात्र अब अपने डैशबोर्ड से पासवर्ड बदल सकते हैं, स्टडी मैटेरियल देख और पढ़ सकते हैं, नए इंटर्नशिप कोर्स जोड़ (Add Course) सकते हैं तथा <strong>ऑनलाइन परीक्षा (Exam) शुरू/पूर्ण होने से पहले तक</strong> अपने कोर्स की जानकारी संपादित (Edit) कर सकते हैं। परीक्षा पूर्ण होने के बाद कोर्स में किसी प्रकार का संशोधन (Edit) संभव नहीं होगा।
+                                </marquee>
+                            </div>
                             <div class="alert alert-info">
                                 Student registration and secure login to create a personal internship account.
                             </div>

@@ -137,7 +137,7 @@ class Service_model extends Model
     }
     public function get_applied_internship_courses($ie_id){
         $builder = $this->db->table('tbl_internship_applications ia');
-        $builder->select('ia.*,ie.stu_name,ie.email,ie.phone,ie.image,c.ic_name,mj.sub_name mjc_subject,cl.college_name');
+        $builder->select('ia.*,ie.stu_name,ie.email,ie.phone,ie.image,c.ic_name,c.c_pdf,mj.sub_name mjc_subject,cl.college_name');
         $builder->join('tbl_internship_enrollment ie', 'ia.ie_id = ie.ie_id', 'left');
         $builder->join('tbl_intern_course c', 'ia.ic_id = c.ic_id', 'left');
         $builder->join('tbl_mjcsubject mj', 'ia.mjc_id = mj.mjc_id', 'left');

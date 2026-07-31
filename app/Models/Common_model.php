@@ -75,6 +75,13 @@ class Common_model extends Model
         $result = $builder->delete();
         return $result;
     }
+    public function isExists($table, $whereArr = null){
+        $builder = $this->db->table($table);
+        if (!empty($whereArr)) {
+            $builder->where($whereArr);
+        }
+        return $builder->countAllResults() > 0;
+    }
     public function get_setting($id=''){
         $builder = $this->db->table($this->settingTbl);
         $builder->where('id',$id);

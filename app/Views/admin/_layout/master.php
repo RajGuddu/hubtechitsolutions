@@ -258,9 +258,9 @@
 
   <!-- End plugin js for this page -->
   <!-- inject:js -->
-  <!-- <script src="<?=base_url('public/assets/Admin/js/off-canvas.js') ?>"></script> -->
+  <script src="<?=base_url('public/assets/Admin/js/off-canvas.js') ?>"></script>
   <script src="<?=base_url('public/assets/Admin/js/hoverable-collapse.js') ?>"></script>
-  <!-- <script src="<?=base_url('public/assets/Admin/js/template.js') ?>"></script> -->
+  <script src="<?=base_url('public/assets/Admin/js/template.js') ?>"></script>
   <script src="<?=base_url('public/assets/Admin/js/settings.js') ?>"></script>
   <script src="<?=base_url('public/assets/Admin/js/todolist.js') ?>"></script>
   <!-- endinject -->

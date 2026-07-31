@@ -85,10 +85,10 @@
           </li>
           <?php } ?>
 
-          <?php if(is_privilege(21)){
+          <?php if(is_privilege([21,22])){
             $collapsed = 'collapsed'; $show = ''; $active = ''; $areaexpanded = 'false';
 
-            if($segment2 == 'intern-students'){
+            if(in_array($segment2, ['intern-students','intern_course'])){
               $collapsed = ''; $show = 'show'; $active = 'active'; $areaexpanded = 'true';
             }
           ?>
@@ -103,9 +103,9 @@
                 <?php if(is_privilege(21)){ ?>
                 <li class="nav-item <?=($segment2=='intern-students')?'active':''?>"> <a class="nav-link" href="<?=base_url('admin/intern-students')?>">Student List</a></li>
                 <?php } ?>
-                <?php /*if(is_privilege(2)){ ?>
-                <li class="nav-item <?=($segment2=='user_groups')?'active':''?>"> <a class="nav-link" href="<?=base_url('admin/user_groups')?>">  </a></li>
-                <?php } */?>
+                <?php if(is_privilege(22)){ ?>
+                <li class="nav-item <?=($segment2=='intern_course')?'active':''?>"> <a class="nav-link" href="<?=base_url('admin/intern_course')?>">Intern Course</a></li>
+                <?php } ?>
               </ul>
             </div>
           </li>

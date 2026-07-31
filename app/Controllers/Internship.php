@@ -5,10 +5,13 @@ use App\Libraries\Hash;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use App\Traits\RazorpayTrait;
+use App\Traits\MailTrait;
+use App\Controllers\MpdfController;
+use Mpdf\Mpdf;
 
 class Internship extends BaseController
 {
-    use RazorpayTrait;
+    use RazorpayTrait, MailTrait;
     public $data;
     public $commonmodel;
     public $adminmodel;
@@ -231,7 +234,6 @@ class Internship extends BaseController
                 }
                 
                 return redirect()->to(base_url('/internship/profile'));
-
             }
         }
         $data['profile'] = $profile;
@@ -240,7 +242,7 @@ class Internship extends BaseController
         echo view('include/footer', $data);
     }
     public function edit_profile($ie_id){
-        if($this->commonmodel->updateRecord('tbl_internship_enrollment',['profile_completed'=>0, 'status'=>0],['ie_id'=>$ie_id])){
+        if($this->commonmodel->updateRecord('tbl_internship_enrollment',['profile_completed'=>0, 'status'=>0, 'update_at'=>date('Y-m-d H:i:s')],['ie_id'=>$ie_id])){
             session()->set('profile_completed', 0);
             session()->set('status', 0);
             session()->setFlashdata(['message'=>'You can edit your profile.','type'=>'success']);
@@ -251,7 +253,6 @@ class Internship extends BaseController
     }
     public function courses(){
         $ie_id = session('ie_id');
-
         $data['records'] = $this->servicemodel->get_applied_internship_courses($ie_id);
         echo view('include/header', $data);
         echo view('internship/courses', $data);
@@ -262,18 +263,15 @@ class Internship extends BaseController
         if(!empty($internApp) && $internApp->refund_id != null){
             $refund_id = $internApp->refund_id;
             $refund = $this->refund_status($refund_id);
-
             if(isset($refund['status']) && $refund['status'] == true){
                 $data = $refund['data'];
                 $iaUpdateData = array(
                     'refund_status' => $data['status'],
                     'refund_updated' => date('Y-m-d H:i:s'),
-
                 );
                 $updated = $this->commonmodel->updateRecord('tbl_internship_applications', $iaUpdateData, ['ia_id'=>$ia_id]);
                 
                 session()->setFlashdata(['message'=>'The refund status has been updated successfully.','type'=>'success']);
-
             }else{
                 $message = $refund['message'];
                 session()->setFlashdata(['message'=>$message,'type'=>'danger']);
@@ -281,8 +279,351 @@ class Internship extends BaseController
         }
         return redirect()->to(base_url('internship/courses'));
     }
+    public function add_edit_course($ia_id = null){
+        $ia_id = ($ia_id != null)?base64_decode($ia_id):'';
+        $ie_id = session('ie_id');
+        // echo $ia_id;
+        
+        if ($this->request->getMethod() === 'post'){
+            $validation = $this->validate([
+              'uni_roll_no'=>[
+                  'rules'=>'required',
+                  'errors'=>[
+                      'required'=>'University Roll No is required'
+                  ]
+                  ],
+              'uni_reg_no'=>[
+                  'rules'=>'required',
+                  'errors'=>[
+                      'required'=>'University Reg No is required'
+                  ]
+                  ],
+              
+              'class'=>[
+                  'rules'=>'required',
+                  'errors'=>[
+                      'required'=>'Class is required'
+                  ]
+                  ],
+              'mjc_id'=>[
+                  'rules'=>'required',
+                  'errors'=>[
+                      'required'=>'MJC Subject is required'
+                  ]
+                  ],
+              'session'=>[
+                  'rules'=>'required',
+                  'errors'=>[
+                      'required'=>'Session is required'
+                  ]
+                  ],
+              'semester'=>[
+                  'rules'=>'required',
+                  'errors'=>[
+                      'required'=>'Semester is required'
+                  ]
+                  ],
+              'clg_id'=>[
+                  'rules'=>'required',
+                  'errors'=>[
+                      'required'=>'College is required'
+                  ]
+                  ],
+              'ic_id'=>[
+                  'rules'=>'required',
+                  'errors'=>[
+                      'required'=>'Internship Course is required'
+                  ]
+                  ],
+            
+              'duration'=>[
+                  'rules'=>'required',
+                  'errors'=>[
+                      'required'=>'Duration is required'
+                  ]
+                ], 
+              'terms'=>[
+                  'rules'=>'required',
+                  'errors'=>[
+                      'required'=>'Please accept Terms & Conditions.'
+                  ]
+                ], 
+            
+            ]);
+            if(!$validation){
+                $data['validation'] = $this->validator;
+                //return view('admin/users/add_user',$this->data);
+            }else{
+                if($ia_id && $ia_id == $_POST['ia_id']){
+                    $updateData = array(
+                        'uni_roll_no' => $this->request->getPost('uni_roll_no'),
+                        'uni_reg_no' => $this->request->getPost('uni_reg_no'),
+                        'class' => $this->request->getPost('class'),
+                        'mjc_id' => $this->request->getPost('mjc_id'),
+                        'session' => $this->request->getPost('session'),
+                        'semester' => $this->request->getPost('semester'),
+                        'clg_id' => $this->request->getPost('clg_id'),
+                        'ic_id' => $this->request->getPost('ic_id'),
+                        // 'duration' => $tempStudtls->duration,
+                        'terms' => $_POST['terms'] ?? 1,
+                        'update_at' => date('Y-m-d H:i:s')
+                    );
+                    $updated = $this->commonmodel->updateRecord('tbl_internship_applications', $updateData, ['ia_id'=>$ia_id, 'ie_id'=>$ie_id]);
+                    if ($updated) {
+                        session()->setFlashdata([
+                            'message' => 'Record updated successfully!',
+                            'type'    => 'success'
+                        ]);
+                    } else {
+                        session()->setFlashdata([
+                            'message' => 'Something went wrong. Please try again.',
+                            'type'    => 'danger'
+                        ]);
+                    }
+                    return redirect()->to(base_url('internship/update-course/'.base64_encode($ia_id)));
+                }else{
+                    $member = $this->commonmodel->getOneRecord('tbl_internship_enrollment',['ie_id'=>$ie_id]);
+                    $tempStudtls = json_encode($_POST);
+                    $te_id = $this->commonmodel->insertRecord('tbl_temp_enrollment', ['form_details'=>$tempStudtls, 'added_at'=>date('Y-m-d H:i:s')]);
+                    $amount = round(300);
+                    $orderId = 'TXN'.time().mt_rand(1000, 9999);
+                    $orderData = [
+                        'receipt'         => $orderId,
+                        'amount'          => (int)$amount * 100,
+                        'currency'        => 'INR',
+                        'payment_capture' => 1, // auto-capture
+                        'notes' => [
+                            'te_id' => $te_id,
+                            'amount' => $amount,
+                            'payFrom' => 'HUBTECH',
+                            ],
+                    ];
+                    $razorConfig = [
+                        'orderData' => $orderData,
+                        'customer_name' => $member->stu_name,
+                        'customer_email' => $member->email,
+                        'customer_phone' => $member->phone,
+                        'verify_url' => base_url('internship/verify_razor_payment'),
+                    ];
+                    $this->makePayment($razorConfig);
+                }
+            }
+        }
+        if($ia_id){
+            $data['record'] = $this->commonmodel->getOneRecord('tbl_internship_applications',['ia_id'=>$ia_id,'ie_id'=>$ie_id,'status'=>1]);
+        }
+        $data['mjc'] = $this->commonmodel->getAllRecordOrderByDesc('tbl_mjcsubject',['status'=>1],['sub_name','ASC']);
+        $data['colleges'] = $this->commonmodel->getAllRecordOrderByDesc('tbl_colleges',['status'=>1],['college_name','ASC']);
+        $data['internCourse'] = $this->commonmodel->getAllRecordOrderByDesc('tbl_intern_course', ['status'=>1],['ic_name','ASC']);
+        echo view('include/header', $data);
+        echo view('internship/add_edit_course', $data);
+        echo view('include/footer', $data);
+    }
+    public function verify_razor_payment(){
+        if ($this->request->getMethod() === 'post' && isset($_POST['razorpay_payment_id'])){
+            $payment = $this->verifyPayment($_POST);
+            // print_r($payment);
+            if(isset($payment['success']) && $payment['success'] == true){
+                echo view('include/header');
+                echo view('internship/payment_verify_loader', $payment);
+                echo view('include/footer');
+                return;
+            }else{
+                session()->setFlashdata(['message'=>"Payment verification failed ❌ If your amount was deducted, Please contact support with your Application ID: ".$payment['application_id'],'type'=>'danger']);
+            }
+        }
+        if($this->request->getMethod() == 'post' && isset($_POST['paymentId'])){
+            // print_r($_POST); exit;
+            $te_id = $_POST['te_id'];
+            $amount = $_POST['amount'];
+            $tempStudtls = json_decode($this->commonmodel->getOneRecord('tbl_temp_enrollment',['te_id'=>$te_id])->form_details);
+            
+            $this->commonmodel->deleteRecord('tbl_temp_enrollment',['te_id'=>$te_id]);
+
+            //insert into 'tbl_internship_applications'
+            do{
+                $randomNo = rand(1000,9999);
+                $enrollId = 'ENR' . date('Ymd') . $randomNo;
+                $is_exist = $this->commonmodel->getAllRecordCount('tbl_internship_applications',['enroll_id'=>$enrollId]);
+            }while($is_exist);
+            $internCourse = $this->commonmodel->getOneRecord('tbl_intern_course',['ic_id'=>$tempStudtls->ic_id]);
+            
+            $internAppData = array(
+                'ie_id' => session('ie_id'),
+                'enroll_id' => $enrollId,
+                'uni_roll_no' => $tempStudtls->uni_roll_no,
+                'uni_reg_no' => $tempStudtls->uni_reg_no,
+                'class' => $tempStudtls->class,
+                'mjc_id' => $tempStudtls->mjc_id,
+                'session' => $tempStudtls->session,
+                'semester' => $tempStudtls->semester,
+                'clg_id' => $tempStudtls->clg_id,
+                'ic_id' => $tempStudtls->ic_id,
+                // 'duration' => $tempStudtls->duration,
+                'terms' => $tempStudtls->terms ?? 1,
+                'attendence' => mt_rand(80, 95),
+                'status' => 1, // Payment Completed
+                'payment_status' => 'Success',
+                'razor_payment_id' => $_POST['paymentId'],
+                'razor_order_id' => $_POST['orderId'],
+                'amount' => $amount,
+                'exam_duration' => $internCourse->exam_duration,
+                'added_at' => date('Y-m-d H:i:s')
+            );
+            $ia_id = $this->commonmodel->insertRecord('tbl_internship_applications',$internAppData);
+            if($ia_id){
+                $paymentTransactionData = array(
+                    'ia_id' => $ia_id,
+                    'enroll_id' => $enrollId,
+                    'paid_amount' => $amount,
+                    'payment_mode' => 'Online Razorpay',
+                    'payment_status' => 'Success',
+                    'razor_payment_id' => $_POST['paymentId'],
+                    'added_at' => date('Y-m-d H:i:s')
+                );
+                $this->commonmodel->insertRecord('tbl_payment_transaction',$paymentTransactionData);
+            }
+            
+            $mpdfController = new MpdfController();
+            $pdfContent = $mpdfController->get_offer_letter_pdf($ia_id);
+
+            //email to user
+            $member = $this->commonmodel->getOneRecord('tbl_internship_enrollment',['ie_id'=>session('ie_id')]);
+            $mailData = array(
+                'name' => $member->stu_name ?? 'Student',
+                'heading' => 'Internship Payment Successful 🎉',
+                'content' => '
+                    <p style="color:#555;font-size:15px;">
+                        We are pleased to inform you that your internship payment has been <strong>successfully processed</strong>.
+                    </p>
+
+                    <p style="color:#555;font-size:15px;">
+                        Your internship course has been successfully added to your account. You can now start your internship and access all course materials, assignments, and other resources from your dashboard.
+                    </p>
+
+                    <p style="color:#555;font-size:15px;">
+                        <strong>Payment & Enrollment Details:</strong>
+                    </p>
+                ',
+                'details' => [
+                    'Name' => $member->stu_name ?? 'Student',
+                    'Email/Username' => $member->email ?? '',
+                    // 'Password' => '123456',
+                    'Course / Internship' => ucwords($internCourse->ic_name ?? 'Internship Program'),
+                    'Payment Status' => 'Success',
+                    'Transaction ID' => $_POST['paymentId'] ?? 'N/A',
+                    'Amount Paid' => $amount ?? 'N/A',
+                    'Payment Date' => date('d M-Y')
+                ]
+            );
+
+            $mailConfig['subject'] = 'Internship Payment Successful';
+            $mailConfig['mailto'] = $member->email ?? 'test@yopmail.com';
+            $mailConfig['attachment'] = [
+                'content' => $pdfContent,
+                'filename' => 'Internship_Offer_Letter.pdf',
+                'mime' => 'application/pdf'
+            ];
+            $this->mail_to_user($mailConfig, $mailData);
+
+            //email to admin
+            /*$mailData = array(
+                'heading' => 'Internship Payment Received',
+                'content' => 'A user has successfully completed the internship payment. 
+                                <p style="color: #555555; font-size: 15px;">
+                                    <strong>Payment Details:</strong>
+                                </p>',
+                'details' => [
+                    'Name' => $tempStudtls->stu_name ?? 'Student',
+                    'Email' => $tempStudtls->email ?? '',
+                    'Course / Internship' => ucwords($internCourse->ic_name ?? 'Internship Program'),
+                    'Amount Paid' => $amount ?? 'N/A',
+                    'Transaction ID' => $_POST['paymentId'] ?? 'N/A',
+                    'Payment Date' => date('d M-Y')
+                ]
+            );
+
+            $mailConfig['subject'] = 'New Internship Payment Received';
+            $this->mail_to_admin($mailConfig, $mailData);*/
+            
+            return redirect()->to(
+                base_url('internship/payment-success') . '?' . http_build_query([
+                    'application_id' => $enrollId,
+                    'stu_name' => $member->stu_name,
+                    'intern_course' => ucwords($internCourse->ic_name ?? 'Internship Program'),
+                ])
+            );
+
+            exit;
+        }else{
+            session()->setFlashdata(['message'=>'Unable to complete your internship registration. Payment was unsuccessful or an error occurred. Please try again.','type'=>'danger']);
+        }
+        
+        return redirect()->to(base_url('internship/courses'));
+    }
+    public function payment_success(){
+        $data = [
+            'application_id' => $this->request->getGet('application_id'),
+            'stu_name'       => $this->request->getGet('stu_name'),
+            'intern_course'  => $this->request->getGet('intern_course'),
+        ];
+
+        echo view('include/header', $data);
+        echo view('internship/payment_success', $data);
+        echo view('include/footer', $data);
+    }
+    public function change_password(){
+        $data = [];
+        $ie_id = session('ie_id');
+        if ($this->request->getMethod() === 'post') {
+            $rules = [
+                'password' => [
+                    'rules' => 'required|min_length[6]|regex_match[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/]',
+                    'errors' => [
+                        'required'     => 'Password is required.',
+                        'min_length'   => 'Password must be at least 6 characters long.',
+                        'regex_match'  => 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.'
+                    ]
+                ],
+                'cpassword' => [
+                    'rules' => 'required|matches[password]',
+                    'errors' => [
+                        'required' => 'Confirm Password is required.',
+                        'matches'  => 'Confirm Password does not match the Password.'
+                    ]
+                ]
+            ];
+            if (!$this->validate($rules)) {
+                $data['validation'] = $this->validator;
+            } else {
+                $post = ['password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+                        'update_at'=>date('Y-m-d H:i:s')];
+                $updated = $this->commonmodel->updateRecord('tbl_internship_enrollment',$post,['ie_id' => $ie_id]);
+                if ($updated) {
+                    session()->setFlashdata([
+                        'message' => 'Password has been changed successfully!',
+                        'type'    => 'success'
+                    ]);
+                } else {
+                    session()->setFlashdata([
+                        'message' => 'Something went wrong. Please try again.',
+                        'type'    => 'danger'
+                    ]);
+                }
+                return redirect()->to(base_url('internship/change-password'));
+            }
+        }
+        echo view('include/header', $data);
+        echo view('internship/change_password', $data);
+        echo view('include/footer', $data);
+    }
     public function logout(){
         session()->destroy();
         return redirect()->to(base_url('internship/login'))->with('alert_error','You have successfully logged out!');
     }
+    // public function testverify(){
+    //     echo view('include/header');
+    //     echo view('internship/payment_verify_loader');
+    //     echo view('include/footer');
+    // }
 }

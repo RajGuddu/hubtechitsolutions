@@ -61,6 +61,24 @@ class MpdfController extends BaseController
         return $mpdf->Output('', 'S'); // PDF string return
         // $mpdf->Output('Offer_letter.pdf', 'I'); exit;
     }
+    /**********************For modal******************* */
+    public function view_pdf($file){
+        // echo 'Hi'. $file; exit;
+        $path = './' . PDF_PATH . $file;
+
+        if ($file == NULL || !file_exists($path)) {
+            return '
+            <div style="padding:50px;text-align:center;font-family:Arial;">
+                <h3>📄 File not uploaded yet.</h3>
+                <p>Please contact the administrator.</p>
+            </div>';
+        }
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/pdf')
+            ->setHeader('Content-Disposition', 'inline; filename="' . basename($path) . '"')
+            ->setBody(file_get_contents($path));
+    }
 
     /***********Testing*********** */
     public function _get_offer_letter_pdf($ie_id){

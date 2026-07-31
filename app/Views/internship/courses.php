@@ -10,15 +10,18 @@
                         <i class="bx bx-user-circle me-2"></i>
                         Internship Courses
                     </h4>
-                    <a href="javascript:void(0)" class="btn btn-primary btn-lg text-white px-4"
-                        onclick="return confirm('Under development')">Add Course</a>
+                    <a href="<?=base_url('internship/add-course')?>" class="btn btn-primary btn-lg text-white px-4">Add Course</a>
                 </div>
                 <?php if(session()->getFlashdata('message') !== NULL){
                     echo alertBS(session()->getFlashdata('message'),session()->getFlashdata('type'));
                 } ?>
                 <div class="card-body">
+                    <div class="alert alert-danger mb-3">
+                        <marquee behavior="scroll" direction="left" scrollamount="5">
+                            🔔 महत्वपूर्ण सूचना: छात्र अब अपने डैशबोर्ड से पासवर्ड बदल सकते हैं, स्टडी मैटेरियल देख और पढ़ सकते हैं, नए इंटर्नशिप कोर्स जोड़ (Add Course) सकते हैं तथा <strong>ऑनलाइन परीक्षा (Exam) शुरू/पूर्ण होने से पहले तक</strong> अपने कोर्स की जानकारी संपादित (Edit) कर सकते हैं। परीक्षा पूर्ण होने के बाद कोर्स में किसी प्रकार का संशोधन (Edit) संभव नहीं होगा।
+                        </marquee>
+                    </div>
                     <div class="row g-4">
-
                         <!-- Card-->
                         <?php if(!empty($records)){
                         foreach($records as $list){ 
@@ -44,7 +47,6 @@
                         ?>
                         <div class="col-md-6">
                             <div class="card h-100 shadow-lg" style="border:1px solid #dee2e6; border-radius:12px;">
-
                                 <div class="card-header bg-white border-bottom">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h5 class="mb-0 fw-semibold"><?=ucwords(strtolower($list->ic_name)) ?></h5>
@@ -56,15 +58,15 @@
                                         <?= date('d M Y',strtotime($list->added_at)) ?>
                                     </small>
                                 </div>
-
                                 <div class="card-body">
-
                                     <p class="text-muted mb-3">
-                                        This internship course provides practical learning and hands-on experience to help participants develop industry-relevant skills. Complete the course and assessment successfully to earn your internship certificate.
+                                        This internship course provides practical learning and hands-on experience to
+                                        help participants develop industry-relevant skills. Complete the course and
+                                        assessment successfully to earn your internship certificate.
                                     </p>
                                     <div class="d-flex align-items-center">
                                         <div>
-                                        <?= get_intern_program_status($list->status) ?>
+                                            <?= get_intern_program_status($list->status) ?>
                                         </div>
                                         <?php if($list->status == 5){ ?>
                                         <div class="ms-auto">
@@ -73,140 +75,140 @@
                                         <?php } ?>
                                     </div>
                                     <?php if($list->status == 1){ ?>
-                                        <p class="text-danger mt-0 mb-1"><strong>Note:</strong> You have successfully applied for this course. Complete your studies and pass the examination to download your certificate.</p>
+                                    <p class="text-danger mt-0 mb-1"><strong>Note:</strong> You have successfully
+                                        applied for this course. Complete your studies and pass the examination to
+                                        download your certificate.</p>
                                     <?php } ?>
                                     <?php if($list->status == 5){ ?>
-                                        <p class="text-danger mt-0 mb-1"><strong>Note:</strong> Refund initiated successfully. The amount will be credited to your original payment method within 5–7 business days. Click "Refresh Status" to fetch the latest refund status.</p>
-                                        <p class="text-danger mt-0 mb-1"><strong>Refund Amount:</strong> ₹ <?=$list->refund_amount?></p>
-                                        <p class="text-danger mt-0 mb-1"><strong>Refund Reason:</strong> <?=$list->refund_reason?></p>
+                                    <p class="text-danger mt-0 mb-1"><strong>Note:</strong> Refund initiated
+                                        successfully. The amount will be credited to your original payment method within
+                                        5–7 business days. Click "Refresh Status" to fetch the latest refund status.</p>
+                                    <p class="text-danger mt-0 mb-1"><strong>Refund Amount:</strong> ₹
+                                        <?=$list->refund_amount?>
+                                    </p>
+                                    <p class="text-danger mt-0 mb-1"><strong>Refund Reason:</strong>
+                                        <?=$list->refund_reason?>
+                                    </p>
                                     <?php } ?>
-
                                     <div class="d-flex gap-2 mt-3 flex-wrap">
                                         <?php if($list->status == 5){ ?>
-                                        <a href="<?=base_url('internship/update_refund_status/'.$list->ia_id)?>" class="btn btn-danger btn-lg" >
+                                        <a href="<?=base_url('internship/update_refund_status/'.$list->ia_id)?>"
+                                            class="btn btn-danger btn-lg">
                                             <i class="ri-refresh-line"></i> Refresh Status
                                         </a>
-                                        <?php }else{ ?>
-                                        <a href="javascript:void(0)" class="btn btn-primary btn-lg"
-                                            onclick="return confirm('Under development')">
+                                        <?php }else{ 
+                                        $c_pdf = $list->c_pdf != '' ? $list->c_pdf : 'NULL' ?>
+                                        <a href="javascript:void(0)" class="btn btn-primary btn-lg viewPdfBtn"
+                                            data-pdf="<?= base_url('internship/view_pdf/' . $c_pdf) ?>" data-title="Study PDF">
                                             <i class="ri-book-open-line"></i> Study
                                         </a>
                                         <?php if($list->status == 1){ ?>
-                                        
-                                        <a href="#" class="btn btn-warning btn-lg" onclick="return confirm('Under development')">
+                                        <a href="<?=base_url('internship/update-course/'.base64_encode($list->ia_id))?>" class="btn btn-warning btn-lg" >
                                             <i class="ri-edit-line"></i> Edit Course
                                         </a>
-                                        <a href="<?=base_url('download-intern-letter/'.$list->ia_id)?>" class="btn btn-success btn-lg" onclick="return confirm('Are u sure to download?')">
+                                        <a href="<?=base_url('download-intern-letter/'.$list->ia_id)?>"
+                                            class="btn btn-success btn-lg"
+                                            onclick="return confirm('Are u sure to download?')">
                                             <i class="ri-download-2-line"></i> Download Letter
                                         </a>
-                                        
                                         <a href="javascript:void(0)" class="btn btn-danger btn-lg"
                                             onclick="return confirm('Under development')">
                                             <i class="ri-edit-2-line"></i> Start Exam
                                         </a>
-                                        
                                         <?php }else{ ?>
                                         <a href="#" class="btn btn-success btn-lg">
                                             <i class="bi bi-cash"></i> Pay Course Fee
                                         </a>
-
                                         <a href="#" class="btn btn-danger btn-lg">
                                             <i class="bi bi-trash-fill"></i> Delete
                                         </a>
                                         <?php } }?>
                                     </div>
-
                                 </div>
-
                                 <div class="card-footer bg-white border-top-0 pt-2">
                                     <a href="javascript:void(0)" class="btn btn-dark btn-lg w-100 student-details"
-                                        data-bs-toggle="modal" data-bs-target="#studentDetailsModal" data-student="<?= esc($studentData, 'attr') ?>">
+                                        data-bs-toggle="modal" data-bs-target="#studentDetailsModal"
+                                        data-student="<?= esc($studentData, 'attr') ?>">
                                         View Details
                                     </a>
                                 </div>
-
                             </div>
                         </div>
                         <?php } }else{
                             echo '<p class="text-danger text-center">You have not apply in any courses!</p>';
                         } ?>
                     </div>
-
                 </div>
             </div>
         </div>
-
     </div>
 </div>
-
+<!-- PDF View Modal -->
+<div class="modal fade" id="pdfModal" tabindex="-1">
+    <div class="modal-dialog modal-xl mt-0">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-title">View PDF</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0">
+                <iframe id="pdfFrame" src="" style="width:100%; height:80vh;"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- Student Details Modal -->
 <div class="modal fade" id="studentDetailsModal" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow">
-
             <div class="modal-header bg-linear">
                 <h5 class="modal-title text-light">
                     <i class="ri-user-3-line me-2 text-primary"></i>
                     Student Course Details
                 </h5>
-
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-
             <div class="modal-body">
-
                 <div class="row">
-
                     <!-- Left Side -->
                     <div class="col-md-8">
-
                         <table class="table table-borderless mb-0">
-
                             <tr>
                                 <th width="35%">Course</th>
                                 <td id="m_course"></td>
                             </tr>
-
                             <tr>
                                 <th>Email</th>
                                 <td id="m_email"></td>
                             </tr>
-
                             <tr>
                                 <th>Mobile</th>
                                 <td id="m_mobile"></td>
                             </tr>
-
                             <tr>
                                 <th>University Roll No</th>
                                 <td id="m_university_roll_no"></td>
                             </tr>
-
                             <tr>
                                 <th>University Reg No</th>
                                 <td id="m_university_reg_no"></td>
                             </tr>
-
                             <tr>
                                 <th>Class</th>
                                 <td id="m_class"></td>
                             </tr>
-
                             <tr>
                                 <th>MJC</th>
                                 <td id="m_mjc"></td>
                             </tr>
-
                             <tr>
                                 <th>Session</th>
                                 <td id="m_session"></td>
                             </tr>
-
                             <tr>
                                 <th>Semester</th>
                                 <td id="m_semester"></td>
                             </tr>
-
                             <tr>
                                 <th>College/Institute</th>
                                 <td id="m_college"></td>
@@ -215,52 +217,48 @@
                                 <th>Attendence</th>
                                 <td id="m_atn"></td>
                             </tr>
-
                             <tr>
                                 <th>Status</th>
                                 <td id="m_status"></td>
                             </tr>
-
                         </table>
-
                     </div>
-
                     <!-- Right Side -->
                     <div class="col-md-4 text-center border-start">
-
-                        <img src="" class="img-fluid rounded shadow-sm border p-2"
-                            style="max-height:200px;" id="m_image">
-
+                        <img src="" class="img-fluid rounded shadow-sm border p-2" style="max-height:200px;"
+                            id="m_image">
                         <h6 class="mt-3 mb-1 fw-bold" id="m_student_name"></h6>
-
                         <small class="text-muted">
                             Application ID : <span id="enroll_id"></span>
                         </small>
-
                     </div>
-
                 </div>
-
             </div>
-
             <div class="modal-footer">
-
                 <button class="btn btn-secondary btn-lg" data-bs-dismiss="modal">
                     <i class="ri-close-line me-1"></i>
                     Close
                 </button>
-
             </div>
-
         </div>
     </div>
 </div>
-
 <script>
+    $(document).ready(function () {
+        $('.viewPdfBtn').on('click', function () {
+            var pdfUrl = $(this).data('pdf');
+            var title = $(this).data('title');
+            //alert(pdfUrl) ; return 0;
+            $('#modal-title').text(title);
+            $('#pdfFrame').attr('src', pdfUrl + '?t=' + new Date().getTime());
+            $('#pdfModal').modal('show');
+        });
+        $('#pdfModal').on('hidden.bs.modal', function () {
+            $('#pdfFrame').attr('src', '');
+        });
+    });
     $(document).on('click', '.student-details', function () {
-
         let data = JSON.parse(atob($(this).data('student')));
-
         $('#m_course').text(data.internship_course);
         $('#m_student_name').text(data.student_name);
         $('#m_email').text(data.email);
@@ -273,11 +271,9 @@
         $('#m_semester').text(data.semester);
         $('#m_college').text(data.college);
         // $('#m_internship_course').text(data.internship_course);
-
         $('#m_status').html(data.status);
         $('#m_image').attr('src', data.image);
         $('#enroll_id').text(data.enroll_id);
         $('#m_atn').text(data.attendence + '%');
-
     });
 </script>
