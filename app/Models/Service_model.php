@@ -150,6 +150,39 @@ class Service_model extends Model
         
         return $result;
     }
-    
+    public function get_question_bank($ie_id = null, $count=null,$limit=null, $offset=null){
+        $result = [];
+        $builder = $this->db->table('tbl_question_bank qb');
+        $builder->select('qb.*,ic.ic_name');
+        $builder->join('tbl_intern_course ic', 'qb.ic_id = ic.ic_id', 'left');
+        // $builder->join('tbl_colleges cl', 'e.clg_id = cl.clg_id', 'left');
+        // $builder->join('tbl_intern_course c', 'e.ic_id = c.ic_id', 'left');
+        if($ie_id != null){
+            $builder->where('ie_id', $ie_id);
+        }
+        $search = session('s_ic_id');
+        if(!empty($search)){
+            $builder->groupStart()
+                ->where('qb.ic_id', $search, 'after')
+                // ->orLike('email', $search, 'after')
+                // ->orLike('phone', $search, 'after')
+                // ->orLike('enroll_id', $search, 'after')
+                ->groupEnd();
+        }
+
+        $builder->orderBy('q_id','DESC');
+        $builder->limit($limit, $offset);
+        $query = $builder->get();
+        if($ie_id != null){
+            $result = $query->getRow();
+        }elseif($count != null){
+            $result = $query->getNumRows();
+        }else{
+            $result = $query->getResult();
+        }
+        
+        // echo '<pre>';print_r($result); exit;
+        return $result;
+    }
     
 }

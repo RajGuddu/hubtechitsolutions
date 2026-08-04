@@ -96,7 +96,7 @@
                 $out['limit'] = $rec_limit;
                 $out['offset'] = 0;
                 $out['pagination_html'] = '';
-                $out['caption'] = '1 to '.$tot_record.' of '.$tot_record;
+                $out['caption'] = ($tot_record<1)?'0':'1'.' to '.$tot_record.' of '.$tot_record;
                 
             }else{
                 $total_page = ceil($tot_record / $rec_limit);

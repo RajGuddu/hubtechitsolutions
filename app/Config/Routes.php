@@ -176,6 +176,12 @@ $routes->group('', ['filter' => 'AuthCheck'], function($routes){
     $routes->get('admin/view_pdf/(:any)', 'MpdfController::view_pdf/$1');
     $routes->get('admin/delete_intern_course/(:num)', 'Admin\InternCourse::delete_intern_course/$1');
 
+    /**************************Question Bank************************************** */
+    $routes->match(['get','post'], 'admin/question_bank', 'Admin\QuestionBank::index');
+    $routes->match(['get','post'], 'admin/question_bank/(:num)', 'Admin\QuestionBank::index/$1');
+    $routes->match(['get','post'], 'admin/question_reset_search', 'Admin\QuestionBank::reset_search');
+    $routes->match(['get','post'], 'admin/delete_question/(:num)', 'Admin\QuestionBank::delete_question/$1');
+
     /**************************Certificate List*********************************** */
     $routes->get('/admin/certificate_list', 'Admin::certificate_list');
     $routes->match(['get','post'],'/admin/certificate_cu', 'Admin::certificate_cu');
