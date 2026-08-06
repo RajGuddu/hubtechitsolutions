@@ -261,6 +261,64 @@ class Test extends BaseController
         $refund = $this->refund_status($refund_id);
         echo '<pre>';print_r($refund);echo $refund['data']['id'];
     }
+    public function shuffle_question_options(){
+        $db = \Config\Database::connect();
+
+        $builder = $db->table('tbl_question_bank');
+
+        $questions = $builder->get()->getResultArray();
+
+        $count = 0;
+
+        foreach ($questions as $row) {
+
+            $options = [
+                'A' => $row['opt_a'],
+                'B' => $row['opt_b'],
+                'C' => $row['opt_c'],
+                'D' => $row['opt_d']
+            ];
+
+            // Current correct answer value
+            $correctAnswer = $options[$row['correct_opt']];
+
+            // Shuffle options
+            $values = array_values($options);
+            shuffle($values);
+
+            $newOptions = [
+                'A' => $values[0],
+                'B' => $values[1],
+                'C' => $values[2],
+                'D' => $values[3]
+            ];
+
+            // Find new correct option
+            $newCorrect = '';
+
+            foreach ($newOptions as $key => $value) {
+                if ($value == $correctAnswer) {
+                    $newCorrect = $key;
+                    break;
+                }
+            }
+
+            // Update data
+            $builder
+                ->where('q_id', $row['q_id'])
+                ->update([
+                    'opt_a' => $newOptions['A'],
+                    'opt_b' => $newOptions['B'],
+                    'opt_c' => $newOptions['C'],
+                    'opt_d' => $newOptions['D'],
+                    'correct_opt' => $newCorrect
+                ]);
+
+            $count++;
+        }
+
+        echo "Total Updated Questions : ".$count;
+    }
     
 
 }

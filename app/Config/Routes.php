@@ -62,6 +62,7 @@ $routes->get('update', 'Test::update');
 // $routes->get('add', 'Test::add');
 // $routes->get('refund', 'Test::refund');
 // $routes->get('update_refund', 'Test::update_refund');
+// $routes->get('shuffle-question-options', 'Test::shuffle_question_options');
 
 //internship Student
 $routes->group('internship', ['filter' => 'InternAuthCheck'], function($routes){
