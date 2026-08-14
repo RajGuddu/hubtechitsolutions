@@ -21,16 +21,28 @@
                     <form method="post" action="<?=base_url('admin/intern-students')?>">
                         <?=csrf_field()?>
                         <div class="row">
-                            <div class="col-md-5">
+                            <div class="col-md-3">
                                 <input type="text" name="search" class="form-control"
                                     placeholder="Search by Name, Email & Phone"
                                     value="<?=session('intern_student_search')?>" >
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <select name="status" id="status" class="form-select" style="height:49px;">
-                                    <option value="">Search by Status</option>
+                                    <option value="">Student Status</option>
                                     <option value="N" <?=set_select('status','N',(session('intern_student_status') == 'N')?true:false)?>>Pending</option>
                                     <option value="1" <?=set_select('status',1,(session('intern_student_status') == 1)?true:false)?>>Approved</option>
+                                </select>
+                                
+                            </div>
+                            <div class="col-md-3">
+                                <select name="cstatus" id="cstatus" class="form-select" style="height:49px;">
+                                    <option value="">Course Status</option>
+                                    <option value="1" <?=set_select('cstatus',1,(session('intern_course_status') == 1)?true:false)?>>Payment Completed</option>
+                                    <option value="2" <?=set_select('cstatus',2,(session('intern_course_status') == 2)?true:false)?>>Exam In Process</option>
+                                    <option value="3" <?=set_select('cstatus',3,(session('intern_course_status') == 3)?true:false)?>>Exam Passed</option>
+                                    <option value="4" <?=set_select('cstatus',4,(session('intern_course_status') == 4)?true:false)?>>Exam Failed</option>
+                                    <option value="5" <?=set_select('cstatus',5,(session('intern_course_status') == 5)?true:false)?>>Payment Refund</option>
+                                    
                                 </select>
                                 
                             </div>
@@ -38,7 +50,7 @@
                                 <button type="submit" class="btn btn-primary w-100">
                                     Search
                                 </button>
-                                <?php if(session('intern_student_search') || session('intern_student_status')){ ?>
+                                <?php if(session('intern_student_search') || session('intern_student_status') || session('intern_course_status')){ ?>
                                 <a href="<?=base_url('admin/intern-students/reset-search')?>" class="btn btn-secondary">
                                     Reset
                                 </a>

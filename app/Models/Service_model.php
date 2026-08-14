@@ -76,20 +76,20 @@ class Service_model extends Model
     }
     public function get_internship_students($ie_id = null, $count=null,$limit=null, $offset=null){
         $result = [];
-        $builder = $this->db->table('tbl_internship_enrollment');
-        $builder->select('*');
-        // $builder->join('tbl_mjcsubject mj', 'e.mjc_id = mj.mjc_id', 'left');
+        $builder = $this->db->table('tbl_internship_enrollment ie');
+        $builder->select('ie.*');
+        $builder->join('tbl_internship_applications ia', 'ie.ie_id = ia.ie_id', 'left');
         // $builder->join('tbl_colleges cl', 'e.clg_id = cl.clg_id', 'left');
         // $builder->join('tbl_intern_course c', 'e.ic_id = c.ic_id', 'left');
         if($ie_id != null){
-            $builder->where('ie_id', $ie_id);
+            $builder->where('ie.ie_id', $ie_id);
         }
         $search = session('intern_student_search');
         if(!empty($search)){
             $builder->groupStart()
-                ->like('stu_name', $search, 'after')
-                ->orLike('email', $search, 'after')
-                ->orLike('phone', $search, 'after')
+                ->like('ie.stu_name', $search, 'after')
+                ->orLike('ie.email', $search, 'after')
+                ->orLike('ie.phone', $search, 'after')
                 // ->orLike('enroll_id', $search, 'after')
                 ->groupEnd();
         }
@@ -97,11 +97,18 @@ class Service_model extends Model
         if(!empty($status)){
             $status = $status == 'N' ? 0 : $status;
             $builder->groupStart()
-                ->where('status', $status)
+                ->where('ie.status', $status)
                 ->groupEnd();
         }
-
-        $builder->orderBy('ie_id','DESC');
+        $c_status = session('intern_course_status');
+        if(!empty($c_status)){
+            $builder->groupStart()
+                ->where('ia.status', $c_status)
+                ->groupEnd();
+        }
+        
+        $builder->groupBy('ie.ie_id');
+        $builder->orderBy('ie.ie_id','DESC');
         $builder->limit($limit, $offset);
         $query = $builder->get();
         if($ie_id != null){
