@@ -95,6 +95,13 @@ $routes->group('internship', ['filter' => 'InternAuthCheck'], function($routes){
     });
     $routes->get('logout', 'Internship::logout');
 });
+
+// for Vocational Course
+$routes->group('vocational', ['filter' => 'InternAuthCheck'], function($routes){
+    $routes->group('', ['filter' => 'internProfileComplete'], function($routes){
+        $routes->get('programs', 'VocationalProgram::index');
+    });
+});
 $routes->group('internship', ['filter' => 'InternAlreadyLoggedIn'], function($routes){
     //Add all routes need protected after logged in
     $routes->get('login', 'Internship::login');

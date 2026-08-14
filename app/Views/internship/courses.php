@@ -23,6 +23,13 @@
                         </marquee>
                     </div>
                     <?php } ?>
+                    <?php if($setting->notice2 != ''){ ?>
+                    <div class="alert alert-success mb-3">
+                        <marquee behavior="scroll" direction="left" scrollamount="5">
+                            <?=$setting->notice2?>
+                        </marquee>
+                    </div>
+                    <?php } ?>
                     <div class="row g-4">
                         <!-- Card-->
                         <?php if(!empty($records)){

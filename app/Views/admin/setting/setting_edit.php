@@ -80,17 +80,18 @@
                             <h4 class="py-2 text-danger">Internship Student Notification:</h4>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="intern_notice">Message</label>
+                                    <label for="intern_notice">Marquee Line-1</label>
                                     <textarea class="form-control" id="intern_notice" name="intern_notice" rows="5"><?=$settings->intern_notice ?></textarea>
                                 </div>
                             </div>
-                            
-                            <?php /*<div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="enroll_start_no">Enrolment Starting No</label>
-                                    <input class="form-control" type="text" id="enroll_start_no" name="enroll_start_no" value="<?=$settings->enroll_start_no ?>" >
+                                    <label for="notice2">Marquee Line-2</label>
+                                    <textarea class="form-control" id="notice2" name="notice2" rows="5"><?=$settings->notice2 ?></textarea>
                                 </div>
-                            </div>*/?>
+                            </div>
+                            
+                            
                         </div>
                         
                         <?php if(is_privilege(6,2)){ ?>

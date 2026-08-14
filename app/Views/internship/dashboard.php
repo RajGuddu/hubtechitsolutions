@@ -148,6 +148,13 @@
                                 </marquee>
                             </div>
                             <?php } ?>
+                            <?php if($setting->notice2 != NULL){ ?>
+                            <div class="alert alert-success mb-3">
+                                <marquee behavior="scroll" direction="left" scrollamount="5">
+                                    <?=$setting->notice2?>
+                                </marquee>
+                            </div>
+                            <?php } ?>
                             <div class="alert alert-info">
                                 Student registration and secure login to create a personal internship account.
                             </div>
