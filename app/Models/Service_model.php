@@ -93,6 +93,13 @@ class Service_model extends Model
                 // ->orLike('enroll_id', $search, 'after')
                 ->groupEnd();
         }
+        $status = session('intern_student_status');
+        if(!empty($status)){
+            $status = $status == 'N' ? 0 : $status;
+            $builder->groupStart()
+                ->where('status', $status)
+                ->groupEnd();
+        }
 
         $builder->orderBy('ie_id','DESC');
         $builder->limit($limit, $offset);

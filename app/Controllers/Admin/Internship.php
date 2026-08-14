@@ -24,9 +24,12 @@ class Internship extends BaseController
     public function index($ie_id=null)
     {
         if($this->request->getMethod() == 'post'){
-           session()->set(
+            session()->set(
                 'intern_student_search',
                 trim($this->request->getPost('search'))
+            ); 
+            session()->set(
+                'intern_student_status', $this->request->getPost('status')
             ); 
         }
         // $this->servicemodel->get_internship_students();exit;
@@ -58,6 +61,7 @@ class Internship extends BaseController
     }
     public function reset_search(){
         session()->remove('intern_student_search');
+        session()->remove('intern_student_status');
 
         return redirect()->to(base_url('admin/intern-students'));
     }
