@@ -16,11 +16,13 @@
                     echo alertBS(session()->getFlashdata('message'),session()->getFlashdata('type'));
                 } ?>
                 <div class="card-body">
+                    <?php if($setting->intern_notice != ''){ ?>
                     <div class="alert alert-danger mb-3">
                         <marquee behavior="scroll" direction="left" scrollamount="5">
-                            🔔 महत्वपूर्ण सूचना: छात्र अब अपने डैशबोर्ड से पासवर्ड बदल सकते हैं, स्टडी मैटेरियल देख और पढ़ सकते हैं, नए इंटर्नशिप कोर्स जोड़ (Add Course) सकते हैं तथा <strong>ऑनलाइन परीक्षा (Exam) शुरू/पूर्ण होने से पहले तक</strong> अपने कोर्स की जानकारी संपादित (Edit) कर सकते हैं। परीक्षा पूर्ण होने के बाद कोर्स में किसी प्रकार का संशोधन (Edit) संभव नहीं होगा।
+                            <?=$setting->intern_notice?>
                         </marquee>
                     </div>
+                    <?php } ?>
                     <div class="row g-4">
                         <!-- Card-->
                         <?php if(!empty($records)){
@@ -102,25 +104,36 @@
                                             data-pdf="<?= base_url('internship/view_pdf/' . $c_pdf) ?>" data-title="Study PDF">
                                             <i class="ri-book-open-line"></i> Study
                                         </a>
-                                        <?php if($list->status == 1){ ?>
-                                        <a href="<?=base_url('internship/update-course/'.base64_encode($list->ia_id))?>" class="btn btn-warning btn-lg" >
-                                            <i class="ri-edit-line"></i> Edit Course
-                                        </a>
                                         <a href="<?=base_url('download-intern-letter/'.$list->ia_id)?>"
                                             class="btn btn-success btn-lg"
                                             onclick="return confirm('Are u sure to download?')">
                                             <i class="ri-download-2-line"></i> Download Letter
                                         </a>
-                                        <a href="javascript:void(0)" class="btn btn-danger btn-lg"
-                                            onclick="return confirm('Under development')">
-                                            <i class="ri-edit-2-line"></i> Start Exam
+                                        <?php if($list->status == 1){ ?>
+                                        <a href="<?=base_url('internship/update-course/'.base64_encode($list->ia_id))?>" class="btn btn-warning btn-lg" >
+                                            <i class="ri-edit-line"></i> Edit Course
+                                        </a>
+                                        <?php } if($list->status <= 2 || $list->status == 4){ ?>
+                                        <a href="<?=base_url('internship/exam/'.base64_encode($list->ia_id))?>" class="btn btn-danger btn-lg">
+                                            <i class="ri-edit-2-line"></i> <?=($list->status == 4)?'Retake':'Start'?> Exam
                                         </a>
                                         <?php }else{ ?>
-                                        <a href="#" class="btn btn-success btn-lg">
-                                            <i class="bi bi-cash"></i> Pay Course Fee
+                                        <a href="javascript:void(0)" class="btn btn-success btn-lg viewPdfBtn" 
+                                            data-pdf="<?= base_url('internship/atten_cert_pdf/' . base64_encode($list->ia_id)) ?>" data-title="Attendance Certificate PDF">
+                                            <i class="ri-download-2-line"></i> Attendance Cert
                                         </a>
-                                        <a href="#" class="btn btn-danger btn-lg">
-                                            <i class="bi bi-trash-fill"></i> Delete
+                                        <a href="javascript:void(0)" class="btn btn-success btn-lg viewPdfBtn"
+                                            data-pdf="<?= base_url('internship/cover_page_pdf/' . base64_encode($list->ia_id)) ?>" data-title="Cover Page PDF">
+                                            <i class="ri-download-2-line"></i></i> Cover Page
+                                        </a>
+                                        <?php $project_part2 = $list->project_part2 != '' ? $list->project_part2 : 'NULL' ?>
+                                        <a href="javascript:void(0)" class="btn btn-success btn-lg viewPdfBtn"
+                                            data-pdf="<?= base_url('internship/view_pdf/' . $project_part2) ?>" data-title="Study PDF">
+                                            <i class="ri-download-2-line"></i></i> Project
+                                        </a>
+                                        <a href="javascript:void(0)" class="btn btn-success btn-lg viewPdfBtn"
+                                            data-pdf="<?= base_url('internship/intern_cert_pdf/' . base64_encode($list->ia_id)) ?>" data-title="Internship Certificate PDF">
+                                            <i class="ri-download-2-line"></i></i> Certificate
                                         </a>
                                         <?php } }?>
                                     </div>

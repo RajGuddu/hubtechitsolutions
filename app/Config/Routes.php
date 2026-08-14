@@ -55,9 +55,17 @@ $routes->get('intern-pay-success', 'Home::internPaySuccess');
 $routes->match(['get','post'],'intern-certificate-verification', 'Home::intern_certificate_verification');
 $routes->match(['get','post'],'download-intern-letter/(:num)', 'Home::download_intern_letter/$1');
 
+// examination route for ajax
+$routes->post('intern-update-examinee-duration', 'Internship::intern_update_examinee_duration');
+$routes->post('intern-exam-save-result', 'Internship::intern_exam_save_result');
+// end examination route for ajax
+
 //test route
 $routes->get('testmail', 'Home::testmail');
-$routes->get('testpdf', 'Home::testpdf');
+// $routes->get('testpdf', 'Home::testpdf');
+$routes->get('c_p_pdf', 'MpdfController::c_p_pdf'); //cover page
+$routes->get('a_c_pdf', 'MpdfController::a_c_pdf'); // attendance cert
+$routes->get('i_c_pdf', 'MpdfController::i_c_pdf'); // intern cert
 $routes->get('update', 'Test::update');
 // $routes->get('add', 'Test::add');
 // $routes->get('refund', 'Test::refund');
@@ -78,6 +86,12 @@ $routes->group('internship', ['filter' => 'InternAuthCheck'], function($routes){
         $routes->match(['get','post'], 'update-course/(:any)', 'Internship::add_edit_course/$1');
         $routes->match(['get','post'], 'verify_razor_payment', 'Internship::verify_razor_payment');
         $routes->get('payment-success','Internship::payment_success');
+        $routes->match(['get','post'], 'exam/(:any)', 'Internship::exam/$1');
+        $routes->get('exam-review','Internship::exam_review');
+        //pdf url
+        $routes->get('cover_page_pdf/(:any)','MpdfController::cover_page_pdf/$1');
+        $routes->get('atten_cert_pdf/(:any)','MpdfController::atten_cert_pdf/$1');
+        $routes->get('intern_cert_pdf/(:any)','MpdfController::intern_cert_pdf/$1');
     });
     $routes->get('logout', 'Internship::logout');
 });
@@ -170,6 +184,10 @@ $routes->group('', ['filter' => 'AuthCheck'], function($routes){
     $routes->get('admin/get_offer_letter_pdf/(:num)', 'MpdfController::get_offer_letter_pdf_for_modal/$1');
     $routes->match(['get','post'],'/admin/refund_amount', 'Admin\Internship::refund_amount');
     $routes->get('admin/update_refund_status/(:num)', 'Admin\Internship::update_refund_status/$1');
+    $routes->get('admin/cover_page_pdf/(:any)', 'MpdfController::cover_page_pdf/$1');
+    $routes->get('admin/atten_cert_pdf/(:any)','MpdfController::atten_cert_pdf/$1');
+    $routes->get('admin/intern_cert_pdf/(:any)','MpdfController::intern_cert_pdf/$1');
+    $routes->get('admin/view_pdf/(:any)', 'MpdfController::view_pdf/$1');
 
     /**************************Intern Course************************************** */
     $routes->match(['get','post'], 'admin/intern_course', 'Admin\InternCourse::index');

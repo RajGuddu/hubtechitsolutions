@@ -62,12 +62,14 @@ class Service_model extends Model
     }
     public function get_searched_internship_certificate($cert_no){
         $builder = $this->db->table('tbl_internship_applications ia');
-        $builder->select('ia.*,ie.stu_name,ie.email,ie.phone,c.ic_name');
+        $builder->select('ia.*,ie.stu_name,ie.email,ie.phone,ie.image,c.ic_name');
         $builder->join('tbl_internship_enrollment ie', 'ia.ie_id = ie.ie_id', 'left');
         $builder->join('tbl_intern_course c', 'ia.ic_id = c.ic_id', 'left');
 
-        // $builder->where('cert_no', $cert_no);
+        $builder->groupStart();
         $builder->where('ia.enroll_id', $cert_no);
+        $builder->orWhere('ia.cert_no', $cert_no);
+        $builder->groupEnd();
         $query = $builder->get();
         $result = $query->getRow();
         return $result;
@@ -122,7 +124,7 @@ class Service_model extends Model
     // }
     public function get_one_internship_course_detail($ia_id){
         $builder = $this->db->table('tbl_internship_applications ia');
-        $builder->select('ia.*,ie.stu_name,ie.email,ie.phone,ie.image,c.ic_name,c.duration,mj.sub_name,cl.college_name');
+        $builder->select('ia.*,ie.stu_name,ie.email,ie.phone,ie.image,c.ic_name,c.duration,c.exam_ques,c.exam_duration sub_exam_duration,mj.sub_name,cl.college_name');
         $builder->join('tbl_internship_enrollment ie', 'ia.ie_id = ie.ie_id', 'left');
         $builder->join('tbl_intern_course c', 'ia.ic_id = c.ic_id', 'left');
         $builder->join('tbl_mjcsubject mj', 'ia.mjc_id = mj.mjc_id', 'left');
@@ -137,7 +139,7 @@ class Service_model extends Model
     }
     public function get_applied_internship_courses($ie_id){
         $builder = $this->db->table('tbl_internship_applications ia');
-        $builder->select('ia.*,ie.stu_name,ie.email,ie.phone,ie.image,c.ic_name,c.c_pdf,mj.sub_name mjc_subject,cl.college_name');
+        $builder->select('ia.*,ie.stu_name,ie.email,ie.phone,ie.image,c.ic_name,c.c_pdf,c.project_part2,mj.sub_name mjc_subject,cl.college_name');
         $builder->join('tbl_internship_enrollment ie', 'ia.ie_id = ie.ie_id', 'left');
         $builder->join('tbl_intern_course c', 'ia.ic_id = c.ic_id', 'left');
         $builder->join('tbl_mjcsubject mj', 'ia.mjc_id = mj.mjc_id', 'left');
@@ -184,5 +186,55 @@ class Service_model extends Model
         // echo '<pre>';print_r($result); exit;
         return $result;
     }
-    
+    public function get_questions($ic_id, $quesLimit, $existQues=null){
+        $builder = $this->db->table('tbl_question_bank');
+        $builder->select('*');
+        $builder->where('status', 1);
+        $builder->where('ic_id', $ic_id);
+        if (!empty($existQues)) {
+            $ids = explode(',', $existQues); 
+            $builder->whereNotIn('q_id', $ids);
+        }
+        $builder->orderBy('RAND()');
+        $builder->limit($quesLimit);
+        $query = $builder->get();
+
+        // $query = $this->db->getLastQuery(); echo $query;exit;
+        if($quesLimit == 0){
+            $result = [];
+        }else{
+            $result = $query->getResult();
+        }
+        
+        return $result;
+    }
+    public function get_grade($percent){
+        $builder = $this->db->table('tbl_grade');
+
+        $builder->select('*');
+        $builder->where('marks_from <=', $percent);
+        $builder->where('marks_to >=', $percent);
+
+        $result = $builder->get()->getRow();
+
+        return $result;
+    }
+    public function get_exam_review($ie_id){
+        $result = [];
+        $builder = $this->db->table('tbl_exam_review rv');
+        $builder->select('rv.*,ic.ic_name');
+        $builder->join('tbl_internship_applications ia', 'rv.ia_id = ia.ia_id', 'left');
+        $builder->join('tbl_intern_course ic', 'ia.ic_id = ic.ic_id', 'left');
+        // $builder->join('tbl_intern_course c', 'e.ic_id = c.ic_id', 'left');
+        $builder->where('rv.ie_id', $ie_id);
+
+        $builder->orderBy('rv.id','DESC');
+        // $builder->limit($limit, $offset);
+        $query = $builder->get();
+        
+        $result = $query->getResult();
+        
+        // echo '<pre>';print_r($result); exit;
+        return $result;
+    }
 }

@@ -87,12 +87,12 @@ if (isset($_GET['add']) || isset($record->ic_id)) {
                                     </button>
                                     <?php }else{ echo 'Not Uploaded Yet!'; } ?>
 
-                                    <?php /*  if (!empty($list->project_part2)) : ?>
+                                    <?php if (!empty($list->project_part2)) : ?>
                                     <button class="btn btn-secondary btn-sm viewPdfBtn"
-                                        data-pdf="<?= site_url('secure/pdf/' . $list->project_part2) ?>">
+                                        data-pdf="<?= base_url('admin/view_pdf/' . $list->project_part2) ?>">
                                         Project Part-2
                                     </button>
-                                    <?php endif; */ ?>
+                                    <?php endif; ?>
                                 </td>
 
                                 <td>
@@ -189,14 +189,14 @@ if (isset($_GET['add']) || isset($record->ic_id)) {
                             </span>
                         </div>
 
-                        <?php /* <div class="mb-3">
+                        <div class="mb-3">
                             <label class="form-label">Project Part-2 <span class="text-danger">*(PDF)</span></label>
                             <input type="file" name="project_part2" class="form-control">
                             <input type="hidden" name="old_project_part2" value="<?= $record->project_part2 ?? '' ?>">
                             <span class="text-danger">
-                                <?= isset($validation) ? display_error($validation, 'center_name') : '' ?>
+                                <?= isset($validation) ? display_error($validation, 'project_part2') : '' ?>
                             </span>
-                        </div> */ ?>
+                        </div>
 
                         <hr>
 

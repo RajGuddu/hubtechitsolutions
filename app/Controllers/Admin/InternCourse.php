@@ -36,10 +36,10 @@ class InternCourse extends BaseController
             if (!$id || ($file && $file->isValid() && !$file->hasMoved())) {
                 $rules['c_pdf'] = 'uploaded[c_pdf]|ext_in[c_pdf,pdf]|max_size[c_pdf,2048]';
             }
-            /*$file2 = $this->request->getFile('project_part2');
+            $file2 = $this->request->getFile('project_part2');
             if (!$id || ($file2 && $file2->isValid() && !$file2->hasMoved())) {
                 $rules['project_part2'] = 'uploaded[project_part2]|ext_in[project_part2,pdf]|max_size[project_part2,2048]';
-            }*/
+            }
             $validation = $this->validate($rules);
             if (!$validation) {
                 $this->data['validation'] = $this->validator;
@@ -62,23 +62,23 @@ class InternCourse extends BaseController
                     $post['c_pdf'] = $pdfFilename;
                 }
                 // Project PDF
-                /*$file = $this->request->getFile('project_part2');
-                if ($file && $file->isValid() && !$file->hasMoved()) {
+                $file2 = $this->request->getFile('project_part2');
+                if ($file2 && $file2->isValid() && !$file2->hasMoved()) {
                     do {
                         $pdfFilename = 'prjpart2-' . bin2hex(random_bytes(4)) . '.pdf';
-                        $exists = $this->commonmodel->isExists('tbl_subjects', [
+                        $exists = $this->commonmodel->isExists('tbl_intern_course', [
                             'project_part2' => $pdfFilename
                         ]);
                     } while ($exists);
-                    $file->move(FCPATH . 'uploads/pdf', $pdfFilename);
+                    $file2->move('./' . PDF_PATH, $pdfFilename);
                     if (!empty($this->request->getPost('old_project_part2'))) {
-                        $old = FCPATH . 'uploads/pdf/' . $this->request->getPost('old_project_part2');
+                        $old = './' . PDF_PATH . $this->request->getPost('old_project_part2');
                         if (file_exists($old)) {
                             unlink($old);
                         }
                     }
                     $post['project_part2'] = $pdfFilename;
-                }*/
+                }
                 $post['ic_name']      = $this->request->getPost('ic_name');
                 // $post['short_desc']    = $this->request->getPost('short_desc');
                 // $post['fee']           = $this->request->getPost('fee');

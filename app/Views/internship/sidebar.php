@@ -60,9 +60,13 @@
                     <i class="ri-account-circle-line me-2 text-primary"></i>
                     My Profile
                 </a>
-                <a href="<?=base_url('internship/courses')?>" class="list-group-item list-group-item-action <?=(in_array($segment2, ['courses','update-course','add-course','verify_razor_payment','payment-success']))?'active':''?> py-3">
+                <a href="<?=base_url('internship/courses')?>" class="list-group-item list-group-item-action <?=(in_array($segment2, ['courses','update-course','add-course','verify_razor_payment','payment-success','exam']))?'active':''?> py-3">
                     <i class="ri-book-open-line me-2"></i>
                     Internship Course
+                </a>
+                <a href="<?=base_url('internship/exam-review')?>" class="list-group-item list-group-item-action <?=(in_array($segment2, ['exam-review']))?'active':''?> py-3">
+                    <i class="ri-question-answer-line me-2"></i>
+                    Exam Review
                 </a>
                 <a href="<?=base_url('internship/change-password')?>" class="list-group-item list-group-item-action <?=($segment2 == 'change-password')?'active':''?> py-3">
                     <i class="ri-lock-password-line me-2"></i>

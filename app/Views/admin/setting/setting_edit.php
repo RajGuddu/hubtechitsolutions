@@ -77,20 +77,20 @@
                                     <input class="form-control" type="text" id="instagram_link" name="instagram_link" value="<?=$settings->instagram_link ?>" >
                                 </div>
                             </div>
-                            <h4 class="py-2 text-danger">Setting for certificate</h4>
-                            <div class="col-md-6">
+                            <h4 class="py-2 text-danger">Internship Student Notification:</h4>
+                            <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="cert_start_no">Certificate Starting Serial No</label>
-                                    <input class="form-control" type="text" id="cert_start_no" name="cert_start_no" value="<?=$settings->cert_start_no ?>" >
+                                    <label for="intern_notice">Message</label>
+                                    <textarea class="form-control" id="intern_notice" name="intern_notice" rows="5"><?=$settings->intern_notice ?></textarea>
                                 </div>
                             </div>
                             
-                            <div class="col-md-6">
+                            <?php /*<div class="col-md-6">
                                 <div class="form-group">
                                     <label for="enroll_start_no">Enrolment Starting No</label>
                                     <input class="form-control" type="text" id="enroll_start_no" name="enroll_start_no" value="<?=$settings->enroll_start_no ?>" >
                                 </div>
-                            </div>
+                            </div>*/?>
                         </div>
                         
                         <?php if(is_privilege(6,2)){ ?>

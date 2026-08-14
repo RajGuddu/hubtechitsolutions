@@ -82,6 +82,7 @@ class Internship extends BaseController
         $data['totApplied'] = $this->commonmodel->getAllRecordCount('tbl_internship_applications',['ie_id'=>$ie_id]);
         $data['totIncmp'] = $this->commonmodel->getAllRecordCount('tbl_internship_applications',['ie_id'=>$ie_id,'status != '=>3]);
         $data['totCmp'] = $this->commonmodel->getAllRecordCount('tbl_internship_applications',['ie_id'=>$ie_id,'status'=>3]);
+        $data['setting'] = $this->commonmodel->get_setting(1);
         
         echo view('include/header', $data);
         echo view('internship/dashboard', $data);
@@ -254,6 +255,7 @@ class Internship extends BaseController
     public function courses(){
         $ie_id = session('ie_id');
         $data['records'] = $this->servicemodel->get_applied_internship_courses($ie_id);
+        $data['setting'] = $this->commonmodel->get_setting(1);
         echo view('include/header', $data);
         echo view('internship/courses', $data);
         echo view('include/footer', $data);
@@ -617,6 +619,192 @@ class Internship extends BaseController
         echo view('internship/change_password', $data);
         echo view('include/footer', $data);
     }
+    //exam module
+    public function exam($id){
+        $ia_id = base64_decode($id);
+        $examineeDtls = $this->servicemodel->get_one_internship_course_detail($ia_id);
+        $data = [];
+        if($this->request->getMethod() == 'post'){
+            // echo '<pre>'; print_r($_POST); exit;
+            if(!isset($_POST['answer']) && empty($_POST['answer'])){
+                session()->setFlashdata(['message'  => 'Please answer at least one question before submitting the exam.','type' => 'danger']);
+                return redirect()->to(base_url('internship/exam/'.$id));
+            }
+            $updateData = array();
+            $examinee_id = $_POST['examinee_id']; //ia_id
+            $tot_ques = $_POST['tot_ques'];
+            $ex_submit = array();
+            $n = $true = $false = $result = 0;
+            $grade = 'F';
+            if(isset($_POST['q_title']) && !empty($_POST['q_title'])){
+                
+                foreach($_POST['q_title'] as $k=>$q_title){
+                    $ex_submit[$n]['qno'] = $_POST['qno'][$k];
+                    $ex_submit[$n]['q_title'] = $_POST['q_title'][$k];
+                    // $ex_submit[$n]['q_title_hn'] = $_POST['q_title_hn'][$k];
+                    $ex_submit[$n]['opt1'] = $_POST['opt1'][$k];
+                    $ex_submit[$n]['opt2'] = $_POST['opt2'][$k];
+                    $ex_submit[$n]['opt3'] = $_POST['opt3'][$k];
+                    $ex_submit[$n]['opt4'] = $_POST['opt4'][$k];
+                    $ex_submit[$n]['c_ans'] = $_POST['c_ans'][$k];
+
+                    if(isset($_POST['answer'][$k])){
+                        $ex_submit[$n]['answer'] = $_POST['answer'][$k];
+
+                        if($_POST['c_ans'][$k] == $_POST['answer'][$k]){
+                            $true++;
+                            $ex_submit[$n]['remark'] = 'TRUE';
+                        }else{
+                            $false++;
+                            $ex_submit[$n]['remark'] = 'FALSE';
+                        }
+                    }else{
+                        $ex_submit[$n]['answer'] = 'N/A';
+                        $ex_submit[$n]['remark'] = 'N/A';
+                    }
+                    $n++;
+                }
+                if($true){
+                    $result = round(($true * 100) / $tot_ques, 2);
+                    $grade = $this->servicemodel->get_grade($result)->grade ?? '';
+                }
+                if($grade == 'F'){
+                    $updateData['status'] = 4;
+                    $updateData['ex_submit'] = '';
+                    $updateData['true_ans'] = 0;
+                    $updateData['false_ans'] = 0;
+                    $updateData['result'] = 0;
+                    $updateData['grade'] = '';
+                    $updateData['exam_duration'] = $examineeDtls->sub_exam_duration;
+                }else{
+                    do{
+                        $randomNo = rand(100000,999999);
+                        $cert_no = 'HUB' . $randomNo;
+                        $is_exist = $this->commonmodel->getAllRecordCount('tbl_internship_applications',['cert_no'=>$cert_no]);
+                    }while($is_exist);
+                    $updateData['status'] = 3;
+                    $updateData['ex_submit'] = json_encode($ex_submit);
+                    $updateData['true_ans'] = $true;
+                    $updateData['false_ans'] = $false;
+                    $updateData['result'] = $result;
+                    $updateData['grade'] = $grade;
+                    $updateData['completion_date'] = date('Y-m-d');
+                    $updateData['cert_no'] = $cert_no;
+                    $updateData['update_at'] = date('Y-m-d H:i:s');
+                }
+                $update = $this->commonmodel->updateRecord('tbl_internship_applications',$updateData, ['ia_id'=>$ia_id]);
+
+                // inserting into tbl_exam_review
+                $examReviewData = array(
+                    'ia_id' => $ia_id,
+                    'ie_id' => $examineeDtls->ie_id,
+                    'ex_submit' => json_encode($ex_submit),
+                    'tot_ques' => $tot_ques,
+                    'true_ans' => $true,
+                    'false_ans' => $false,
+                    'result' => $result,
+                    'grade' => $grade,
+                    'completion_date' => date('Y-m-d')
+                );
+                $this->commonmodel->insertRecord('tbl_exam_review',$examReviewData);
+
+                if($update){
+                    session()->setFlashdata(['message'  => 'You have done your examination.','type' => 'success']);
+                }else{
+                    session()->setFlashdata(['message'  => 'Something went wrong!','type' => 'danger']);
+                }
+                return redirect()->to(base_url('internship/courses'));
+            }
+            
+        }
+
+        if($examineeDtls->exam_ques && $examineeDtls->exam_duration != '00:00:00'){
+            $ic_id = $examineeDtls->ic_id;
+
+            $existQues = '';
+            if($examineeDtls->ex_submit != ''){
+                $subQuestions = json_decode($examineeDtls->ex_submit);
+                $existQues = implode(',',(array_column($subQuestions, 'qno')));
+            }
+            // $quesLimit = $examineeDtls->exam_ques;
+            $quesLimit = $examineeDtls->exam_ques - ($examineeDtls->true_ans + $examineeDtls->false_ans);
+            // echo $quesLimit; exit;
+            $questions = $this->servicemodel->get_questions($ic_id, $quesLimit, $existQues);
+            // echo '<pre>'; print_r($questions); exit;
+            $data['examineeDtls'] = $examineeDtls;
+            $data['questions'] = $questions;
+        }
+        // $data['examineeDtls'] = $examineeDtls;
+        echo view('include/header', $data);
+        echo view('internship/exam', $data);
+        echo view('include/footer', $data);
+    }
+    public function intern_update_examinee_duration(){
+        if($this->request->getMethod() == 'post'){
+            $id = $_POST['id'];
+            $h = $_POST['h'];
+            $m = $_POST['m'];
+            $s = $_POST['s'];
+            $duration = date('H:i:s',strtotime($h.':'.$m.':'.$s));
+            $this->commonmodel->updateRecord('tbl_internship_applications', ['exam_duration'=>$duration], ['ia_id'=>$id]);
+            exit;
+        }
+    }
+    public function intern_exam_save_result(){
+        if($this->request->getMethod() == 'post'){
+            if(isset($_POST['answer']) && !empty($_POST['answer'])){
+                $examinee_id = $_POST['examinee_id'];
+                $tot_ques = $_POST['tot_ques'];
+                $ex_submit = $updateData = array();
+                $n = $true = $false = $result = 0;
+                foreach($_POST['answer'] as $k=>$ans){
+                    $ex_submit[$n]['qno'] = $_POST['qno'][$k];
+                    $ex_submit[$n]['q_title'] = $_POST['q_title'][$k];
+                    // $ex_submit[$n]['q_title_hn'] = $_POST['q_title_hn'][$k];
+                    $ex_submit[$n]['opt1'] = $_POST['opt1'][$k];
+                    $ex_submit[$n]['opt2'] = $_POST['opt2'][$k];
+                    $ex_submit[$n]['opt3'] = $_POST['opt3'][$k];
+                    $ex_submit[$n]['opt4'] = $_POST['opt4'][$k];
+                    $ex_submit[$n]['c_ans'] = $_POST['c_ans'][$k];
+                    $ex_submit[$n]['answer'] = $_POST['answer'][$k];
+
+                    if($_POST['c_ans'][$k] == $_POST['answer'][$k]){
+                        $true++;
+                        $ex_submit[$n]['remark'] = 'TRUE';
+                    }else{
+                        $false++;
+                        $ex_submit[$n]['remark'] = 'FALSE';
+                    }
+                    $n++;
+                }
+                if($true){
+                    $result = round(($true * 100) / $tot_ques, 2);
+                }
+                $updateData['status'] = 2;
+                $updateData['ex_submit'] = json_encode($ex_submit);
+                $updateData['true_ans'] = $true;
+                $updateData['false_ans'] = $false;
+                $updateData['result'] = $result;
+                // $updateData['update_at'] = date('Y-m-d H:i:s');
+                $update = $this->commonmodel->updateRecord('tbl_internship_applications',$updateData, ['ia_id'=>$examinee_id]);
+                if($update){
+                    $res['update'] = 'true';
+                }else{
+                    $res['update'] = 'false';
+                }
+                return $this->response->setJSON($res);
+            }
+        }
+    }
+    //end exam module
+    public function exam_review(){
+        $ie_id = session('ie_id');
+        $data['records'] = $this->servicemodel->get_exam_review($ie_id);
+        echo view('include/header', $data);
+        echo view('internship/exam_review', $data);
+        echo view('include/footer', $data);
+    }
+
     public function logout(){
         session()->destroy();
         return redirect()->to(base_url('internship/login'))->with('alert_error','You have successfully logged out!');

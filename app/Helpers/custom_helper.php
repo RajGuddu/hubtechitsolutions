@@ -165,7 +165,7 @@
                     return '<span class="badge bg-success text-light mb-1 d-inline-block">Exam Completed (Passed)</span>';
                     break;
                 case 4:
-                    return '<span class="badge bg-success text-light mb-1 d-inline-block">Exam Completed (Failed)</span>';
+                    return '<span class="badge bg-warning text-dark mb-1 d-inline-block">Exam Completed (Failed)</span>';
                     break;
                 case 5:
                     return '<span class="badge bg-danger text-light mb-1 d-inline-block">Payment Refund</span>';

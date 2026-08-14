@@ -189,19 +189,30 @@
                                             data-title="Offer Letter">
                                             <i class="fa-solid fa-file-lines"></i>
                                         </a>
-                                        <a href="javascript:void(0)" class="btn btn-outline-success btn-sm"
-                                            data-bs-toggle="tooltip" title="Project">
-                                            <i class="fa-solid fa-folder-open"></i>
-                                        </a>
-                                        <a href="javascript:void(0)" class="btn btn-outline-success btn-sm"
-                                            data-bs-toggle="tooltip" title="Download Certificate">
-                                            <i class="fa-solid fa-award"></i>
-                                        </a>
+                                        <?php if($course->status == 1){ ?>
                                         <a href="javascript:void(0)" class="btn btn-outline-warning btn-sm btnRefund"
                                             data-ia_id="<?= $course->ia_id; ?>" data-bs-toggle="tooltip" title="Refund">
                                             <i class="fa-solid fa-money-bill-wave"></i>
                                         </a>
-                                        <?php } ?>
+                                        <?php }elseif($course->status == 3){ ?>
+                                        <a href="javascript:void(0)" class="btn btn-outline-success btn-sm viewPdfBtn"
+                                            data-bs-toggle="tooltip" title="Attendance Certificate" data-pdf="<?= base_url('admin/atten_cert_pdf/'.base64_encode($course->ia_id)) ?>" data-title="Attendance Certificate">
+                                            <i class="fa-solid fa-calendar-check"></i>
+                                        </a>
+                                        <a href="javascript:void(0)" class="btn btn-outline-success btn-sm viewPdfBtn" data-bs-toggle="tooltip" title="Cover Page" data-pdf="<?= base_url('admin/cover_page_pdf/'.base64_encode($course->ia_id)) ?>" data-title="Cover Page">
+                                            <i class="fa-solid fa-file-arrow-down"></i>
+                                        </a>
+                                        <?php $project_part2 = $course->project_part2 != '' ? $course->project_part2 : 'NULL' ?>
+                                        <a href="javascript:void(0)" class="btn btn-outline-success btn-sm viewPdfBtn"
+                                            data-bs-toggle="tooltip" title="Project" data-pdf="<?= base_url('admin/view_pdf/'.$project_part2) ?>" data-title="Project">
+                                            <i class="fa-solid fa-folder-open"></i>
+                                        </a>
+                                        <a href="javascript:void(0)" class="btn btn-outline-success btn-sm viewPdfBtn"
+                                            data-bs-toggle="tooltip" title="Download Certificate" data-pdf="<?= base_url('admin/intern_cert_pdf/'.base64_encode($course->ia_id)) ?>" data-title="Internship Certificate">
+                                            <i class="fa-solid fa-award"></i>
+                                        </a>
+                                        
+                                        <?php } } ?>
                                     </div>
                                     <button class="btn btn-primary btn-sm w-100 student-details"
                                         data-student="<?= esc($studentData, 'attr') ?>">

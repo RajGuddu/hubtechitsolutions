@@ -143,10 +143,10 @@ class Test extends BaseController
     }
     public function update(){
         echo '<pre>';
-        // $this->commonmodel->updateRecord('tbl_intern_course', ['exam_duration'=>'00:30:00'], ['status'=>1]);
-        // $this->commonmodel->updateRecord('tbl_intern_course', ['duration'=>120], ['status'=>1]);
+        // $this->commonmodel->updateRecord('tbl_intern_course', ['exam_ques'=>50, 'exam_duration'=>gmdate("H:i:s", 90 * 60)], ['ic_id >='=>1]);
+        // $this->commonmodel->updateRecord('tbl_internship_applications', ['exam_duration'=>gmdate("H:i:s", 90 * 60)], ['ia_id >='=>1]);
 
-        $data = $this->commonmodel->getAllRecord('tbl_internship_enrollment',['ie_id >'=>218, 'ie_id <='=>225]);
+        /*$data = $this->commonmodel->getAllRecord('tbl_internship_enrollment',['ie_id >'=>218, 'ie_id <='=>225]);
         foreach($data as $li){
             // for email
             //mail to user
@@ -240,7 +240,7 @@ class Test extends BaseController
                     $this->commonmodel->insertRecord('tbl_payment_transaction',$paymentTransactionData);
                 }
             }*/
-        }
+        //}
         // $data = $this->commonmodel->getAllRecord('tbl_internship_applications');
         // print_r($data);
         // $data = [];
