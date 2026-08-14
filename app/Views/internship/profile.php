@@ -36,12 +36,12 @@
                                 HUBI25061234
                             </span> -->
                         </div>
-                        <div class="col-md-2 text-end mt-5">
+                        <?php /*<div class="col-md-2 text-end mt-5">
                             <a href="<?= base_url('internship/edit_profile/'.$profile->ie_id) ?>" class="edu-btn btn-medium px-4 text-white"
                                 onclick="return confirm('Are You Sure?')">
                                 Edit Profile
                             </a>
-                        </div>
+                        </div>*/ ?>
                     </div>
                     <hr>
                     <?php if(session()->getFlashdata('message') !== NULL){

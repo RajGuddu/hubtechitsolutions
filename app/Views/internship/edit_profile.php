@@ -6,7 +6,7 @@
             <div class="card-header bg-linear py-3 d-flex justify-content-between align-items-center">
                 <h4 class="text-white mb-0">
                     <i class="bx bx-edit-alt me-2"></i>
-                    Edit Profile
+                    My Profile
                 </h4>
                 <?php echo get_intern_stu_status($profile->status); ?>
             </div>
@@ -15,9 +15,10 @@
                     <?=csrf_field()?>
                     <!-- Profile Image -->
                     <div class="mb-5 text-center">
-                        <p class="text-danger fw-bold fs-3 mb-0">
+                        <p class="text-danger fs-3 mb-0">
                             <i class="ri-error-warning-fill fs-2 me-2 align-middle"></i>
-                            Please complete your profile first to gain full access to all internship features and services.
+                            कृपया इंटर्नशिप की सभी सुविधाओं और सेवाओं का पूर्ण लाभ उठाने के लिए सबसे पहले अपना प्रोफ़ाइल पूरा करें।
+                            <strong>महत्वपूर्ण:</strong> प्रोफ़ाइल सबमिट करने से पहले सभी जानकारी को अच्छी तरह से मिलाकर और ध्यानपूर्वक जाँच लें। <strong>एक बार प्रोफ़ाइल सबमिट हो जाने के बाद आपका प्रोफ़ाइल लॉक हो जाएगा और उसमें किसी भी प्रकार का बदलाव/संशोधन संभव नहीं होगा।</strong>
                         </p>
                     </div>
                     <h5 class="mb-3">Personal Information</h5>
@@ -139,7 +140,7 @@
                     
                     <div class="text-end mt-5">
                         
-                        <button type="submit" class="btn text-white px-4" style="background:#0c2778;">
+                        <button type="submit" class="btn text-white px-4" style="background:#0c2778;" onclick="return confirm('कृपया सबमिट करने से पहले अपनी सभी जानकारी अच्छी तरह से जाँच लें। एक बार प्रोफ़ाइल सबमिट हो जाने के बाद आपका प्रोफ़ाइल लॉक हो जाएगा और उसमें किसी भी प्रकार का बदलाव संभव नहीं होगा। क्या आप प्रोफ़ाइल सबमिट करना चाहते हैं?');">
                             <i class="bx bx-save me-1"></i>
                             Save Changes
 

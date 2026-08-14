@@ -212,11 +212,7 @@ class Internship extends BaseController
                 );
                 $post['status']        = 1;
                 $post['profile_completed'] = 1;
-                // do{
-                //     $No1 = mt_rand(10000, 10500);
-                //     $is_exist = $this->commonmodel->getAllRecordCount('tbl_members',['member_code'=>$No1]);
-                // } while($is_exist);
-                // $post['member_code'] = $No1;
+                
                 $updated = $this->commonmodel->updateRecord('tbl_internship_enrollment', $post, ['ie_id'=>$ie_id]); 
                 if($updated){
                     $user_info = $this->commonmodel->getOneRecord('tbl_internship_enrollment',['ie_id'=>$ie_id]);
@@ -242,7 +238,7 @@ class Internship extends BaseController
         echo view('internship/profile', $data);
         echo view('include/footer', $data);
     }
-    public function edit_profile($ie_id){
+    /*public function edit_profile($ie_id){
         if($this->commonmodel->updateRecord('tbl_internship_enrollment',['profile_completed'=>0, 'status'=>0, 'update_at'=>date('Y-m-d H:i:s')],['ie_id'=>$ie_id])){
             session()->set('profile_completed', 0);
             session()->set('status', 0);
@@ -251,7 +247,7 @@ class Internship extends BaseController
             session()->setFlashdata(['message'=>'Something went wrong. Please Try After Sometimes...','type'=>'danger']);
         }
         return redirect()->to(base_url('/internship/profile'));
-    }
+    }*/ //temporaraly closed
     public function courses(){
         $ie_id = session('ie_id');
         $data['records'] = $this->servicemodel->get_applied_internship_courses($ie_id);

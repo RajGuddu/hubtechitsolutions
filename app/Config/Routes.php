@@ -76,7 +76,7 @@ $routes->get('update', 'Test::update');
 $routes->group('internship', ['filter' => 'InternAuthCheck'], function($routes){
     $routes->get('dashboard', 'Internship::dashboard');
     $routes->match(['get','post'], 'profile', 'Internship::profile');
-    $routes->get('edit_profile/(:num)', 'Internship::edit_profile/$1');
+    // $routes->get('edit_profile/(:num)', 'Internship::edit_profile/$1');
     $routes->match(['get','post'], 'change-password', 'Internship::change_password');
     $routes->group('', ['filter' => 'internProfileComplete'], function($routes){
         $routes->get('courses', 'Internship::courses');
