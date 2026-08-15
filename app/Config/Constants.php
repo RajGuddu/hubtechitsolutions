@@ -82,5 +82,7 @@ defined('IMAGE_PATH')      || define('IMAGE_PATH', 'public/assets/upload/images/
 defined('PDF_PATH')      || define('PDF_PATH', 'public/assets/upload/pdf/'); 
 defined('CERT_PATH')      || define('CERT_PATH', 'public/assets/upload/cert_images/'); 
 defined('WEBSITE_NAME')      || define('WEBSITE_NAME', 'Hub Techsolutions'); 
+// defined('ADMIN_EMAIL_ID')  || define('ADMIN_EMAIL_ID', 'info.hubtechs@gmail.com'); 
+// defined('REACH_US_EMAIL')  || define('REACH_US_EMAIL', 'info.hubtechs@gmail.com');
 defined('ADMIN_EMAIL_ID')  || define('ADMIN_EMAIL_ID', 'test152@yopmail.com'); 
-defined('REACH_US_EMAIL')  || define('REACH_US_EMAIL', 'test152@yopmail.com'); 
+defined('REACH_US_EMAIL')  || define('REACH_US_EMAIL', 'test152@yopmail.com');  

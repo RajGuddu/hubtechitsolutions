@@ -1,3 +1,68 @@
+<style>
+    .student-photo {
+        position: relative;
+        display: inline-block;
+        width: 90px;
+        height: 110px;
+        margin-bottom: 24px;
+    }
+
+    .student-img {
+        display: block;
+        width: 90px;
+        height: 110px;
+        object-fit: cover;
+        border: 1px solid #ddd;
+        padding: 3px;
+        border-radius: 10px;
+        background: #fff;
+    }
+
+    .verified-stamp {
+        position: absolute;
+        width: 55px;
+        height: 55px;
+        object-fit: contain;
+
+        /* Photo ke bottom par half overlap */
+        left: 50%;
+        bottom: -19px;
+        top: auto;
+        right: auto;
+        transform: translateX(-50%);
+
+        z-index: 10;
+    }
+
+    @media (max-width: 576px) {
+
+        .student-photo {
+            width: 80px;
+            height: 100px;
+            margin-bottom: 22px;
+        }
+
+        .student-img {
+            width: 80px;
+            height: 100px;
+        }
+
+        .verified-stamp {
+            width: 48px;
+            height: 48px;
+            left: 50%;
+            bottom: -10px;
+            top: auto;
+            right: auto;
+            transform: translateX(-50%);
+        }
+
+        .table td,
+        .table th {
+            font-size: 14px;
+        }
+    }
+</style>
 <div class="edu-breadcrumb-area breadcrumb-style-2 bg-image bg-image--19">
     <div class="container">
         <div class="breadcrumb-inner">
@@ -40,25 +105,31 @@
         </form>
     </div>
     <?php if(isset($certDtls) && !empty($certDtls)){ ?>
-    <div class="container px-4 py-4">
+    <div class="container px-3 px-md-4 py-4">
         <div class="row">
-            <div class="offset-md-2 col-md-8">
+            <div class="col-12 col-md-8 offset-md-2">
 
-                <table class="table align-middle">
+                <table class="table align-middle mb-0">
                     <tbody>
 
                         <!-- Header -->
                         <tr>
-                            <th style="width:50%;">
+                            <th style="width:60%;">
                                 <strong>Student Details</strong>
                             </th>
 
-                            <th style="width:30%; text-align:center;">
-                                <span class="btn btn-success">Approved</span>
-                            </th>
-                            <?php if($certDtls->image != ''){ ?>
-                            <th style="width:20%; text-align:right;">
-                                <img src="<?= base_url(IMAGE_PATH.$certDtls->image) ?>" alt="Student Photo" style="width:75px; height:90px; object-fit:cover; border:1px solid #ddd; padding:3px; border-radius:4px;">
+                            <?php if ($certDtls->image != '') { ?>
+                            <th style="width:40%; text-align:center;">
+
+                                <div class="student-photo">
+                                    <img src="<?= base_url(IMAGE_PATH.$certDtls->image) ?>" alt="Student Photo"
+                                        class="student-img">
+
+                                    <!-- Verified Stamp -->
+                                    <img src="<?= base_url(IMAGE_PATH.'verified.png') ?>" alt="Verified"
+                                        class="verified-stamp">
+                                </div>
+
                             </th>
                             <?php } ?>
                         </tr>
@@ -69,12 +140,14 @@
                                 <?= $certDtls->enroll_id ?>
                             </td>
                         </tr>
+
                         <tr>
                             <td>Student's Name</td>
                             <td colspan="2">
                                 <?= ucwords($certDtls->stu_name) ?>
                             </td>
                         </tr>
+
                         <tr>
                             <td>Internship Course</td>
                             <td colspan="2">
@@ -82,26 +155,29 @@
                             </td>
                         </tr>
 
-                        <?php if($certDtls->cert_no != '' && $certDtls->status == 3){ ?>
+                        <?php if ($certDtls->cert_no != '' && $certDtls->status == 3) { ?>
+
                         <tr>
                             <td>Certificate No</td>
                             <td colspan="2">
                                 <?= $certDtls->cert_no ?>
                             </td>
                         </tr>
+
                         <tr>
                             <td>Grade</td>
                             <td colspan="2">
                                 <?= $certDtls->grade ?>
                             </td>
                         </tr>
-                        
+
                         <tr>
                             <td>Completion Date</td>
                             <td colspan="2">
                                 <?= date('d M Y', strtotime($certDtls->completion_date)) ?>
                             </td>
                         </tr>
+
                         <?php } ?>
 
                     </tbody>
