@@ -118,7 +118,7 @@
           <?php if(is_privilege([24,25,26])){
             $collapsed = 'collapsed'; $show = ''; $active = ''; $areaexpanded = 'false';
 
-            if(in_array($segment2, ['vocational-course'])){
+            if(in_array($segment2, ['vstudent','vocational-course','vquestion_bank'])){
               $collapsed = ''; $show = 'show'; $active = 'active'; $areaexpanded = 'true';
             }
           ?>
@@ -130,17 +130,16 @@
             </a>
             <div class="collapse <?=$show?>" id="vocational">
               <ul class="nav flex-column sub-menu">
-                <?php /*if(is_privilege(24)){ ?>
-                <li class="nav-item <?=($segment2=='intern-students')?'active':''?>"> <a class="nav-link" href="<?=base_url('admin/intern-students')?>">V-Student List</a></li>
-                <?php }*/ ?>
-                <li class="nav-item "> <a class="nav-link" href="javascript:void(0)" onclick="return confirm('Under Development!')">V-Student List</a></li>
+                <?php if(is_privilege(24)){ ?>
+                <li class="nav-item <?=($segment2=='vstudent')?'active':''?>"> <a class="nav-link" href="<?=base_url('admin/vstudent')?>">V-Student List</a></li>
+                <?php } ?>
+                
                 <?php if(is_privilege(25)){ ?>
                 <li class="nav-item <?=($segment2=='vocational-course')?'active':''?>"> <a class="nav-link" href="<?=base_url('admin/vocational-course')?>"> Vocational Course</a></li>
                 <?php } ?>
-                <li class="nav-item "> <a class="nav-link" href="javascript:void(0)" onclick="return confirm('Under Development!')">V-Question Bank</a></li>
-                <?php /*if(is_privilege(26)){ ?>
-                <li class="nav-item <?=($segment2=='question_bank')?'active':''?>"> <a class="nav-link" href="<?=base_url('admin/question_bank')?>">V-Question Bank</a></li>
-                <?php }*/ ?>
+                <?php if(is_privilege(26)){ ?>
+                <li class="nav-item <?=($segment2=='vquestion_bank')?'active':''?>"> <a class="nav-link" href="<?=base_url('admin/vquestion_bank')?>">V-Question Bank</a></li>
+                <?php } ?>
               </ul>
             </div>
           </li>

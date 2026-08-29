@@ -5,7 +5,7 @@ use App\Libraries\Hash;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 // use App\Traits\RazorpayTrait;
-class QuestionBank extends BaseController
+class VStudent extends BaseController
 {
     // use RazorpayTrait;
     public $data;
@@ -14,7 +14,7 @@ class QuestionBank extends BaseController
     private $servicemodel;
     public function __construct()
     {
-        $this->data['title'] = 'Admin-Internship-Question-Bank';
+        $this->data['title'] = 'Admin-Vocational-Student-List';
         $this->commonmodel = model('App\Models\Common_model', false);
         $this->servicemodel = model('App\Models\Service_model', false);
     }
@@ -23,11 +23,11 @@ class QuestionBank extends BaseController
     {
         if($this->request->getMethod() == 'post' && $this->request->getPost('form') == 'search_form'){
            session()->set(
-                's_ic_id',
-                trim($this->request->getPost('s_ic_id'))
+                's_vc_id',
+                trim($this->request->getPost('s_vc_id'))
             ); 
         }
-        if ($this->request->getMethod() === 'post' && $this->request->getPost('form') == 'question_form') {
+        /*if ($this->request->getMethod() === 'post' && $this->request->getPost('form') == 'question_form') {
             // print_r($_POST); exit;
             $id = $this->request->getPost('id');
             $rules = [
@@ -77,9 +77,9 @@ class QuestionBank extends BaseController
                     return redirect()->to(site_url('admin/question_bank'));
                 }
             }
-        }
+        }*/
         //pagination
-        $totRecord = $this->servicemodel->get_question_bank('', $count=1);
+        $totRecord = $this->servicemodel->get_vocational_course_applied_student($count=1);
         $rec_limit = 10;
         $page_config = array(
             'tot_record' => $totRecord,
@@ -97,15 +97,15 @@ class QuestionBank extends BaseController
         $this->data['pagination'] = $cp_data['pagination_html'];
         $this->data['caption'] = $cp_data['caption'];
         //end pagination
-        if($q_id){
+        /*if($q_id){
             $this->data['record'] = $this->commonmodel->getOneRecord('tbl_question_bank',['q_id'=>$q_id]);
-        }
-        $this->data['records'] = $this->servicemodel->get_question_bank('','',$limit, $offset);
-        $this->data['subjects'] = $this->commonmodel->getAllRecordOrderByDesc('tbl_intern_course',['status'=>1],['ic_name','ASC']);
-        return view("admin/internship/question_bank",$this->data);
+        }*/
+        $this->data['records'] = $this->servicemodel->get_vocational_course_applied_student('',$limit, $offset);
+        // $this->data['subjects'] = $this->commonmodel->getAllRecordOrderByDesc('tbl_vocational_course',['status'=>1],['course_name','ASC']);
+        return view("admin/vocational/vStudentList",$this->data);
         
     }
-    public function delete_question($id = null){
+    /*public function delete_question($id = null){
         if ($id) {
             $record = $this->commonmodel->getOneRecord('tbl_question_bank', ['q_id' => $id]);
             if (!empty($record)) {
@@ -120,10 +120,10 @@ class QuestionBank extends BaseController
             }
         }
         return redirect()->to(site_url('admin/question_bank'));
-    }
+    }*/
     public function reset_search(){
-        session()->remove('s_ic_id');
+        session()->remove('s_vc_id');
 
-        return redirect()->to(base_url('admin/question_bank'));
+        return redirect()->to(base_url('admin/vquestion_bank'));
     }
 }

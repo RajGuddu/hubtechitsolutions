@@ -10,11 +10,11 @@ if (isset($_GET['add']) || isset($record->q_id)) {
 <div class="content-wrapper">
     <!-- Main Content -->
     <div class="d-flex justify-content-between align-items-center mb-2">
-        <h4 class="mb-0">Question Bank (<?=$caption?>)</h4>
+        <h4 class="mb-0">Vocational Student List (<?=$caption?>)</h4>
 
-        <a href="<?= base_url('admin/question_bank').'?add=1' ?>" class="btn btn-primary">
+        <?php /*<a href="<?= base_url('admin/question_bank').'?add=1' ?>" class="btn btn-primary">
             <i class="fa-solid fa-plus me-1"></i> Add Question
-        </a>
+        </a>*/ ?>
     </div>
     <div class="row mb-2">
         <div class="col-md-12">
@@ -25,7 +25,7 @@ if (isset($_GET['add']) || isset($record->q_id)) {
     </div>
     <div class="row">
         
-        <div class="col-lg-12 mb-2 <?= $formClass ?>">
+        <?php /* <div class="col-lg-12 mb-2 <?= $formClass ?>">
             <div class="card shadow-sm">
 
                 <div class="card-header fw-bold">
@@ -128,20 +128,20 @@ if (isset($_GET['add']) || isset($record->q_id)) {
                 </div>
 
             </div>
-        </div>
-        <div class="col-md-12 mb-2">
+        </div> */ ?>
+        <?php /* <div class="col-md-12 mb-2">
             <div class="card">
                 <div class="card-body py-2">
-                    <form method="post" action="<?=base_url('admin/question_bank')?>">
+                    <form method="post" action="<?=base_url('admin/vquestion_bank')?>">
                         <?=csrf_field()?>
                         <input type="hidden" name="form" value="search_form">
                         <div class="row">
                             <div class="col-md-9">
-                                <select name="s_ic_id" id="s_ic_id" class="form-select">
+                                <select name="s_vc_id" id="s_vc_id" class="form-select">
                                     <option value="">Select any one!</option>
                                     <?php if(!empty($subjects)){
                                     foreach($subjects as $list){ ?>
-                                        <option value="<?=$list->ic_id?>" <?=set_select('s_ic_id', $list->ic_id,(session('s_ic_id')==$list->ic_id)?true:'') ?>><?=$list->ic_name?></option>
+                                        <option value="<?=$list->vc_id?>" <?=set_select('s_vc_id', $list->vc_id,(session('s_vc_id')==$list->vc_id)?true:'') ?>><?=$list->course_name?></option>
                                     <?php } } ?>
                                 </select>
                             </div>
@@ -149,8 +149,8 @@ if (isset($_GET['add']) || isset($record->q_id)) {
                                 <button type="submit" class="btn btn-primary w-100">
                                     Search
                                 </button>
-                                <?php if(session('s_ic_id')){ ?>
-                                <a href="<?=base_url('admin/question_reset_search')?>" class="btn btn-secondary">
+                                <?php if(session('s_vc_id')){ ?>
+                                <a href="<?=base_url('admin/vquestion_reset_search')?>" class="btn btn-secondary">
                                     Reset
                                 </a>
                                 <?php } ?>
@@ -160,7 +160,7 @@ if (isset($_GET['add']) || isset($record->q_id)) {
                 </div>
                 
             </div>
-        </div>
+        </div> */ ?>
         <!-- Question List -->
         <div class="col-lg-12">
             <div class="card shadow-sm">
@@ -171,15 +171,14 @@ if (isset($_GET['add']) || isset($record->q_id)) {
                             <thead class="table-dark">
                                 <tr>
                                     <th>#</th>
-                                    <th>Subject Name</th>
-                                    <th>Question Title</th>
-                                    <th>OPT A</th>
-                                    <th>OPT B</th>
-                                    <th>OPT C</th>
-                                    <th>OPT D</th>
-                                    <th>Correct Option</th>
+                                    <th>Photo</th>
+                                    <th>Student Name</th>
+                                    <th>Reg. No</th>
+                                    <th>Course Name</th>
+                                    <th>Course Duration</th>
+                                    <th>Exam Fee</th>
                                     <th>Status</th>
-                                    <th>Action</th>
+                                    <!-- <th>Action</th> -->
                                 </tr>
                             </thead>
 
@@ -190,23 +189,27 @@ if (isset($_GET['add']) || isset($record->q_id)) {
                                 <?php foreach ($records as $list) : ?>
 
                                 <?php
-                                $status = ($list->status == 1)
-                                    ? '<span class="badge bg-success">Active</span>'
-                                    : '<span class="badge bg-danger">Inactive</span>';
+                                $courseDtls = json_decode($list->course_details);
+                                $photo = !empty($list->image)
+                                    ? base_url(IMAGE_PATH.$list->image)
+                                    : base_url('assets/images/user.png'); // Default Image
+                                // $status = ($list->status == 1)
+                                //     ? '<span class="badge bg-success">Active</span>'
+                                //     : '<span class="badge bg-danger">Inactive</span>';
                                 ?>
 
                                 <tr>
                                     <td><?= $n++ ?> </td>
-                                    <td><?= esc($list->ic_name) ?></td>
-                                    <td><?php echo $list->question_title  ?></td>
-                                    <td><?= esc($list->opt_a) ?></td>
-                                    <td><?= esc($list->opt_b) ?></td>
-                                    <td><?= esc($list->opt_c) ?></td>
-                                    <td><?= esc($list->opt_d) ?></td>
-                                    <td><?= $list->correct_opt ?></td>
-                                    <td><?= $status ?></td>
+                                    <td><img src="<?= $photo ?>" alt="Student Photo" class="rounded-circle border" width="60"
+                                    height="60" style="object-fit:cover;"></td>
+                                    <td><?= esc($list->stu_name) ?></td>
+                                    <td><?php echo $list->reg_no  ?></td>
+                                    <td><?= esc($courseDtls->course_name) ?></td>
+                                    <td><?= esc($courseDtls->duration) ?></td>
+                                    <td><?= '₹'.$list->amount?></td>
+                                    <td><?= get_intern_program_status($list->status); ?></td>
 
-                                    <td
+                                    <?php /*<td
                                         class="<?= (isset($record) && $record->q_id == $list->q_id) ? 'bg-success' : '' ?>">
                                         <a class="btn btn-sm btn-outline-primary"
                                             href="<?= site_url('admin/question_bank/' . $list->q_id) ?>">
@@ -217,7 +220,7 @@ if (isset($_GET['add']) || isset($record->q_id)) {
                                             href="<?= site_url('admin/delete_question/' . $list->q_id) ?>">
                                             <i class="fa-solid fa-trash"></i>
                                         </a>
-                                    </td>
+                                    </td>*/?>
                                 </tr>
 
                                 <?php endforeach; ?>

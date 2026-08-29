@@ -187,6 +187,66 @@ class Service_model extends Model
         // echo '<pre>';print_r($result); exit;
         return $result;
     }
+    public function get_vquestion_bank($count=null,$limit=null, $offset=null){
+        $result = [];
+        $builder = $this->db->table('tbl_voc_question_bank vq');
+        $builder->select('vq.*,vc.course_name');
+        $builder->join('tbl_vocational_course vc', 'vq.vc_id = vc.vc_id', 'left');
+        // $builder->join('tbl_colleges cl', 'e.clg_id = cl.clg_id', 'left');
+        // $builder->join('tbl_intern_course c', 'e.ic_id = c.ic_id', 'left');
+        
+        $search = session('s_vc_id');
+        if(!empty($search)){
+            $builder->groupStart()
+                ->where('vq.vc_id', $search, 'after')
+                // ->orLike('email', $search, 'after')
+                // ->orLike('phone', $search, 'after')
+                // ->orLike('enroll_id', $search, 'after')
+                ->groupEnd();
+        }
+
+        $builder->orderBy('vc.course_name','ASC');
+        $builder->limit($limit, $offset);
+        $query = $builder->get();
+        if($count != null){
+            $result = $query->getNumRows();
+        }else{
+            $result = $query->getResult();
+        }
+        
+        // echo '<pre>';print_r($result); exit;
+        return $result;
+    }
+    public function get_vocational_course_applied_student($count=null,$limit=null, $offset=null){
+        $result = [];
+        $builder = $this->db->table('tbl_vocational_applications va');
+        $builder->select('va.*,ie.stu_name,ie.image');
+        $builder->join('tbl_internship_enrollment ie', 'va.ie_id = ie.ie_id', 'left');
+        // $builder->join('tbl_colleges cl', 'e.clg_id = cl.clg_id', 'left');
+        // $builder->join('tbl_intern_course c', 'e.ic_id = c.ic_id', 'left');
+        
+        // $search = session('s_vc_id');
+        // if(!empty($search)){
+        //     $builder->groupStart()
+        //         ->where('vq.vc_id', $search, 'after')
+        //         // ->orLike('email', $search, 'after')
+        //         // ->orLike('phone', $search, 'after')
+        //         // ->orLike('enroll_id', $search, 'after')
+        //         ->groupEnd();
+        // }
+
+        $builder->orderBy('va.va_id','DESC');
+        $builder->limit($limit, $offset);
+        $query = $builder->get();
+        if($count != null){
+            $result = $query->getNumRows();
+        }else{
+            $result = $query->getResult();
+        }
+        
+        // echo '<pre>';print_r($result); exit;
+        return $result;
+    }
     public function get_questions($ic_id, $quesLimit, $existQues=null){
         $builder = $this->db->table('tbl_question_bank');
         $builder->select('*');

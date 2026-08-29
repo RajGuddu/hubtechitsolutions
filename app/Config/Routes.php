@@ -212,6 +212,13 @@ $routes->group('', ['filter' => 'AuthCheck'], function($routes){
     // $routes->get('admin/view_pdf/(:any)', 'MpdfController::view_pdf/$1');
     $routes->get('admin/delete_v_course/(:num)', 'Admin\VocationalCourse::delete_v_course/$1');
 
+    /**************************Vocational Question Bank********************************** */
+    $routes->match(['get','post'], 'admin/vquestion_bank', 'Admin\VQuestionBank::index');
+    $routes->match(['get','post'], 'admin/vquestion_reset_search', 'Admin\VQuestionBank::reset_search');
+    /**************************Vocational Student List********************************** */
+    $routes->match(['get','post'], 'admin/vstudent', 'Admin\VStudent::index');
+    // $routes->match(['get','post'], 'admin/vquestion_reset_search', 'Admin\VQuestionBank::reset_search');
+
     /**************************Question Bank************************************** */
     $routes->match(['get','post'], 'admin/question_bank', 'Admin\QuestionBank::index');
     $routes->match(['get','post'], 'admin/question_bank/(:num)', 'Admin\QuestionBank::index/$1');
