@@ -15,6 +15,7 @@ trait RazorpayTrait
         $customer_email = $razorConfig['customer_email'];
         $customer_phone = $razorConfig['customer_phone'];
         $verify_url = $razorConfig['verify_url'];
+        $cancel_url = $razorConfig['cancel_url'] ?? '';
         $orderData = $razorConfig['orderData'];
         
         $api = new Api(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET);
@@ -51,6 +52,11 @@ trait RazorpayTrait
                 },
                 "theme": {
                     "color": "#3399cc"
+                },
+                "modal": {
+                    "ondismiss": function () {
+                        window.location.href = "'.$cancel_url.'";
+                    }
                 }
             };
             var rzp1 = new Razorpay(options);

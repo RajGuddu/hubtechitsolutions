@@ -122,20 +122,7 @@ class Service_model extends Model
         // echo '<pre>';print_r($result); exit;
         return $result;
     }
-    // public function get_one_internship_student_detail($ie_id){ // not use
-    //     $builder = $this->db->table('tbl_internship_enrollment e');
-    //     $builder->select('e.*,mj.sub_name,cl.college_name,c.ic_name');
-    //     $builder->join('tbl_mjcsubject mj', 'e.mjc_id = mj.mjc_id', 'left');
-    //     $builder->join('tbl_colleges cl', 'e.clg_id = cl.clg_id', 'left');
-    //     $builder->join('tbl_intern_course c', 'e.ic_id = c.ic_id', 'left');
-        
-    //     $builder->where('e.ie_id', $ie_id);
-        
-    //     $query = $builder->get();
-    //     $result = $query->getRow();
-        
-    //     return $result;
-    // }
+    
     public function get_one_internship_course_detail($ia_id){
         $builder = $this->db->table('tbl_internship_applications ia');
         $builder->select('ia.*,ie.stu_name,ie.email,ie.phone,ie.image,c.ic_name,c.duration,c.exam_ques,c.exam_duration sub_exam_duration,mj.sub_name,cl.college_name');
@@ -249,6 +236,19 @@ class Service_model extends Model
         $result = $query->getResult();
         
         // echo '<pre>';print_r($result); exit;
+        return $result;
+    }
+    //vocational course
+    public function get_one_vocational_applicant($va_id){ 
+        $builder = $this->db->table('tbl_vocational_applications va');
+        $builder->select('va.*,ie.stu_name');
+        $builder->join('tbl_internship_enrollment ie', 'va.ie_id = ie.ie_id', 'left');
+        
+        $builder->where('va.va_id', $va_id);
+        
+        $query = $builder->get();
+        $result = $query->getRow();
+        
         return $result;
     }
 }

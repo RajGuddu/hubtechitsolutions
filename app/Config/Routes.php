@@ -71,6 +71,8 @@ $routes->get('update', 'Test::update');
 // $routes->get('refund', 'Test::refund');
 // $routes->get('update_refund', 'Test::update_refund');
 // $routes->get('shuffle-question-options', 'Test::shuffle_question_options');
+$routes->get('reci', 'Test::reci');
+$routes->get('r_pdf', 'MpdfController::receipt_pdf');
 
 //internship Student
 $routes->group('internship', ['filter' => 'InternAuthCheck'], function($routes){
@@ -99,7 +101,9 @@ $routes->group('internship', ['filter' => 'InternAuthCheck'], function($routes){
 // for Vocational Course
 $routes->group('vocational', ['filter' => 'InternAuthCheck'], function($routes){
     $routes->group('', ['filter' => 'internProfileComplete'], function($routes){
-        $routes->get('programs', 'VocationalProgram::index');
+        $routes->match(['get','post'],'programs', 'VocationalProgram::index');
+        $routes->match(['get','post'],'exam-payment-verify', 'VocationalProgram::exam_payment_verify');
+        $routes->get('exam_fee_receipt_pdf/(:any)','MpdfController::exam_fee_receipt_pdf/$1');
     });
 });
 $routes->group('internship', ['filter' => 'InternAlreadyLoggedIn'], function($routes){
@@ -201,6 +205,12 @@ $routes->group('', ['filter' => 'AuthCheck'], function($routes){
     $routes->match(['get','post'], 'admin/intern_course/(:num)', 'Admin\InternCourse::index/$1');
     $routes->get('admin/view_pdf/(:any)', 'MpdfController::view_pdf/$1');
     $routes->get('admin/delete_intern_course/(:num)', 'Admin\InternCourse::delete_intern_course/$1');
+
+    /**************************Vocational Course************************************** */
+    $routes->match(['get','post'], 'admin/vocational-course', 'Admin\VocationalCourse::index');
+    $routes->match(['get','post'], 'admin/vocational-course/(:num)', 'Admin\VocationalCourse::index/$1');
+    // $routes->get('admin/view_pdf/(:any)', 'MpdfController::view_pdf/$1');
+    $routes->get('admin/delete_v_course/(:num)', 'Admin\VocationalCourse::delete_v_course/$1');
 
     /**************************Question Bank************************************** */
     $routes->match(['get','post'], 'admin/question_bank', 'Admin\QuestionBank::index');

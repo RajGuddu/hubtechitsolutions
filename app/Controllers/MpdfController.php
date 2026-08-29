@@ -88,6 +88,13 @@ class MpdfController extends BaseController
         // echo $html;exit;
         return $this->common_pdf_generator_for_modal($html, $fileName);
     }
+    public function exam_fee_receipt_pdf($_va_id){
+        $va_id = base64_decode($_va_id);
+        $record = $this->service_model->get_one_vocational_applicant($va_id);
+        $html = view('pdfhtml/fee_receipt', ['record'=>$record]);
+        $fileName = 'Payment_Receipt_'.$record->reg_no;
+        return $this->common_pdf_generator_for_modal($html, $fileName);
+    }
     private function common_pdf_generator_for_modal($html, $_fileName){
         $mpdf = new Mpdf([
             'format' => 'A4',
@@ -212,6 +219,24 @@ class MpdfController extends BaseController
     public function c_p_pdf(){ //cover page
         $student = $this->service_model->get_one_internship_course_detail(3);
         $html = view('pdfhtml/cover_page', ['record'=>$student]);
+        // echo $html;exit;
+        $mpdf = new Mpdf([
+            'format' => 'A4',
+            'margin_top' => 0,
+            'margin_bottom' => 0,
+            'margin_left' => 0,
+            'margin_right' => 0,
+            'orientation' => 'P'
+        ]);
+
+        $mpdf->WriteHTML($html);
+
+        // return $mpdf->Output('', 'S'); // PDF string return
+        $mpdf->Output('cover_page.pdf', 'I'); exit;
+    }
+    public function receipt_pdf(){ //payment receipt
+        $student = $this->service_model->get_one_vocational_applicant(1);
+        $html = view('pdfhtml/fee_receipt', ['record'=>$student]);
         // echo $html;exit;
         $mpdf = new Mpdf([
             'format' => 'A4',

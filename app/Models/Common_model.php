@@ -43,8 +43,12 @@ class Common_model extends Model
             $builder->where($whereArr);
         }
         if($orderBy != null){
-           $builder->orderBy($orderBy[0],$orderBy[1]);
+        //    $builder->orderBy($orderBy[0],$orderBy[1]);
+            foreach (array_chunk($orderBy, 2) as $order) {
+                $builder->orderBy($order[0], $order[1] ?? 'ASC');
+            }
         }
+        
         $query = $builder->get();
         $result = $query->getResult();
         return $result;

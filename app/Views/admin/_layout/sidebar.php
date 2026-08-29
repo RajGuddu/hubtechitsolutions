@@ -113,6 +113,38 @@
             </div>
           </li>
           <?php } ?>
+
+          <?php // Vocational Course ?>
+          <?php if(is_privilege([24,25,26])){
+            $collapsed = 'collapsed'; $show = ''; $active = ''; $areaexpanded = 'false';
+
+            if(in_array($segment2, ['vocational-course'])){
+              $collapsed = ''; $show = 'show'; $active = 'active'; $areaexpanded = 'true';
+            }
+          ?>
+          <li class="nav-item <?=$active?>">
+            <a class="nav-link <?=$collapsed?>" data-bs-toggle="collapse" href="#vocational" aria-expanded="<?=$areaexpanded?>" aria-controls="auth">
+              <i class="menu-icon mdi mdi-briefcase-outline"></i>
+              <span class="menu-title">Vocational Management</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse <?=$show?>" id="vocational">
+              <ul class="nav flex-column sub-menu">
+                <?php /*if(is_privilege(24)){ ?>
+                <li class="nav-item <?=($segment2=='intern-students')?'active':''?>"> <a class="nav-link" href="<?=base_url('admin/intern-students')?>">V-Student List</a></li>
+                <?php }*/ ?>
+                <li class="nav-item "> <a class="nav-link" href="javascript:void(0)" onclick="return confirm('Under Development!')">V-Student List</a></li>
+                <?php if(is_privilege(25)){ ?>
+                <li class="nav-item <?=($segment2=='vocational-course')?'active':''?>"> <a class="nav-link" href="<?=base_url('admin/vocational-course')?>"> Vocational Course</a></li>
+                <?php } ?>
+                <li class="nav-item "> <a class="nav-link" href="javascript:void(0)" onclick="return confirm('Under Development!')">V-Question Bank</a></li>
+                <?php /*if(is_privilege(26)){ ?>
+                <li class="nav-item <?=($segment2=='question_bank')?'active':''?>"> <a class="nav-link" href="<?=base_url('admin/question_bank')?>">V-Question Bank</a></li>
+                <?php }*/ ?>
+              </ul>
+            </div>
+          </li>
+          <?php } ?>
           
           <?php if(is_privilege(15) || is_privilege(16)){
             $collapsed = 'collapsed'; $show = ''; $active = ''; $areaexpanded = 'false';

@@ -20,6 +20,9 @@ class Test extends BaseController
         $this->commonmodel = model('App\Models\Common_model', false);
         $this->servicemodel = model('App\Models\Service_model', false);
     }
+    public function reci(){
+        echo view('pdfhtml/fee_receipt');
+    }
     public function add(){
         $amount = 300;
 
@@ -143,7 +146,7 @@ class Test extends BaseController
     }
     public function update(){
         echo '<pre>';
-        // $this->commonmodel->updateRecord('tbl_intern_course', ['exam_ques'=>50, 'exam_duration'=>gmdate("H:i:s", 90 * 60)], ['ic_id >='=>1]);
+        // $this->commonmodel->updateRecord('tbl_vocational_course', ['total_questions'=>40, 'exam_duration'=>gmdate("H:i:s", 60 * 60)], ['vc_id >='=>1]);
         // $this->commonmodel->updateRecord('tbl_internship_applications', ['exam_duration'=>gmdate("H:i:s", 90 * 60)], ['ia_id >='=>1]);
 
         /*$data = $this->commonmodel->getAllRecord('tbl_internship_enrollment',['ie_id >'=>218, 'ie_id <='=>225]);
