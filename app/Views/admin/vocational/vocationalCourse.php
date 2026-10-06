@@ -46,6 +46,7 @@ if (isset($_GET['add']) || isset($record->vc_id)) {
                                 <th>#</th>
                                 <th>Sort Order</th>
                                 <th>Course Name</th>
+                                <th>Course Category</th>
                                 <th>Course Short Name</th>
                                 <th>Duration</th>
                                 <th>Exam Fee (₹)</th>
@@ -74,12 +75,19 @@ if (isset($_GET['add']) || isset($record->vc_id)) {
                                 list($hours, $minutes, $seconds) = explode(':', $list->exam_duration);
                                 $totalMinutes = ($hours * 60) + $minutes + ($seconds / 60);
                             }
+                            $courseCat = '<span class="badge bg-success">Computer</span>';
+                            if($list->course_cat == 'B'){
+                                $courseCat = '<span class="badge bg-primary">Beautician</span>';
+                            }elseif($list->course_cat == 'T'){
+                                $courseCat = '<span class="badge bg-warning">Tailoring</span>';
+                            }
                             ?>
 
                             <tr>
                                 <td><?= $n++ ?></td>
                                 <td><?= $list->sort_order ?></td>
                                 <td><?= esc($list->course_name) ?></td>
+                                <td><?= $courseCat ?></td>
                                 <td><?= esc($list->course_short_name) ?></td>
                                 <td><?= esc($list->duration) ?></td>
                                 <td>₹<?= esc($list->exam_fee) ?></td>
@@ -147,6 +155,17 @@ if (isset($_GET['add']) || isset($record->vc_id)) {
                             <input type="text" name="course_name" value="<?= set_value('course_name', $record->course_name ?? '') ?>" class="form-control">
                             <span class="text-danger">
                                 <?= isset($validation) ? display_error($validation, 'course_name') : '' ?>
+                            </span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Course Category <span class="text-danger">*</span></label>
+                            <select class="form-select" name="course_cat" id="course_cat">
+                                <option value="C" <?=set_select('course_cat', 'C', (isset($record->course_cat) && $record->course_cat == 'C')?TRUE:FALSE) ?>>Computer</option>
+                                <option value="B" <?=set_select('course_cat', 'B', (isset($record->course_cat) && $record->course_cat == 'B')?TRUE:FALSE) ?>>Beautician </option>
+                                <option value="T" <?=set_select('course_cat', 'T', (isset($record->course_cat) && $record->course_cat == 'T')?TRUE:FALSE) ?>>Tailoring  </option>
+                            </select>
+                            <span class="text-danger">
+                                <?= isset($validation) ? display_error($validation, 'course_cat') : '' ?>
                             </span>
                         </div>
                         

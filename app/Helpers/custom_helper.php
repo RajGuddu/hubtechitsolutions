@@ -176,4 +176,28 @@
             }
         }
     }
+    if(!function_exists('get_vocational_program_status')){
+        function get_vocational_program_status($status){
+            switch ($status){
+                case 1:
+                    return '<span class="badge bg-success text-light mb-1 d-inline-block">Exam Fee Paid</span>';
+                    break;
+                case 2:
+                    return '<span class="badge bg-primary text-light mb-1 d-inline-block">Exam In Progress</span>';
+                    break;
+                case 3:
+                    return '<span class="badge bg-warning text-light mb-1 d-inline-block">Exam Completed (Failed)</span>';
+                    break;
+                case 4:
+                    return '<span class="badge bg-primary text-light mb-1 d-inline-block">Exam Completed (Passed)</span>';
+                    break;
+                case 5:
+                    return '<span class="badge bg-success text-light mb-1 d-inline-block">Course Completed</span>';
+                    break;
+                default:
+                    return '<span class="badge bg-warning text-light mb-1 d-inline-block">Application Incomplete</span>';
+                    break;
+            }
+        }
+    }
 ?>

@@ -52,6 +52,8 @@
                                         <li><a href="<?=base_url('intern-certificate-verification')?>">Internship Student Verification</a></li>
                                         <li><a href="<?=base_url('certificate-verification')?>">Center Student Verification</a></li>
                                         <li><a href="<?=base_url('contact-us')?>">Contact</a></li>
+                                        <li><a href="<?=base_url('privacy-policy')?>">Privacy Policy</a></li>
+                                        <li><a href="<?=base_url('terms-and-conditions')?>">Terms & Condition</a></li>
                                         
                                     </ul>
                                 </div>

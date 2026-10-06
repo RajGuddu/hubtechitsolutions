@@ -23,6 +23,7 @@
                                         <input type="hidden" name="orderId" value="<?= $orderId ?? '' ?>">
                                         <input type="hidden" name="application_id" value="<?= $application_id ?? '' ?>">
                                         <input type="hidden" name="te_id" value="<?= $te_id ?? '' ?>">
+                                        <input type="hidden" name="va_id" value="<?= $va_id ?? '' ?>">
                                         <input type="hidden" name="amount" value="<?= $amount ?? '' ?>">
                                     </form>
                                 </div>

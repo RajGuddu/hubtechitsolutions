@@ -193,7 +193,7 @@
                                         <h5 class="fw-bold mb-0">
                                             <?=$courseDtls->course_short_name?>
                                         </h5>
-                                        <?= get_intern_program_status($cList->status) ?>
+                                        <?= get_vocational_program_status($cList->status) ?>
                                     </div>
                                     <p class="text-muted small mb-0 mt-1">
                                         <?=$courseDtls->course_name?>
@@ -240,7 +240,7 @@
                                         data-bs-toggle="modal"
                                         data-bs-target="#viewCourseModal"
                                         data-record='<?= base64_encode(json_encode($cList)) ?>'
-                                        data-status="<?= htmlspecialchars(get_intern_program_status($cList->status), ENT_QUOTES, 'UTF-8') ?>">
+                                        data-status="<?= htmlspecialchars(get_vocational_program_status($cList->status), ENT_QUOTES, 'UTF-8') ?>">
                                         <i class="ri-eye-line"></i>
                                         View
                                     </button>
@@ -266,57 +266,92 @@
                                 </div>
                             </div>
                             <!-- Step 3 -->
-                            <div class="horizontal-step active">
+                            <div class="horizontal-step <?=($cList->status >= 4)?'completed':'active'?>">
                                 <div class="horizontal-step-circle">
-                                    3
+                                    <?=($cList->status >= 4)?'<i class="ri-check-line"></i>':'3'?>
                                 </div>
                                 <div class="horizontal-step-content">
                                     <h6>
                                         Online Exam
                                     </h6>
+                                    <?php 
+                                        $label3rd = "Exam Available";
+                                        if($cList->status >= 4) $label3rd = "Exam Completed";
+                                    ?>
                                     <span>
-                                        Exam Available
+                                        <?=$label3rd?>
                                     </span>
-                                    <button class="btn btn-primary btn-xs" onclick="alert('Online Exam सुविधा अभी Development में है। कृपया बाद में पुनः प्रयास करें।');">
+                                    <?php if($cList->status >= 4){ ?>
+                                    <a href="<?=base_url('internship/exam-review')?>" class="btn btn-outline-success btn-xs">
+                                        <i class="ri-file-chart-line"></i>
+                                        Result
+                                    </a>
+                                    <?php }else{ ?>
+                                    <a href="<?=base_url('vocational/vexam/'.base64_encode($cList->va_id))?>" class="btn btn-primary btn-xs" onclick="alert('Ready to Start Your Exam?');">
                                         <i class="ri-edit-line"></i>
-                                        Start Exam
-                                    </button>
+                                        <?=($cList->status == 3)?'Retake':'Start'?> Exam
+                                    </a>
+                                    <?php } ?>
                                 </div>
                             </div>
                             <!-- Step 4 -->
-                            <div class="horizontal-step">
+                            <div class="horizontal-step <?=($cList->status < 4)?'':(($cList->status == 4)?'active':'completed')?>">
                                 <div class="horizontal-step-circle">
-                                    4
+                                    <?=($cList->status == 5)?'<i class="ri-check-line"></i>':'4'?>
                                 </div>
                                 <div class="horizontal-step-content">
                                     <h6>
                                         Course Fee
                                     </h6>
                                     <span>
-                                        After Exam
+                                        <?=($cList->status == 5)?'Payment Completed':'After Exam'?>
                                     </span>
+                                    <?php if($cList->status == 4){ ?>
+                                    <button class="btn btn-primary btn-xs course-fee-payment-btn" data-bs-toggle="modal" data-bs-target="#CourseFeeModal"
+                                        data-bs-toggle="modal" data-bs-target="#CourseFeeModal"
+                                        data-course="<?=$courseDtls->course_name?>" data-fee="₹<?=$courseDtls->course_fee?>" data-va_id="<?=base64_encode($cList->va_id)?>">
+                                        <i class="ri-bank-card-line"></i>
+                                        Make Payment ₹<?=$courseDtls->course_fee?>
+                                    </button>
+                                    
+                                    <?php }elseif($cList->status == 5){ ?>
+                                    <button class="btn btn-outline-success btn-xs viewPdfBtn"
+                                        data-pdf="<?= base_url('vocational/course_fee_receipt_pdf/' . base64_encode($cList->va_id)) ?>" data-title="Payment Receipt">
+                                        <i class="ri-file-list-line"></i>
+                                        Receipt
+                                    </button>
+                                    <?php }else{ ?>
                                     <button class="btn btn-outline-secondary btn-xs" disabled>
                                         <i class="ri-lock-line"></i>
                                         Locked
                                     </button>
+                                    <?php } ?>
                                 </div>
                             </div>
                             <!-- Step 5 -->
-                            <div class="horizontal-step">
+                            <div class="horizontal-step <?=($cList->status == 5)?'completed':''?>">
                                 <div class="horizontal-step-circle">
-                                    5
+                                    <?=($cList->status == 5)?'<i class="ri-check-line"></i>':'5'?>
                                 </div>
                                 <div class="horizontal-step-content">
                                     <h6>
                                         Certificate
                                     </h6>
                                     <span>
-                                        Course Complete
+                                        Course Completed
                                     </span>
+                                    <?php if($cList->status == 5){ ?>
+                                    <button class="btn btn-outline-success btn-xs viewPdfBtn"
+                                        data-pdf="<?= base_url('vocational/vocational_cert_pdf/' . base64_encode($cList->va_id)) ?>" data-title="Certificate">
+                                        <i class="ri-award-line"></i>
+                                        Certificate
+                                    </button>
+                                    <?php }else{ ?>
                                     <button class="btn btn-outline-secondary btn-xs" disabled>
                                         <i class="ri-lock-line"></i>
                                         Locked
                                     </button>
+                                    <?php } ?>
                                 </div>
                             </div>
                         </div>
@@ -639,8 +674,7 @@
                             <small class="text-muted d-block">
                                 Status
                             </small>
-                            <span class="badge bg-success"
-                                  id="viewStatus">
+                            <span class="" id="viewStatus">
                                 Registered
                             </span>
                         </div>
@@ -658,6 +692,82 @@
     </div>
 </div>
 <!-- =====================================================
+    COURSE Fee Payment MODAL
+===================================================== -->
+<div class="modal fade" id="CourseFeeModal" tabindex="-1" aria-labelledby="CourseFeeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <form action="<?=current_url()?>" method="post">
+            <?=csrf_field()?>
+            <input type="hidden" name="va_id" value="" id="modalVaId">
+            <input type="hidden" name="form_id" value="course_fee" id="course_fee">
+            <!-- Header -->
+            <div class="modal-header border-0 bg-success text-white px-4 py-3">
+                <div>
+                    <h4 class="modal-title text-white fw-bold mb-1" id="CourseFeeModalLabel">
+                        Course Fee Payment
+                    </h4>
+                    <small class="text-white-50">
+                        Vocational Course
+                    </small>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <!-- Body -->
+            <div class="modal-body p-4">
+                <!-- Course -->
+                <div class="text-center mb-3">
+                    <div class="apply-modal-icon mx-auto mb-3">
+                        <i class="ri-book-open-line"></i>
+                    </div>
+                    <div class="text-muted small mb-1">
+                        Completed Course
+                    </div>
+                    <h5 class="fw-bold mb-0" id="modalCompletedCourseName">
+                        Diploma in Computer Applications
+                    </h5>
+                </div>
+                <!-- Registration Fee -->
+                <div class="registration-fee-box text-center mb-4">
+                    <div class="small text-muted mb-1">
+                        Course Fee
+                    </div>
+                    <div class="registration-fee" id="modalCompletedCourseFee">
+                        ₹100
+                    </div>
+                </div>
+                <!-- Message -->
+                <div class="alert alert-success border-0 rounded-3 mb-0">
+                    <div class="d-flex align-items-start">
+                        <i class="ri-information-line fs-4 me-2"></i>
+                        <div class="small">
+                            <strong>Payment Information</strong>
+                            <p class="mb-0 mt-1">
+                                आगे बढ़ने पर आपको सुरक्षित
+                                <strong>Payment Gateway</strong> पर
+                                भेजा जाएगा, जहाँ आप Course Fee
+                                का भुगतान कर सकेंगे।
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Footer -->
+            <div class="modal-footer border-0 px-4 pb-4 pt-0">
+                <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">
+                    Cancel
+                </button>
+                <button type="submit" class="btn btn-success rounded-pill px-4" id="proceedCourseFeePaymentBtn">
+                    <i class="ri-secure-payment-line me-1"></i>
+                    Proceed to Payment
+                </button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- =====================================================
      APPLY COURSE MODAL
 ===================================================== -->
 <div class="modal fade" id="applyCourseModal" tabindex="-1" aria-labelledby="applyCourseModalLabel" aria-hidden="true">
@@ -670,7 +780,7 @@
             <!-- Header -->
             <div class="modal-header border-0 bg-primary text-white px-4 py-3">
                 <div>
-                    <h4 class="modal-title fw-bold mb-1" id="applyCourseModalLabel">
+                    <h4 class="modal-title text-white fw-bold mb-1" id="applyCourseModalLabel">
                         Apply for Course
                     </h4>
                     <small class="text-white-50">
@@ -799,6 +909,22 @@ document.addEventListener('DOMContentLoaded', function () {
             modalCourseName.textContent = courseName;
             modalCourseFee.textContent = courseFee;
             modalCourseId.value = courseId;
+        });
+    });
+});
+document.addEventListener('DOMContentLoaded', function () {
+    const courseFeePayButtons = document.querySelectorAll('.course-fee-payment-btn');
+    const modalCourseName = document.getElementById('modalCompletedCourseName');
+    const modalCourseFee = document.getElementById('modalCompletedCourseFee');
+    const modalVaId = document.getElementById('modalVaId');
+    courseFeePayButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            const courseName = this.getAttribute('data-course');
+            const courseFee = this.getAttribute('data-fee');
+            const vaId = this.getAttribute('data-va_id');
+            modalCourseName.textContent = courseName;
+            modalCourseFee.textContent = courseFee;
+            modalVaId.value = vaId;
         });
     });
 });

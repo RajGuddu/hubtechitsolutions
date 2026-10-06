@@ -14,7 +14,8 @@
         "laminas/laminas-escaper": "^2.9",
         "psr/log": "^1.1",
         "mpdf/mpdf": "^8.3",
-        "endroid/qr-code": "^5.1"
+        "endroid/qr-code": "^5.1",
+        "phpoffice/phpspreadsheet": "^5.8"
     },
     "require-dev": {
         "codeigniter/coding-standard": "^1.1",

@@ -82,6 +82,14 @@
         font-weight: 500;
         cursor: pointer;
     }
+    a{
+        color:#0c2778;
+        text-decoration:none;
+    }
+
+    a:hover{
+        color:#80082b;
+    }
 </style>
 
 <div class="container min-vh-100 d-flex justify-content-center align-items-center">
@@ -293,7 +301,16 @@
                     <input class="form-check-input" type="checkbox" id="terms" name="terms" value="1"
                         <?=set_checkbox('terms','1'); ?>>
                     <label class="form-check-label" for="terms">
-                        I agree to Terms & Conditions
+                        I agree to the
+                        <a href="<?= base_url('terms-and-conditions') ?>"
+                        target="_blank">
+                            Terms & Conditions
+                        </a>
+                        and
+                        <a href="<?= base_url('privacy-policy') ?>"
+                        target="_blank">
+                            Privacy Policy
+                        </a>.
                     </label>
                 </div>
                 <span class="text-danger">

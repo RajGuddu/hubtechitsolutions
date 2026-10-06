@@ -21,12 +21,12 @@
                     <form method="post" action="<?=base_url('admin/intern-students')?>">
                         <?=csrf_field()?>
                         <div class="row">
-                            <div class="col-md-3">
+                            <div class="col-md-3 px-0">
                                 <input type="text" name="search" class="form-control"
                                     placeholder="Search by Name, Email & Phone"
                                     value="<?=session('intern_student_search')?>" >
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2 px-1">
                                 <select name="status" id="status" class="form-select" style="height:49px;">
                                     <option value="">Student Status</option>
                                     <option value="N" <?=set_select('status','N',(session('intern_student_status') == 'N')?true:false)?>>Pending</option>
@@ -34,7 +34,7 @@
                                 </select>
                                 
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2 px-1">
                                 <select name="cstatus" id="cstatus" class="form-select" style="height:49px;">
                                     <option value="">Course Status</option>
                                     <option value="1" <?=set_select('cstatus',1,(session('intern_course_status') == 1)?true:false)?>>Payment Completed</option>
@@ -46,15 +46,18 @@
                                 </select>
                                 
                             </div>
-                            <div class="col-md-3 d-flex gap-2">
-                                <button type="submit" class="btn btn-primary w-100">
+                            <div class="col-md-5 px-1 d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">
                                     Search
                                 </button>
                                 <?php if(session('intern_student_search') || session('intern_student_status') || session('intern_course_status')){ ?>
-                                <a href="<?=base_url('admin/intern-students/reset-search')?>" class="btn btn-secondary">
+                                <a href="<?=base_url('admin/intern-students/reset-search')?>" class="btn btn-warning">
                                     Reset
                                 </a>
                                 <?php } ?>
+                                <a href="<?=base_url('admin/intern-export')?>" class="btn btn-danger w-100" onclick="return confirm('Are you sure to download excelsheet?')">
+                                    <i class="fa-solid fa-file-excel fs-5"></i>&nbsp;&nbsp;&nbsp;  Export to Excel
+                                </a>
                             </div>
                         </div>
                     </form>

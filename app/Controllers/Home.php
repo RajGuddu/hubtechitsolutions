@@ -58,6 +58,20 @@ class Home extends BaseController
         echo view('contact', $data);
         echo view('include/footer', $data);
     }
+    public function terms_condition(){
+        $data['title'] = 'Hubtech | Terms & Condition';
+        $data['settings'] = $this->common_model->get_setting(1);
+        echo view('include/header', $data);
+        echo view('terms_condition', $data);
+        echo view('include/footer', $data);
+    }
+    public function privacy_policy(){
+        $data['title'] = 'Hubtech | Privacy Policy';
+        $data['settings'] = $this->common_model->get_setting(1);
+        echo view('include/header', $data);
+        echo view('privacy_policy', $data);
+        echo view('include/footer', $data);
+    }
     public function save_contact_us(){ // also course enrolled form submit from course details page
 		if($this->request->getMethod() == 'post'){
 			$result = array();
@@ -314,6 +328,7 @@ class Home extends BaseController
                 'password' => $hashPassword,
                 'phone' => $tempStudtls->phone,
                 'genger' => $tempStudtls->gender,
+                'terms' => $tempStudtls->terms,
                 'status' => 0,
                 'can_login' => 1,
                 'profile_completed' => 0,
@@ -333,7 +348,11 @@ class Home extends BaseController
                     $is_exist = $this->common_model->getAllRecordCount('tbl_internship_applications',['enroll_id'=>$enrollId]);
                 }while($is_exist);
                 $internCourse = $this->common_model->getOneRecord('tbl_intern_course',['ic_id'=>$tempStudtls->ic_id]);
-                
+                $addedAt = date('Y-m-d H:i:s');
+                /***********Temporary Added Date ******/
+                $addedAt = date('Y-m-d H:i:s', strtotime('-7 days'));
+                /*********************************** */
+                    
                 $internAppData = array(
                     'ie_id' => $ie_id,
                     'enroll_id' => $enrollId,
@@ -347,14 +366,15 @@ class Home extends BaseController
                     'ic_id' => $tempStudtls->ic_id,
                     // 'duration' => $tempStudtls->duration,
                     'terms' => $tempStudtls->terms ?? 1,
-                    'attendence' => mt_rand(80, 95),
+                    // 'attendence' => mt_rand(80, 95),
+                    'attendence' => 100,
                     'status' => 1, // Payment Completed
                     'payment_status' => 'Success',
                     'razor_payment_id' => $_POST['paymentId'],
                     'razor_order_id' => $_POST['orderId'],
                     'amount' => $amount,
                     'exam_duration' => $internCourse->exam_duration,
-                    'added_at' => date('Y-m-d H:i:s')
+                    'added_at' => $addedAt
                 );
                 $ia_id = $this->common_model->insertRecord('tbl_internship_applications',$internAppData);
                 if($ia_id){
@@ -477,6 +497,20 @@ class Home extends BaseController
         }
         echo view('include/header', $data);
         echo view('intern_verification', $data);
+        echo view('include/footer', $data);
+    }
+    public function vocational_certificate_verification(){
+        $data['title'] = 'Hubtech | Vocational Certificate Verification';
+        if(isset($_GET['cert_no']) && $_GET['cert_no'] != ''){
+            $certDtls = $this->service_model->get_searched_vocational_certificate(trim($_GET['cert_no']));
+            if(!empty($certDtls)){
+                $data['certDtls'] = $certDtls;
+            }else{
+                session()->setFlashdata('err', 'Certificate Details Not Found! Please check the certificate No/Enrollment No.');
+            }
+        }
+        echo view('include/header', $data);
+        echo view('vocational_verification', $data);
         echo view('include/footer', $data);
     }
     public function download_intern_letter($ia_id){

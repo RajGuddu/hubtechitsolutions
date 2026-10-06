@@ -177,8 +177,9 @@ if (isset($_GET['add']) || isset($record->q_id)) {
                                     <th>Course Name</th>
                                     <th>Course Duration</th>
                                     <th>Exam Fee</th>
+                                    <th>Course Fee</th>
                                     <th>Status</th>
-                                    <!-- <th>Action</th> -->
+                                    <th>Action</th>
                                 </tr>
                             </thead>
 
@@ -206,21 +207,53 @@ if (isset($_GET['add']) || isset($record->q_id)) {
                                     <td><?php echo $list->reg_no  ?></td>
                                     <td><?= esc($courseDtls->course_name) ?></td>
                                     <td><?= esc($courseDtls->duration) ?></td>
-                                    <td><?= '₹'.$list->amount?></td>
-                                    <td><?= get_intern_program_status($list->status); ?></td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="fw-semibold text-dark">
+                                                ₹<?= number_format($list->amount, 2) ?>
+                                            </span>
 
-                                    <?php /*<td
-                                        class="<?= (isset($record) && $record->q_id == $list->q_id) ? 'bg-success' : '' ?>">
-                                        <a class="btn btn-sm btn-outline-primary"
-                                            href="<?= site_url('admin/question_bank/' . $list->q_id) ?>">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                        </a>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-primary rounded-circle d-inline-flex align-items-center justify-content-center p-0 viewPdfBtn"
+                                                    style="width:34px;height:34px;"
+                                                    title="Receipt"
+                                                    data-pdf="<?= base_url('admin/exam_fee_receipt_pdf/' . base64_encode($list->va_id)) ?>"
+                                                    data-title="Exam Fee Reciept">
+                                                <i class="fa-solid fa-receipt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="fw-semibold text-dark">
+                                                ₹<?= number_format($list->coursefee_amount, 2) ?>
+                                            </span>
+                                            <?php if($list->status == 5){ ?>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-primary rounded-circle d-inline-flex align-items-center justify-content-center p-0 viewPdfBtn"
+                                                    style="width:34px;height:34px;"
+                                                    title="Receipt"
+                                                    data-pdf="<?= base_url('admin/course_fee_receipt_pdf/' . base64_encode($list->va_id)) ?>"
+                                                    data-title="Course Fee Reciept">
+                                                <i class="fa-solid fa-receipt"></i>
+                                            </button>
+                                            <?php } ?>
+                                        </div>
+                                    </td>
+                                    <td><?= get_vocational_program_status($list->status); ?></td>
 
-                                        <a class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure?')"
+                                    <td>
+                                        <?php if($list->status == 5){ ?>
+                                        <button class="btn btn-sm btn-outline-primary viewPdfBtn" title="Certificate" data-pdf="<?= base_url('admin/vocational_cert_pdf/' . base64_encode($list->va_id)) ?>" data-title="Certificate">
+                                            <i class="fa-solid fa-award"></i>
+                                        </button>
+                                        <?php }else{ echo '--'; } ?>
+
+                                        <?php /* <a class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure?')"
                                             href="<?= site_url('admin/delete_question/' . $list->q_id) ?>">
                                             <i class="fa-solid fa-trash"></i>
-                                        </a>
-                                    </td>*/?>
+                                        </a> */ ?>
+                                    </td>
                                 </tr>
 
                                 <?php endforeach; ?>

@@ -46,6 +46,8 @@ $routes->get('about-us', 'Home::about_us');
 $routes->get('courses', 'Home::courses');
 $routes->get('course-details/(:any)', 'Home::course_details/$1');
 $routes->get('contact-us', 'Home::contact_us');
+$routes->get('terms-and-conditions', 'Home::terms_condition');
+$routes->get('privacy-policy', 'Home::privacy_policy');
 $routes->match(['get','post'],'home/save_contact_us', 'Home::save_contact_us');
 $routes->match(['get','post'],'certificate-verification', 'Home::certificate_verification');
 $routes->match(['get','post'],'enroll-internship', 'Home::enroll_internship');
@@ -53,11 +55,14 @@ $routes->match(['get','post'],'enrollment-payment-verify', 'Home::enrollment_pay
 $routes->get('intern-pay-success', 'Home::internPaySuccess');
 
 $routes->match(['get','post'],'intern-certificate-verification', 'Home::intern_certificate_verification');
+$routes->get('vocational-certificate-verification', 'Home::vocational_certificate_verification');
 $routes->match(['get','post'],'download-intern-letter/(:num)', 'Home::download_intern_letter/$1');
 
 // examination route for ajax
 $routes->post('intern-update-examinee-duration', 'Internship::intern_update_examinee_duration');
 $routes->post('intern-exam-save-result', 'Internship::intern_exam_save_result');
+$routes->post('vocational-update-examinee-duration', 'VocationalProgram::vocational_update_examinee_duration');
+$routes->post('vocational-exam-save-result', 'VocationalProgram::vocational_exam_save_result');
 // end examination route for ajax
 
 //test route
@@ -66,6 +71,7 @@ $routes->get('testmail', 'Home::testmail');
 $routes->get('c_p_pdf', 'MpdfController::c_p_pdf'); //cover page
 $routes->get('a_c_pdf', 'MpdfController::a_c_pdf'); // attendance cert
 $routes->get('i_c_pdf', 'MpdfController::i_c_pdf'); // intern cert
+$routes->get('v_c_pdf', 'MpdfController::v_c_pdf'); // vocational Computer cert
 $routes->get('update', 'Test::update');
 // $routes->get('add', 'Test::add');
 // $routes->get('refund', 'Test::refund');
@@ -94,6 +100,7 @@ $routes->group('internship', ['filter' => 'InternAuthCheck'], function($routes){
         $routes->get('cover_page_pdf/(:any)','MpdfController::cover_page_pdf/$1');
         $routes->get('atten_cert_pdf/(:any)','MpdfController::atten_cert_pdf/$1');
         $routes->get('intern_cert_pdf/(:any)','MpdfController::intern_cert_pdf/$1');
+        $routes->get('fee_receipt_pdf/(:any)','MpdfController::intern_fee_receipt_pdf/$1');
     });
     $routes->get('logout', 'Internship::logout');
 });
@@ -104,11 +111,19 @@ $routes->group('vocational', ['filter' => 'InternAuthCheck'], function($routes){
         $routes->match(['get','post'],'programs', 'VocationalProgram::index');
         $routes->match(['get','post'],'exam-payment-verify', 'VocationalProgram::exam_payment_verify');
         $routes->get('exam_fee_receipt_pdf/(:any)','MpdfController::exam_fee_receipt_pdf/$1');
+        $routes->match(['get','post'], 'vexam/(:any)', 'VocationalProgram::exam/$1');
+        $routes->match(['get','post'],'courseFee-payment-verify', 'VocationalProgram::courseFee_payment_verify');
+        $routes->get('course_fee_receipt_pdf/(:any)','MpdfController::course_fee_receipt_pdf/$1');
+        $routes->get('vocational_cert_pdf/(:any)','MpdfController::vocational_cert_pdf/$1');
     });
 });
 $routes->group('internship', ['filter' => 'InternAlreadyLoggedIn'], function($routes){
     //Add all routes need protected after logged in
     $routes->get('login', 'Internship::login');
+    $routes->match(['get','post'], 'register', 'Internship::register');
+    $routes->get('verify-email/(:any)', 'Internship::verify_email/$1');
+    $routes->match(['get','post'], 'forgot-password', 'Internship::forgot_password');
+    $routes->match(['get','post'], 'reset-password/(:any)', 'Internship::reset_password/$1');
 });
 
 //Filter on route group
@@ -192,6 +207,7 @@ $routes->group('', ['filter' => 'AuthCheck'], function($routes){
     $routes->match(['get','post'],'/admin/intern-students', 'Admin\Internship::index');
     $routes->match(['get','post'],'/admin/intern-students/(:num)', 'Admin\Internship::index/$1');
     $routes->get('admin/intern-students/reset-search', 'Admin\Internship::reset_search');
+    $routes->get('admin/intern-export', 'Admin\Internship::intern_export');
     $routes->get('admin/get_offer_letter_pdf/(:num)', 'MpdfController::get_offer_letter_pdf_for_modal/$1');
     $routes->match(['get','post'],'/admin/refund_amount', 'Admin\Internship::refund_amount');
     $routes->get('admin/update_refund_status/(:num)', 'Admin\Internship::update_refund_status/$1');
@@ -218,6 +234,9 @@ $routes->group('', ['filter' => 'AuthCheck'], function($routes){
     /**************************Vocational Student List********************************** */
     $routes->match(['get','post'], 'admin/vstudent', 'Admin\VStudent::index');
     // $routes->match(['get','post'], 'admin/vquestion_reset_search', 'Admin\VQuestionBank::reset_search');
+    $routes->get('admin/exam_fee_receipt_pdf/(:any)','MpdfController::exam_fee_receipt_pdf/$1');
+    $routes->get('admin/vocational_cert_pdf/(:any)', 'MpdfController::vocational_cert_pdf/$1');
+    $routes->get('admin/course_fee_receipt_pdf/(:any)','MpdfController::course_fee_receipt_pdf/$1');
 
     /**************************Question Bank************************************** */
     $routes->match(['get','post'], 'admin/question_bank', 'Admin\QuestionBank::index');

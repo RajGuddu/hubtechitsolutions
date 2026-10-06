@@ -125,7 +125,8 @@
                                     <li class="has-droupdown"><a href="#">Certificate Verification</a>
                                         <ul class="submenu">
                                             
-                                            <li><a href="<?=base_url('intern-certificate-verification')?>">Internship Student</a></li>
+                                            <li><a href="<?=base_url('intern-certificate-verification')?>">Internship</a></li>
+                                            <li><a href="<?=base_url('vocational-certificate-verification')?>">Vocational</a></li>
                                             <li><a href="<?=base_url('certificate-verification')?>">Center Student</a></li>
                                             <!-- <li><a href="course-four.html">Course Style 4</a></li>
                                             <li><a href="course-five.html">Course Style 5</a></li> -->
@@ -135,10 +136,10 @@
                                     <li class="has-droupdown"><a href="javascript:void(0)">Login</a>
                                         <ul class="submenu">
                                             <?php if(session()->has('internIsLoggedIn')){ ?>
-                                                <li><a href="<?=base_url('internship/dashboard')?>">Internship Dashboard</a></li>
+                                                <li><a href="<?=base_url('internship/dashboard')?>">Dashboard</a></li>
                                                 <li><a href="<?=base_url('internship/logout')?>" onclick="return confirm('Are u sure?')">Logout</a></li>
                                             <?php }else{ ?>
-                                                <li><a href="<?=base_url('internship/login')?>">Internship Student</a></li>
+                                                <li><a href="<?=base_url('internship/login')?>">Internship & Vocational</a></li>
                                                 <li><a href="javascript:void(0)" onclick="return confirm('Under development')">Center Student</a></li>
                                                 <li><a href="javascript:void(0)" onclick="return confirm('Under development')">Franchise</a></li>
                                             <?php } ?>
@@ -148,7 +149,7 @@
                                     <li class="has-droupdown"><a href="#">Register</a>
                                         <ul class="submenu">
                                             
-                                            <li><a href="javascript:void(0)" onclick="return confirm('Under development')">Internship Student</a></li>
+                                            <li><a href="<?=base_url('internship/register')?>" >Internship & Vocational</a></li>
                                             <li><a href="javascript:void(0)" onclick="return confirm('Under development')">Center Student</a></li>
                                             <li><a href="javascript:void(0)" onclick="return confirm('Under development')">Franchise</a></li>
                                        
@@ -226,7 +227,8 @@
                         <li class="has-droupdown"><a href="#">Certificate Verification</a>
                             <ul class="submenu">
                                 
-                                <li><a href="<?=base_url('intern-certificate-verification')?>">Internship Student</a></li>
+                                <li><a href="<?=base_url('intern-certificate-verification')?>">Internship</a></li>
+                                <li><a href="<?=base_url('vocational-certificate-verification')?>">Vocational</a></li>
                                 <li><a href="<?=base_url('certificate-verification')?>">Center Student</a></li>
                                 <!-- <li><a href="course-four.html">Course Style 4</a></li>
                                 <li><a href="course-five.html">Course Style 5</a></li> -->
@@ -236,10 +238,10 @@
                         <li class="has-droupdown"><a href="javascript:void(0)">Login</a>
                             <ul class="submenu">
                                 <?php if(session()->has('internIsLoggedIn')){ ?>
-                                    <li><a href="<?=base_url('internship/dashboard')?>">Internship Dashboard</a></li>
+                                    <li><a href="<?=base_url('internship/dashboard')?>">Dashboard</a></li>
                                     <li><a href="<?=base_url('internship/logout')?>" onclick="return confirm('Are u sure?')">Logout</a></li>
                                 <?php }else{ ?>
-                                    <li><a href="<?=base_url('internship/login')?>">Internship Student</a></li>
+                                    <li><a href="<?=base_url('internship/login')?>">Internship & Vocational</a></li>
                                     <li><a href="javascript:void(0)" onclick="return confirm('Under development')">Center Student</a></li>
                                     <li><a href="javascript:void(0)" onclick="return confirm('Under development')">Franchise</a></li>
                                 <?php } ?>
@@ -248,7 +250,7 @@
                         </li>
                         <li class="has-droupdown"><a href="#">Register</a>
                             <ul class="submenu">
-                                <li><a href="javascript:void(0)">Internship Student</a></li>
+                                <li><a href="<?=base_url('internship/register')?>">Internship & Vocational</a></li>
                                 <li><a href="javascript:void(0)">Center Student</a></li>
                                 <li><a href="javascript:void(0)">Franchise</a></li>
                             </ul>

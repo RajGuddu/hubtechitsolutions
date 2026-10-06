@@ -107,6 +107,10 @@
                                         </a>
                                         <?php }else{ 
                                         $c_pdf = $list->c_pdf != '' ? $list->c_pdf : 'NULL' ?>
+                                        <a href="javascript:void(0)" class="btn btn-warning btn-lg viewPdfBtn" 
+                                            data-pdf="<?= base_url('internship/fee_receipt_pdf/' . base64_encode($list->ia_id)) ?>" data-title="Fee Receipt">
+                                            <i class="ri-download-2-line"></i> Fee Receipt
+                                        </a>
                                         <a href="javascript:void(0)" class="btn btn-primary btn-lg viewPdfBtn"
                                             data-pdf="<?= base_url('internship/view_pdf/' . $c_pdf) ?>" data-title="Study PDF">
                                             <i class="ri-book-open-line"></i> Study

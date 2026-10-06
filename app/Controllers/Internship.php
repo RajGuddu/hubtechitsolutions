@@ -22,6 +22,366 @@ class Internship extends BaseController
         $this->commonmodel = model('App\Models\Common_model', false);
         $this->servicemodel = model('App\Models\Service_model', false);
     }
+    public function register(){
+        $data = [];
+        $siteKey = getenv('RECAPTCHA_SITE_KEY');
+        $secretKey = getenv('RECAPTCHA_SECRET_KEY');
+        // echo $siteKey; exit;
+        if($this->request->getMethod() === 'post'){
+            // print_r($_POST); exit;
+            $rules = [
+               
+                'name'=>[
+                    'rules'=>'required|alpha_numeric_space',
+                    'errors'=>['required'=>'Your Full name is required',
+                                'alpha_numeric_space'=>'Please enter valid name.']
+                ],
+                
+                'email'=>[
+                    // 'rules'=>'required|valid_email|is_unique[tbl_members.email]',
+                    'rules'=>'required|valid_email|is_unique[tbl_internship_enrollment.email]',
+                    'errors'=>['required'=>'Email is required',
+                                'valid_email'=>'You must enter a valid email',
+                                'is_unique'=>'This email is already registered in our system',
+                            ]
+                ],
+                'phone'=>[
+                    'rules'=>'required|is_natural|min_length[10]|max_length[10]',
+                    'errors'=>['required'=>'Mobile No is required',
+                                'is_natural'=>'The Mobile No must only contain digits.',
+                                'min_length'=>'Mobile No must be 10 digit in length',
+                                'max_length'=>'Mobile No must not have more than 10 digit in length']
+                ],
+                
+                'password'=>[
+                    'rules'=>'required|min_length[6]|max_length[16]',
+                    'errors'=>['required'=>'Password is required',
+                                'min_length'=>'Password must have atleast 6 character in length',
+                                'max_length'=>'Password must not have characters more than 16 in length']
+                ],
+                'cpassword'=>[
+                    'rules'=>'required|matches[password]',
+                    'errors'=>['required'=>'Confirm Password is required',
+                                'matches'=>'Confirm Password not matches to password']
+                ],
+                'terms'=>['rules'=>'required','errors'=>['required'=>'you must be accept terms & condition']]
+            ];
+            
+
+            $validation = $this->validate($rules);
+            if(!$validation){
+                $data['validation'] = $this->validator; 
+            }else{
+                $token = $this->request->getPost('token');
+                $url = 'https://www.google.com/recaptcha/api/siteverify?secret='.$secretKey.'&response='.$token.'&remoteip='.$this->request->getIPAddress().'';
+                $res = file_get_contents($url);
+                $response = json_decode($res);
+
+                if($response->success){
+                    // print_r($_POST); exit;
+                    
+                    $post = array();
+                    $token = bin2hex(random_bytes(32));
+                    unset($_POST['token']);
+                    
+                    $post['form_details'] = json_encode($_POST);
+                    $post['token'] = $token;
+                    $post['added_at'] = date('Y-m-d H:i:s');
+                    
+                    $insertId = $this->commonmodel->insertRecord('tbl_temp_enrollment', $post);
+                    if($insertId){
+                        $verifyUrl = base_url('internship/verify-email/' . $token);
+                        $mailData = array(
+                            'name' => $_POST['name'] ?? 'Student',
+
+                            'heading' => 'Verify Your Email Address',
+
+                            'content' => '
+                                <p style="color:#555;font-size:15px;">
+                                    Thank you for registering with <strong>'.WEBSITE_NAME.'</strong>.
+                                </p>
+
+                                <p style="color:#555;font-size:15px;">
+                                    Your registration has been received successfully. To complete your
+                                    registration, please verify your email address by clicking the button below.
+                                </p>
+
+                                <p style="color:#555;font-size:15px;">
+                                    <strong>Important:</strong> Please verify your email address before
+                                    logging in to your account.
+                                </p>
+
+                                <div style="text-align:center;margin:25px 0;">
+                                    <a href="' . $verifyUrl . '"
+                                    style="
+                                            display:inline-block;
+                                            padding:12px 25px;
+                                            background:#80082b;
+                                            color:#ffffff;
+                                            text-decoration:none;
+                                            border-radius:5px;
+                                            font-size:15px;
+                                            font-weight:600;
+                                    ">
+                                        Verify Email Address
+                                    </a>
+                                </div>
+
+                                <p style="color:#777;font-size:14px;">
+                                    If you did not create this account, you can safely ignore this email.
+                                </p>
+                            ',
+
+                            'details' => [
+                                'Name' => $_POST['name'] ?? 'Student',
+                                'Email/Username' => $_POST['email'] ?? '',
+                                'Verification Status' => 'Pending Verification'
+                            ]
+                        );
+
+                        $mailConfig['subject'] = 'Verify Your Email - '.WEBSITE_NAME;
+                        $mailConfig['mailto'] = $_POST['email'] ?? 'test@yopmail.com';
+
+                        $mailConfig['attachment'] = [];
+
+                        $this->mail_to_user($mailConfig, $mailData);
+                        session()->setFlashdata('alert_success','Registration successful! Please check your email and click the verification link to verify your email address.');
+                        
+                    }else{
+                        session()->setFlashdata('alert_error','Something went wrong!');
+                    }
+                }else{
+                    session()->setFlashdata('alert_error','Verification Failed!');
+                    return redirect()->to(base_url('internship/register'))->withInput();
+                }
+                return redirect()->to(base_url('/internship/register'));
+            }
+        }
+        $data['siteKey'] = $siteKey;
+        $data['secretKey'] = $secretKey;
+        echo view('include/header', $data);
+        echo view('internship/intern_voc_ragister', $data);
+        echo view('include/footer', $data);
+    }
+    public function verify_email($token){
+        $tempStudtls = $this->commonmodel->getOneRecord('tbl_temp_enrollment',['token'=>$token]);
+        // print_r($tempStudtls);
+        if(!empty($tempStudtls)){
+            $te_id = $tempStudtls->te_id;
+            $formDtls = json_decode($tempStudtls->form_details);
+            $hashPassword = password_hash($formDtls->cpassword, PASSWORD_DEFAULT);
+
+            $enrStudtls = array(
+                'stu_name' => $formDtls->name,
+                'email' => $formDtls->email,
+                'password' => $hashPassword,
+                'phone' => $formDtls->phone,
+                'terms' => $formDtls->terms,
+                'status' => 0,
+                'can_login' => 1,
+                'profile_completed' => 0,
+                'email_verified' => 1,
+                'email_verified_at' => date('Y-m-d H:i:s'),
+                'added_at' => date('Y-m-d H:i:s'),
+            );
+
+            $ie_id = $this->commonmodel->insertRecord('tbl_internship_enrollment', $enrStudtls);
+            if($ie_id){
+                $this->commonmodel->deleteRecord('tbl_temp_enrollment', ['token'=>$token]);
+                session()->setFlashdata('alert_success','Your email address has been verified successfully. You can now continue to your account.');
+                return redirect()->to(base_url('/internship/login'));
+            }else{
+                session()->setFlashdata('alert_error','Something went wrong. Please try again.');
+                return redirect()->to(base_url('/internship/register'));
+            }
+        }else{
+            session()->setFlashdata('alert_error','Invalid or expired verification link.');
+            return redirect()->to(base_url('/internship/register'));
+        }
+    }
+    public function forgot_password(){
+        $data = [];
+        $siteKey = getenv('RECAPTCHA_SITE_KEY');
+        $secretKey = getenv('RECAPTCHA_SECRET_KEY');
+        if($this->request->getMethod() === 'post'){
+            $rules = [
+                'email'=>[
+                    'rules'=>'required|is_not_unique[tbl_internship_enrollment.email]',
+                    'errors'=>['required'=>'Email is required',
+                                'is_not_unique'=>'This Email is not registered in our system']
+                ],
+            ];
+            $validation = $this->validate($rules);
+            if(!$validation){
+                $data['validation'] = $this->validator; 
+            }else{
+                // print_r($_POST);exit;
+                $token = $this->request->getPost('token');
+                $url = 'https://www.google.com/recaptcha/api/siteverify?secret='.$secretKey.'&response='.$token.'&remoteip='.$this->request->getIPAddress().'';
+                $res = file_get_contents($url);
+                $response = json_decode($res);
+
+                if($response->success){
+                    $token = '';
+                    $token = bin2hex(random_bytes(32));
+                    $email = $_POST['email'];
+                    $insertId = $this->commonmodel->insertRecord('password_resets', ['email'=>$email,'token'=>$token, 'created_at'=>date('Y-m-d H:i:s')]);
+                    if($insertId){
+                        $resetUrl = base_url('internship/reset-password/'.$token);
+                        $userDtls = $this->commonmodel->getOneRecord('tbl_internship_enrollment',['email'=>$email]);
+                        $mailData = array(
+                            'name' => $userDtls->stu_name ?? 'Student',
+
+                            'heading' => 'Reset Your Password',
+
+                            'content' => '
+                                <p style="color:#555;font-size:15px;">
+                                    We received a request to reset the password for your
+                                    <strong>'.WEBSITE_NAME.'</strong> account.
+                                </p>
+
+                                <p style="color:#555;font-size:15px;">
+                                    If you requested a password reset, please click the button below
+                                    to create a new password for your account.
+                                </p>
+
+                                <div style="text-align:center;margin:25px 0;">
+                                    <a href="' . $resetUrl . '"
+                                    style="
+                                            display:inline-block;
+                                            padding:12px 25px;
+                                            background:#80082b;
+                                            color:#ffffff;
+                                            text-decoration:none;
+                                            border-radius:5px;
+                                            font-size:15px;
+                                            font-weight:600;
+                                    ">
+                                        Reset Password
+                                    </a>
+                                </div>
+
+                                <p style="color:#777;font-size:14px;">
+                                    This password reset link is valid for a limited time.
+                                    Please reset your password as soon as possible.
+                                </p>
+
+                                <p style="color:#777;font-size:14px;">
+                                    If you did not request a password reset, you can safely ignore
+                                    this email. Your current password will remain unchanged.
+                                </p>
+                            ',
+
+                            'details' => [
+                                'Name' => $userDtls->stu_name ?? 'Student',
+                                'Email/Username' => $email ?? '',
+                                'Request Status' => 'Password Reset Requested'
+                            ]
+                        );
+
+                        $mailConfig['subject'] = 'Reset Your Password - '.WEBSITE_NAME;
+                        $mailConfig['mailto'] = $email ?? 'test@yopmail.com';
+
+                        $mailConfig['attachment'] = [];
+
+                        $this->mail_to_user($mailConfig, $mailData);
+                        session()->setFlashdata('alert_success','A password reset link has been sent to your email address. Please check your inbox.');
+                        return redirect()->to(base_url('/internship/forgot-password'));
+                    }else{
+                        session()->setFlashdata('alert_error','Something went wrong. Please try again');
+                        return redirect()->to(base_url('internship/forgot-password'))->withInput();
+                    }
+
+                }else{
+                    session()->setFlashdata('alert_error','Verification Failed!');
+                    return redirect()->to(base_url('internship/forgot-password'))->withInput();
+                }
+            }
+        }
+        $data['siteKey'] = $siteKey;
+        $data['secretKey'] = $secretKey;
+
+        echo view('include/header', $data);
+        echo view('internship/forgot_password', $data);
+        echo view('include/footer', $data);
+    }
+    public function reset_password($token){
+        // echo $token;
+        $siteKey = getenv('RECAPTCHA_SITE_KEY');
+        $secretKey = getenv('RECAPTCHA_SECRET_KEY');
+
+        if($this->request->getMethod() === 'post'){
+            $rules = [
+                'email'=>[
+                    'rules'=>'required|is_not_unique[tbl_internship_enrollment.email]',
+                    'errors'=>['required'=>'Email is required',
+                                'is_not_unique'=>'This Email is not registered in our system']
+                ],
+                '_token' => 'required',
+                'password'=>[
+                    'rules'=>'required|min_length[6]|max_length[16]',
+                    'errors'=>['required'=>'Password is required',
+                                'min_length'=>'Password must have atleast 6 character in length',
+                                'max_length'=>'Password must not have characters more than 16 in length']
+                ],
+                'cpassword'=>[
+                    'rules'=>'required|matches[password]',
+                    'errors'=>['required'=>'Confirm Password is required',
+                                'matches'=>'Confirm Password not matches to password']
+                ],
+            ];
+            $validation = $this->validate($rules);
+            if(!$validation){
+                $data['validation'] = $this->validator; 
+            }else{
+                // print_r($_POST);exit;
+                $token = $this->request->getPost('token');
+                $url = 'https://www.google.com/recaptcha/api/siteverify?secret='.$secretKey.'&response='.$token.'&remoteip='.$this->request->getIPAddress().'';
+                $res = file_get_contents($url);
+                $response = json_decode($res);
+
+                if($response->success){
+                    $_token = $_POST['_token'];
+                    $tokenData = $this->commonmodel->getOneRecord('password_resets',['token'=>$_token]);
+                    if(empty($tokenData)){
+                        session()->setFlashdata('alert_error','Invalid or expired reset link.');
+                        return redirect()->to(base_url('/internship/forgot-password'));
+                    }
+                    $hashPassword = password_hash($_POST['cpassword'], PASSWORD_DEFAULT);
+                    $post['password'] = $hashPassword;
+                    $post['update_at'] = date('Y-m-d H:i:s');
+                    $email = $_POST['email'];
+                    $updated = $this->commonmodel->updateRecord('tbl_internship_enrollment', $post, ['email'=>$email]);
+                    if($updated){
+                        $this->commonmodel->deleteRecord('password_resets', ['token'=>$_token]);
+                        session()->setFlashdata('alert_success','Password reset successful. You can now login.');
+                        return redirect()->to(base_url('/internship/login'));
+                    }else{
+                        session()->setFlashdata('alert_error','Something went wrong. Please try again');
+                        return redirect()->to(base_url('internship/forgot-password'))->withInput();
+                    }
+
+                }else{
+                    session()->setFlashdata('alert_error','Verification Failed! try again');
+                    return redirect()->to(base_url('internship/forgot-password'))->withInput();
+                }
+            }
+        }
+
+        $tokenData = $this->commonmodel->getOneRecord('password_resets',['token'=>$token]);
+        if(empty($tokenData)){
+            session()->setFlashdata('alert_error','Invalid or expired reset link.');
+            return redirect()->to(base_url('/internship/forgot-password'));
+        }
+
+        $data['tokenData'] = $tokenData;
+        $data['siteKey'] = $siteKey;
+        $data['secretKey'] = $secretKey;
+        echo view('include/header', $data);
+        echo view('internship/reset_password', $data);
+        echo view('include/footer', $data);
+        
+    }
     public function login(){
         $data = [];
         // echo password_hash('654321', PASSWORD_DEFAULT); exit;
@@ -445,6 +805,10 @@ class Internship extends BaseController
                 $is_exist = $this->commonmodel->getAllRecordCount('tbl_internship_applications',['enroll_id'=>$enrollId]);
             }while($is_exist);
             $internCourse = $this->commonmodel->getOneRecord('tbl_intern_course',['ic_id'=>$tempStudtls->ic_id]);
+            $addedAt = date('Y-m-d H:i:s');
+            /***********Temporary Added Date ******/
+            $addedAt = date('Y-m-d H:i:s', strtotime('-7 days'));
+            /*********************************** */
             
             $internAppData = array(
                 'ie_id' => session('ie_id'),
@@ -459,14 +823,15 @@ class Internship extends BaseController
                 'ic_id' => $tempStudtls->ic_id,
                 // 'duration' => $tempStudtls->duration,
                 'terms' => $tempStudtls->terms ?? 1,
-                'attendence' => mt_rand(80, 95),
+                // 'attendence' => mt_rand(80, 95),
+                'attendence' => 100,
                 'status' => 1, // Payment Completed
                 'payment_status' => 'Success',
                 'razor_payment_id' => $_POST['paymentId'],
                 'razor_order_id' => $_POST['orderId'],
                 'amount' => $amount,
                 'exam_duration' => $internCourse->exam_duration,
-                'added_at' => date('Y-m-d H:i:s')
+                'added_at' => $addedAt
             );
             $ia_id = $this->commonmodel->insertRecord('tbl_internship_applications',$internAppData);
             if($ia_id){
@@ -620,6 +985,22 @@ class Internship extends BaseController
         $ia_id = base64_decode($id);
         $examineeDtls = $this->servicemodel->get_one_internship_course_detail($ia_id);
         $data = [];
+        
+        // date check for exam: exam start after 7 days
+        /**************Temprorary Close ****************
+        $addedAt = new \DateTime($examineeDtls->added_at);
+        $examStart = clone $addedAt;
+        $examStart->modify('+7 days');
+        $now = new \DateTime();
+        if($now <= $examStart){
+            $data['examStart'] = $examStart->format('Y-m-d H:i:s');
+            echo view('include/header', $data);
+            echo view('internship/exam-waiting', $data);
+            echo view('include/footer', $data);
+            exit;
+        } ***********/
+
+        //otherwise start exam
         if($this->request->getMethod() == 'post'){
             // echo '<pre>'; print_r($_POST); exit;
             if(!isset($_POST['answer']) && empty($_POST['answer'])){
@@ -796,6 +1177,7 @@ class Internship extends BaseController
     public function exam_review(){
         $ie_id = session('ie_id');
         $data['records'] = $this->servicemodel->get_exam_review($ie_id);
+        $data['vocExamReviewData'] = $this->servicemodel->get_vocational_exam_review($ie_id);
         echo view('include/header', $data);
         echo view('internship/exam_review', $data);
         echo view('include/footer', $data);

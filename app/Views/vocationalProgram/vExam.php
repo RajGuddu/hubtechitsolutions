@@ -37,22 +37,22 @@
                 $h = date('H',strtotime($examineeDtls->exam_duration ?? date('Y-m-d H:i:s'))); 
                 $tot_sec = ($h*60*60) + ($m*60) + $s;
                 // echo $tot_sec; exit;
-                $ia_id = $examineeDtls->ia_id ?? ''; 
+                $va_id = $examineeDtls->va_id ?? ''; 
             ?>
         <div class="col-lg-10">
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-linear py-3 d-flex justify-content-between align-items-center">
                     <div class="">
                         <h3 class="mb-0 text-white ">
-                            <?= ucwords($examineeDtls->ic_name ?? '') ?> Examination
+                            <?= ucwords($examineeDtls->course_name ?? '') ?> Examination
                         </h3>
                         <p class="mb-0 text-white ">
                             Total Questions:
-                            <?= $examineeDtls->exam_ques ?? '' ?>
+                            <?= $examineeDtls->total_questions ?? '' ?>
                         </p>
                     </div>
                     <div id="examTimer" data-s="<?= $s ?>" data-m="<?= $m ?>" data-h="<?= $h ?>"
-                        data-tot_sec="<?= $tot_sec ?>" data-id="<?= $ia_id ?>" class="fw-bold text-white fs-2">
+                        data-tot_sec="<?= $tot_sec ?>" data-id="<?= $va_id ?>" class="fw-bold text-white fs-2">
                         00:00:00
                     </div>
                 </div>
@@ -61,10 +61,10 @@
                 } ?>
                 <div class="card-body">
                     <div style="max-height: 700px; overflow-y: auto; padding-right:10px;">
-                        <form action="<?= current_url() ?>" method="post" id="internExamForm">
+                        <form action="<?= current_url() ?>" method="post" id="vocationalExamForm">
                             <?= csrf_field(); ?>
-                            <input type="hidden" name="examinee_id" value="<?= $examineeDtls->ia_id ?>">
-                            <input type="hidden" name="tot_ques" value="<?= $examineeDtls->exam_ques ?>">
+                            <input type="hidden" name="examinee_id" value="<?= $examineeDtls->va_id ?>">
+                            <input type="hidden" name="tot_ques" value="<?= $examineeDtls->total_questions ?>">
                             <?php
                             $n = 1;
                             $k = 0;
@@ -187,7 +187,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
 
-        let form = document.getElementById("internExamForm");
+        let form = document.getElementById("vocationalExamForm");
 
         if (!form) return;
 
@@ -199,7 +199,7 @@
             radio.addEventListener("click", function () {
 
                 let formData = new FormData(form);
-                let url = "<?=base_url('/intern-exam-save-result')?>";
+                let url = "<?=base_url('/vocational-exam-save-result')?>";
 
                 fetch(url, {
                     method: "POST",
@@ -241,7 +241,7 @@
 
                 span.textContent = formatTime(h, m, s);
 
-                let form = document.getElementById("internExamForm");
+                let form = document.getElementById("vocationalExamForm");
                 if (form) form.submit();
 
                 clearInterval(intVal);
@@ -253,7 +253,7 @@
             } else {
                 $.ajax({
                     type: 'POST',
-                    url: "<?=base_url('intern-update-examinee-duration')?>",
+                    url: "<?=base_url('vocational-update-examinee-duration')?>",
                     data: {s:s, m:m, h:h, id:id},
                     success: function(res){
 

@@ -79,9 +79,9 @@ a:hover{
                 <div class="card login-card shadow border-0">
 
                     <div class="card-header text-center py-4">
-                        <h2 class="mb-2 text-white">Internship Student Login</h2>
+                        <h2 class="mb-2 text-white">Student Login</h2>
                         <p class="mb-0">
-                            Sign in to access your internship dashboard.
+                            Sign in to access your Internship & Vocational dashboard.
                         </p>
                     </div>
 
@@ -89,6 +89,11 @@ a:hover{
                         <?php if(session()->getFlashdata('alert_error') !== NULL){ ?>
                             <div class="alert alert-danger">
                                 <?php echo session()->getFlashdata('alert_error'); ?>
+                            </div>
+                        <?php } ?>
+                        <?php if(session()->getFlashdata('alert_success') !== NULL){ ?>
+                            <div class="alert alert-success">
+                                <?= session()->getFlashdata('alert_success'); ?>
                             </div>
                         <?php } ?>
 
@@ -106,25 +111,25 @@ a:hover{
                                 <span class="text-danger" id=""><?= isset($validation) ? display_error($validation, 'password') : '' ?></span>
                             </div>
 
-                            <!-- <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
 
-                                <a href="#">
+                                <a href="<?=base_url('internship/forgot-password')?>">
                                     Forgot Password?
                                 </a>
 
-                            </div> -->
+                            </div>
 
                             <button type="submit" class="btn login-btn w-100"> Login </button>
 
                         </form>
-                        <!-- <div class="text-center mt-4">
+                        <div class="text-center mt-4">
                             <p class="mb-0">
                                 Don't have an account?
-                                <a href="" class="fw-bold">
+                                <a href="<?=base_url('internship/register')?>" class="fw-bold">
                                     Register Now
                                 </a>
                             </p>
-                        </div> -->
+                        </div>
 
                     </div>
 

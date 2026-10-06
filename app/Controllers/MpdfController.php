@@ -88,11 +88,99 @@ class MpdfController extends BaseController
         // echo $html;exit;
         return $this->common_pdf_generator_for_modal($html, $fileName);
     }
+    public function vocational_cert_pdf($_va_id){ //vocational certificate
+        $va_id = base64_decode($_va_id);
+        ini_set('pcre.backtrack_limit', '5000000');
+        ini_set('pcre.recursion_limit', '5000000');
+        $data = [];
+        $student = $this->service_model->get_one_vocational_applicant($va_id);
+
+        if($student->course_cat == 'B')
+            $acimage = FCPATH.CERT_PATH.'Beautician_Certificate.png';
+        elseif($student->course_cat == 'T')
+            $acimage = FCPATH.CERT_PATH.'Tailor_Certificate.png';
+        else
+            $acimage = FCPATH.CERT_PATH.'Voc_Comp_Certificate.png';
+        
+        $dpimage = FCPATH.IMAGE_PATH.$student->image;
+        $data['dpimage'] = $this->createimage($dpimage);
+        $data['acimage'] = $this->createimage($acimage);
+        $data['record'] = $student;
+
+        $qr = Builder::create()
+            ->data(base_url('vocational-certificate-verification?cert_no=' . $student->cert_no))
+            ->size(150)
+            ->margin(0)
+            ->build();
+
+        $data['qr_image'] = 'data:image/png;base64,' . base64_encode($qr->getString());
+
+        if($student->course_cat == 'B')
+            $html = view('pdfhtml/beauty_cert', $data);
+        elseif($student->course_cat == 'T')
+            $html = view('pdfhtml/tailor_cert', $data);
+        else
+            $html = view('pdfhtml/voc_comp_cert', $data);
+
+        // $html = view('pdfhtml/vtest', $data);
+        $fileName = 'Vocational_Cert_'.$student->cert_no;
+        // echo $html;exit;
+        return $this->common_pdf_generator_for_modal($html, $fileName);
+    }
+    public function intern_fee_receipt_pdf($_ia_id){ // internship fee
+        $ia_id = base64_decode($_ia_id);
+        $student = $this->service_model->get_one_internship_course_detail($ia_id);
+        $record = array(
+            'pay_for' => 'Internship Fee',
+            'stu_name' => $student->stu_name,
+            'reg_no' => $student->enroll_id,
+            'course' => $student->ic_name,
+            'amount' => $student->amount,
+            'payment_date' => date('d-M-Y H:i:s',strtotime($student->added_at)),
+            'payment_id' => $student->razor_payment_id,
+            'order_id' => $student->razor_order_id,
+
+        );
+        $html = view('pdfhtml/fee_receipt', ['record'=>$record]);
+        $fileName = 'Payment_Receipt_'.$student->enroll_id;
+        return $this->common_pdf_generator_for_modal($html, $fileName);
+    }
     public function exam_fee_receipt_pdf($_va_id){
         $va_id = base64_decode($_va_id);
-        $record = $this->service_model->get_one_vocational_applicant($va_id);
+        $vApp = $this->service_model->get_one_vocational_applicant($va_id);
+        $courseDtls = json_decode($vApp->course_details);
+        $record = array(
+            'pay_for' => 'Examination Fee',
+            'stu_name' => $vApp->stu_name,
+            'reg_no' => $vApp->reg_no,
+            'course' => $courseDtls->course_name.' ('.$courseDtls->course_short_name.')',
+            'amount' => $courseDtls->exam_fee,
+            'payment_date' => date('d-M-Y H:i:s',strtotime($vApp->added_at)),
+            'payment_id' => $vApp->exam_payment_id,
+            'order_id' => $vApp->exam_order_id,
+
+        );
         $html = view('pdfhtml/fee_receipt', ['record'=>$record]);
-        $fileName = 'Payment_Receipt_'.$record->reg_no;
+        $fileName = 'Payment_Receipt_'.$vApp->reg_no;
+        return $this->common_pdf_generator_for_modal($html, $fileName);
+    }
+    public function course_fee_receipt_pdf($_va_id){
+        $va_id = base64_decode($_va_id);
+        $vApp = $this->service_model->get_one_vocational_applicant($va_id);
+        $courseDtls = json_decode($vApp->course_details);
+        $record = array(
+            'pay_for' => 'Course Fee',
+            'stu_name' => $vApp->stu_name,
+            'reg_no' => $vApp->reg_no,
+            'course' => $courseDtls->course_name.' ('.$courseDtls->course_short_name.')',
+            'amount' => $vApp->coursefee_amount,
+            'payment_date' => date('d-M-Y H:i:s',strtotime($vApp->coursefee_payment_date)),
+            'payment_id' => $vApp->coursefee_payment_id,
+            'order_id' => $vApp->coursefee_order_id,
+
+        );
+        $html = view('pdfhtml/fee_receipt', ['record'=>$record]);
+        $fileName = 'Course_Payment_Receipt_'.$vApp->cert_no;
         return $this->common_pdf_generator_for_modal($html, $fileName);
     }
     private function common_pdf_generator_for_modal($html, $_fileName){
@@ -194,6 +282,53 @@ class MpdfController extends BaseController
 
         // return $mpdf->Output('', 'S'); // PDF string return
         $mpdf->Output('intern_cert.pdf', 'I'); exit;
+    }
+    public function v_c_pdf(){ //vocational computer certificate
+        ini_set('pcre.backtrack_limit', '5000000');
+        ini_set('pcre.recursion_limit', '5000000');
+        $student = $this->service_model->get_one_vocational_applicant(1);
+
+        if($student->course_cat == 'B')
+            $acimage = FCPATH.CERT_PATH.'Beautician_Certificate.png';
+        elseif($student->course_cat == 'T')
+            $acimage = FCPATH.CERT_PATH.'Tailor_Certificate.png';
+        else
+            $acimage = FCPATH.CERT_PATH.'Voc_Comp_Certificate.png';
+
+        $dpimage = FCPATH.IMAGE_PATH.$student->image;
+        $data['dpimage'] = $this->createimage($dpimage);
+        $data['acimage'] = $this->createimage($acimage);
+        $data['record'] = $student;
+
+        $qr = Builder::create()
+            ->data(base_url('intern-certificate-verification?cert_no=' . $student->cert_no))
+            ->size(150)
+            ->margin(0)
+            ->build();
+
+        $data['qr_image'] = 'data:image/png;base64,' . base64_encode($qr->getString());
+
+        if($student->course_cat == 'B')
+            $html = view('pdfhtml/beauty_cert', $data);
+        elseif($student->course_cat == 'T')
+            $html = view('pdfhtml/tailor_cert', $data);
+        else
+            $html = view('pdfhtml/voc_comp_cert', $data);
+
+        // echo $html;exit;
+        $mpdf = new Mpdf([
+            'format' => 'A4',
+            'margin_top' => 0,
+            'margin_bottom' => 0,
+            'margin_left' => 0,
+            'margin_right' => 0,
+            'orientation' => 'P'
+        ]);
+
+        $mpdf->WriteHTML($html);
+
+        // return $mpdf->Output('', 'S'); // PDF string return
+        $mpdf->Output('voc_comp_cert.pdf', 'I'); exit;
     }
     public function a_c_pdf(){ //attendance
         $student = $this->service_model->get_one_internship_course_detail(3);

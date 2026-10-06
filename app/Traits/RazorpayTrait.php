@@ -84,8 +84,8 @@ trait RazorpayTrait
                 'success' => true,
                 'paymentId' => $paymentId,
                 'orderId' => $orderId,
-                // 'user_id' => $payment['notes']['user_id'] ?? 'N/A',
                 'te_id' => $payment['notes']['te_id'] ?? 'N/A',
+                'va_id' => $payment['notes']['va_id'] ?? 'N/A',
                 'amount' => $payment['notes']['amount'] ?? 'N/A',
                 'payFrom' => $payment['notes']['payFrom'] ?? 'N/A',
             ];

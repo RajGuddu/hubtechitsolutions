@@ -5,6 +5,8 @@ use App\Libraries\Hash;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use App\Traits\RazorpayTrait;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class Internship extends BaseController
 {
@@ -132,5 +134,116 @@ class Internship extends BaseController
             }
         }
         return redirect()->to(base_url('admin/intern-students/'.$ie_id));
+    }
+    public function intern_export(){
+        $students = $this->servicemodel->get_all_internship_application();
+        // echo '<pre>';print_r($apps);
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Sheet Name
+        $sheet->setTitle('Students');
+         // Heading
+        $sheet->setCellValue('A1', 'Student ID');
+        $sheet->setCellValue('B1', 'Name');
+        $sheet->setCellValue('C1', 'Email');
+        $sheet->setCellValue('D1', 'Phone');
+        $sheet->setCellValue('E1', 'University Roll No');
+        $sheet->setCellValue('F1', 'University Reg No');
+        $sheet->setCellValue('G1', 'Class');
+        $sheet->setCellValue('H1', 'MJC');
+        $sheet->setCellValue('I1', 'Session');
+        $sheet->setCellValue('J1', 'Semester');
+        $sheet->setCellValue('K1', 'College');
+        $sheet->setCellValue('L1', 'Internship Course');
+        $sheet->setCellValue('M1', 'Attendance');
+        $sheet->setCellValue('N1', 'Amount');
+        $sheet->setCellValue('O1', 'Payment Status');
+        $sheet->setCellValue('P1', 'Result');
+        $sheet->setCellValue('Q1', 'Grade');
+        $sheet->setCellValue('R1', 'Certificate No');
+        $sheet->setCellValue('S1', 'Status');
+        $sheet->setCellValue('T1', 'Registration Date');
+        $sheet->setCellValue('U1', 'Completion Date');
+
+        // Heading Style
+        $sheet->getStyle('A1:U1')->getFont()->setBold(true);
+
+        // Data
+        $row = 2;
+
+        foreach ($students as $student) {
+
+            $status = $this->get_intern_program_status($student->status);
+
+            $sheet->setCellValue('A' . $row, $student->enroll_id);
+            $sheet->setCellValue('B' . $row, $student->stu_name);
+            $sheet->setCellValue('C' . $row, $student->email);
+            $sheet->setCellValue('D' . $row, $student->phone);
+            $sheet->setCellValue('E' . $row, $student->uni_roll_no);
+            $sheet->setCellValue('F' . $row, $student->uni_reg_no);
+            $sheet->setCellValue('G' . $row, $student->class);
+            $sheet->setCellValue('H' . $row, $student->sub_name);
+            $sheet->setCellValue('I' . $row, $student->session);
+            $sheet->setCellValue('J' . $row, $student->semester);
+            $sheet->setCellValue('K' . $row, $student->college_name);
+            $sheet->setCellValue('L' . $row, $student->ic_name);
+            $sheet->setCellValue('M' . $row, $student->attendence);
+            $sheet->setCellValue('N' . $row, $student->amount);
+            $sheet->setCellValue('O' . $row, $student->payment_status);
+            $sheet->setCellValue('P' . $row, $student->result);
+            $sheet->setCellValue('Q' . $row, $student->grade);
+            $sheet->setCellValue('R' . $row, $student->cert_no);
+            $sheet->setCellValue('S' . $row, $status);
+            $sheet->setCellValue('T' . $row, $student->added_at);
+            $sheet->setCellValue('U' . $row, $student->completion_date);
+
+            $row++;
+        }
+
+        // Auto width
+        foreach (range('A', 'U') as $column) {
+            $sheet->getColumnDimension($column)->setAutoSize(true);
+        }
+
+        // Download
+        $filename = 'students_' . date('Y-m-d_H-i-s') . '.xlsx';
+
+        $writer = new Xlsx($spreadsheet);
+
+        // Output buffer clear
+        if (ob_get_length()) {
+            ob_end_clean();
+        }
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
+
+        exit;
+    }
+    private function get_intern_program_status($status){
+        switch ($status){
+            case 1:
+                return 'Payment Completed';
+                break;
+            case 2:
+                return 'Exam In Progress';
+                break;
+            case 3:
+                return 'Exam Completed (Passed)';
+                break;
+            case 4:
+                return 'Exam Completed (Failed)';
+                break;
+            case 5:
+                return 'Payment Refund';
+                break;
+            default:
+                return 'Application Incomplete';
+                break;
+        }
     }
 }

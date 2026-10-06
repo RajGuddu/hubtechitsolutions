@@ -87,6 +87,7 @@ class VocationalCourse extends BaseController
                 }*/
                 $post['course_name']      = $this->request->getPost('course_name');
                 $post['course_short_name']    = $this->request->getPost('course_short_name');
+                $post['course_cat']    = $this->request->getPost('course_cat');
                 $post['duration']           = $this->request->getPost('duration');
                 $post['exam_fee']      = $this->request->getPost('exam_fee');
                 $post['course_fee']      = $this->request->getPost('course_fee');

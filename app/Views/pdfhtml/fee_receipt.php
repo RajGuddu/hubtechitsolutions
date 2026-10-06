@@ -293,7 +293,7 @@
                             PAYMENT RECEIPT
                         </div>
                         <div class="receipt-subtitle">
-                            Examination Fee
+                            <?=$record['pay_for'] ?>
                         </div>
                     </td>
                 </tr>
@@ -305,7 +305,7 @@
                 ✓ Payment Successful
             </div>
             <div class="success-text">
-                Your examination fee has been received successfully.
+                Your <?=$record['pay_for'] ?> has been received successfully.
             </div>
         </div>
         <!-- Student Information -->
@@ -318,7 +318,7 @@
                                 Student Name
                             </div>
                             <div class="value">
-                                <?=ucwords($record->stu_name)?>
+                                <?=ucwords($record['stu_name'])?>
                             </div>
                         </div>
                     </td>
@@ -328,7 +328,7 @@
                                 Registration No.
                             </div>
                             <div class="value registration-no">
-                                <?=$record->reg_no?>
+                                <?=$record['reg_no']?>
                             </div>
                         </div>
                     </td>
@@ -336,7 +336,7 @@
             </table>
         </div>
         <!-- Course Details -->
-        <?php $courseDtls = json_decode($record->course_details); ?>
+        <?php //$courseDtls = json_decode($record->course_details); ?>
         <div class="course-box">
             <div class="course-heading">
                 Course Details
@@ -348,15 +348,15 @@
                             Course
                         </td>
                         <td class="detail-value">
-                            <?=ucwords($courseDtls->course_name).' ('.$courseDtls->course_short_name.')'?>
+                            <?=ucwords($record['course'])?>
                         </td>
                     </tr>
                     <tr>
                         <td class="detail-label">
-                            Examination Fee
+                            <?=$record['pay_for'] ?>
                         </td>
                         <td class="detail-value">
-                            ₹<?=$courseDtls->exam_fee?>
+                            ₹<?=$record['amount']?>
                         </td>
                     </tr>
                     <tr>
@@ -364,7 +364,7 @@
                             Payment Date
                         </td>
                         <td class="detail-value">
-                            <?=date('d-M-Y',strtotime($record->added_at))?>
+                            <?=date('d-M-Y h:i:s A',strtotime($record['payment_date']))?>
                         </td>
                     </tr>
                 </table>
@@ -382,7 +382,7 @@
                             Payment ID
                         </div>
                         <div class="payment-value">
-                            <?=$record->exam_payment_id?>
+                            <?=$record['payment_id']?>
                         </div>
                     </td>
                     <td>
@@ -390,7 +390,7 @@
                             Order ID
                         </div>
                         <div class="payment-value">
-                            <?=$record->exam_order_id?>
+                            <?=$record['order_id']?>
                         </div>
                     </td>
                 </tr>
@@ -404,7 +404,7 @@
                         Total Paid
                     </td>
                     <td class="amount">
-                        ₹<?=$courseDtls->exam_fee?>
+                        ₹<?=$record['amount']?>
                     </td>
                 </tr>
             </table>

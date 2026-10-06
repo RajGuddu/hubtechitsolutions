@@ -74,6 +74,20 @@ class Service_model extends Model
         $result = $query->getRow();
         return $result;
     }
+    public function get_searched_vocational_certificate($cert_no){
+        $builder = $this->db->table('tbl_vocational_applications ia');
+        $builder->select('ia.*,ie.stu_name,ie.email,ie.phone,ie.image,c.course_name');
+        $builder->join('tbl_internship_enrollment ie', 'ia.ie_id = ie.ie_id', 'left');
+        $builder->join('tbl_vocational_course c', 'ia.vc_id = c.vc_id', 'left');
+
+        $builder->groupStart();
+        $builder->where('ia.reg_no', $cert_no);
+        $builder->orWhere('ia.cert_no', $cert_no);
+        $builder->groupEnd();
+        $query = $builder->get();
+        $result = $query->getRow();
+        return $result;
+    }
     public function get_internship_students($ie_id = null, $count=null,$limit=null, $offset=null){
         $result = [];
         $builder = $this->db->table('tbl_internship_enrollment ie');
@@ -135,6 +149,21 @@ class Service_model extends Model
         
         $query = $builder->get();
         $result = $query->getRow();
+        
+        return $result;
+    }
+    public function get_all_internship_application(){ //for export to excel
+        $builder = $this->db->table('tbl_internship_applications ia');
+        $builder->select('ia.*,ie.stu_name,ie.email,ie.phone,ie.image,c.ic_name,c.duration,c.exam_ques,c.exam_duration sub_exam_duration,mj.sub_name,cl.college_name');
+        $builder->join('tbl_internship_enrollment ie', 'ia.ie_id = ie.ie_id', 'left');
+        $builder->join('tbl_intern_course c', 'ia.ic_id = c.ic_id', 'left');
+        $builder->join('tbl_mjcsubject mj', 'ia.mjc_id = mj.mjc_id', 'left');
+        $builder->join('tbl_colleges cl', 'ia.clg_id = cl.clg_id', 'left');
+        
+        $builder->where('ia.status !=', 5);
+        
+        $query = $builder->get();
+        $result = $query->getResult();
         
         return $result;
     }
@@ -299,16 +328,57 @@ class Service_model extends Model
         return $result;
     }
     //vocational course
-    public function get_one_vocational_applicant($va_id){ 
+    public function get_one_vocational_applicant($va_id){ //vocational student
         $builder = $this->db->table('tbl_vocational_applications va');
-        $builder->select('va.*,ie.stu_name');
+        $builder->select('va.*,ie.stu_name,ie.image,ie.f_name,vc.course_name,vc.course_cat,vc.duration,vc.total_questions,vc.exam_duration sub_exam_duration');
         $builder->join('tbl_internship_enrollment ie', 'va.ie_id = ie.ie_id', 'left');
+        $builder->join('tbl_vocational_course vc', 'va.vc_id = vc.vc_id', 'left');
         
         $builder->where('va.va_id', $va_id);
         
         $query = $builder->get();
         $result = $query->getRow();
         
+        return $result;
+    }
+    public function get_vocational_questions($vc_id, $quesLimit, $existQues=null){
+        $builder = $this->db->table('tbl_voc_question_bank');
+        $builder->select('*');
+        $builder->where('status', 1);
+        $builder->where('vc_id', $vc_id);
+        if (!empty($existQues)) {
+            $ids = explode(',', $existQues); 
+            $builder->whereNotIn('q_id', $ids);
+        }
+        $builder->orderBy('RAND()');
+        $builder->limit($quesLimit);
+        $query = $builder->get();
+
+        // $query = $this->db->getLastQuery(); echo $query;exit;
+        if($quesLimit == 0){
+            $result = [];
+        }else{
+            $result = $query->getResult();
+        }
+        
+        return $result;
+    }
+    public function get_vocational_exam_review($ie_id){
+        $result = [];
+        $builder = $this->db->table('tbl_vocational_exam_review rv');
+        $builder->select('rv.*,vc.course_name');
+        $builder->join('tbl_vocational_applications va', 'rv.va_id = va.va_id', 'left');
+        $builder->join('tbl_vocational_course vc', 'va.vc_id = vc.vc_id', 'left');
+        // $builder->join('tbl_intern_course c', 'e.ic_id = c.ic_id', 'left');
+        $builder->where('rv.ie_id', $ie_id);
+
+        $builder->orderBy('rv.id','DESC');
+        // $builder->limit($limit, $offset);
+        $query = $builder->get();
+        
+        $result = $query->getResult();
+        
+        // echo '<pre>';print_r($result); exit;
         return $result;
     }
 }

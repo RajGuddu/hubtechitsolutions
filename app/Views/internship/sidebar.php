@@ -68,7 +68,7 @@
                     <i class="ri-question-answer-line me-2"></i>
                     Exam Review
                 </a>
-                <a href="<?=base_url('vocational/programs')?>" class="list-group-item list-group-item-action <?=(in_array($segment2, ['programs']))?'active':''?> py-3">
+                <a href="<?=base_url('vocational/programs')?>" class="list-group-item list-group-item-action <?=(in_array($segment2, ['programs','vexam']))?'active':''?> py-3">
                     <i class="ri-computer-line me-2"></i>
                     Vocational Programs
                 </a>

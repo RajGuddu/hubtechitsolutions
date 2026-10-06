@@ -138,9 +138,14 @@
 
         <tr>
             <td style="padding:4px 0;">
-                <strong>Password</strong>
+                <strong>Temporary Password</strong>
             </td>
             <td>: 123456</td>
+        </tr>
+        <tr>
+            <td colspan="2" style="padding:8px 0 0; color:#666;">
+                For security, please change your temporary password after logging in.
+            </td>
         </tr>
 
     </table>
