@@ -53,39 +53,40 @@ class Admin_model extends Model
         }
         return $result;
     }
-    public function enquiry_and_enrollment_list($type=null){
-        $status = (isset($_GET['st']) && $_GET['st'] > 1)?$_GET['st']:'';
+    public function enquiry_and_enrollment_list(){
+        $status = (isset($_GET['st']) && $_GET['st'] != '')?$_GET['st']:1;
         $builder = $this->db->table($this->contactusTbl.' c');
         $builder->select('c.*,cc.course_full_name');
         $builder->join($this->coursesTbl.' cc','c.course_id=cc.course_id','left');
-        if($type == 'contact'){
-            $builder->where('c.course_id <', 1);
-        }else{
-            $builder->where('c.course_id >=', 1);
-        }
-        if($status != ''){
+        
+        if($status != 'all'){
             $builder->where('c.status', $status);
-        }else{
-            $builder->where('c.status', 1);
         }
         $builder->orderBy('c.id','DESC');
         $query = $builder->get();
         $result = $query->getResult();
         return $result;
     }
-    public function count_enquiry_and_enrollment_list($type=null, $status=null){
+    public function count_enquiry_and_enrollment_list($status=null){
         $builder = $this->db->table($this->contactusTbl);
         $builder->select('*');
-        if($type == 'contact'){
-            $builder->where('course_id <', 1);
-        }else{
-            $builder->where('course_id >=', 1);
-        }
-        if($status != null){
+        
+        if($status != 'all'){
             $builder->where('status', $status);
         }
         $query = $builder->get();
         $result = $query->getNumRows();
+        return $result;
+    }
+    public function get_contact_followup_history($contactId){
+        $builder = $this->db->table('tbl_contact_followup_history cf');
+        $builder->select('cf.*,a.name call_by');
+        $builder->join('tbl_admin a','cf.call_by=a.user_id','left');
+        
+        $builder->where('cf.contact_id', $contactId);
+        $builder->orderBy('cf.id','DESC');
+        $query = $builder->get();
+        $result = $query->getResult();
         return $result;
     }
     public function get_admissions_list($whereArr=null, $status=null){
@@ -151,4 +152,5 @@ class Admin_model extends Model
         }
         return $result;
     }
+    
 }

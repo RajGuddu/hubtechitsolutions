@@ -148,24 +148,27 @@
           <?php if(is_privilege(15) || is_privilege(16)){
             $collapsed = 'collapsed'; $show = ''; $active = ''; $areaexpanded = 'false';
 
-            if($segment2 == 'contact_us_listing' || $segment2 == 'enrolled_listing'){
+            if(in_array($segment2, ['contact_us_listing','festivals'])){
               $collapsed = ''; $show = 'show'; $active = 'active'; $areaexpanded = 'true';
             }
           ?>
           <li class="nav-item <?=$active?>">
             <a class="nav-link <?=$collapsed?>" data-bs-toggle="collapse" href="#enquiry" aria-expanded="<?=$areaexpanded?>" aria-controls="auth">
               <i class="menu-icon mdi mdi-layers-outline"></i>
-              <span class="menu-title">Enquiry</span>
+              <span class="menu-title">Festival & Enquiry</span>
               <i class="menu-arrow"></i>
             </a>
             <div class="collapse <?=$show?>" id="enquiry">
               <ul class="nav flex-column sub-menu">
+                <?php if(is_privilege(27)){ ?>
+                <li class="nav-item <?=($segment2=='festivals')?'active':''?>"> <a class="nav-link" href="<?=base_url('admin/festivals')?>">Festival List</a></li>
+                <?php } ?>
                 <?php if(is_privilege(15)){ ?>
                 <li class="nav-item <?=($segment2=='contact_us_listing')?'active':''?>"> <a class="nav-link" href="<?=base_url('admin/contact_us_listing')?>">Contact Us List</a></li>
                 <?php } ?>
-                <?php if(is_privilege(16)){ ?>
+                <?php /*if(is_privilege(16)){ ?>
                 <li class="nav-item <?=($segment2=='enrolled_listing')?'active':''?>"> <a class="nav-link" href="<?=base_url('admin/enrolled_listing')?>">Course Enrollment List</a></li>
-                <?php } ?>
+                <?php } */?>
                 
               </ul>
             </div>

@@ -538,6 +538,189 @@ class Home extends BaseController
             )
             ->setBody($mpdf->Output('', 'S'));
     }
+    /************Festival Certificate**************** */
+    public function festival_certificate($fes_cert_no = null){
+        $data['title'] = 'Hubtech | Festival Certificate';
+        $siteKey = getenv('RECAPTCHA_SITE_KEY');
+        $secretKey = getenv('RECAPTCHA_SECRET_KEY');
+
+        if($this->request->getMethod() === 'post'){
+            // print_r($_POST); exit;
+            $rules = [
+               
+                'name'=>[
+                    'rules'=>'required|alpha_numeric_space',
+                    'errors'=>['required'=>'Your Full name is required',
+                                'alpha_numeric_space'=>'Please enter valid name.']
+                ],
+                
+                'email'=>[
+                    // 'rules'=>'required|valid_email|is_unique[tbl_members.email]',
+                    'rules'=>'required|valid_email',
+                    'errors'=>['required'=>'Email is required',
+                                'valid_email'=>'You must enter a valid email',
+                                // 'is_unique'=>'This email is already registered in our system',
+                            ]
+                ],
+                'phone'=>[
+                    'rules'=>'required|is_natural|min_length[10]|max_length[10]',
+                    'errors'=>['required'=>'Mobile No is required',
+                                'is_natural'=>'The Mobile No must only contain digits.',
+                                'min_length'=>'Mobile No must be 10 digit in length',
+                                'max_length'=>'Mobile No must not have more than 10 digit in length']
+                ],
+                
+                'last_qly'=>[
+                    'rules'=>'required',
+                    'errors'=>['required'=>'Last qualification is required',
+                                // 'min_length'=>'Password must have atleast 6 character in length',
+                                // 'max_length'=>'Password must not have characters more than 16 in length'
+                                ]
+                ],
+                'study_center'=>[
+                    'rules'=>'required',
+                    'errors'=>['required'=>'Study/school/college is required',
+                                // 'matches'=>'Confirm Password not matches to password'
+                                ]
+                ],
+                'consent'=>['rules'=>'required','errors'=>['required'=>'Please accept the consent before proceeding.']]
+            ];
+            
+
+            $validation = $this->validate($rules);
+            if(!$validation){
+                $data['validation'] = $this->validator; 
+            }else{
+                $token = $this->request->getPost('token');
+                $url = 'https://www.google.com/recaptcha/api/siteverify?secret='.$secretKey.'&response='.$token.'&remoteip='.$this->request->getIPAddress().'';
+                $res = file_get_contents($url);
+                $response = json_decode($res);
+
+                if($response->success){
+                    // print_r($_POST); exit;
+                    
+                    $post = array(
+                        'fes_id' => $this->request->getPost('fes_id'),
+                        'submit_from' => 'FC',
+                        'name' => $this->request->getPost('name'),
+                        'email' => $this->request->getPost('email'),
+                        'phone' => $this->request->getPost('phone'),
+                        'address' => $this->request->getPost('address'),
+                        'state' => $this->request->getPost('state'),
+                        'district' => $this->request->getPost('district'),
+                        'occupation' => $this->request->getPost('occupation'),
+                        'last_qly' => $this->request->getPost('last_qly'),
+                        'study_center' => $this->request->getPost('study_center'),
+                        'consent' => $this->request->getPost('consent'),
+                        'ipaddress' => $this->request->getIPAddress(),
+                        'added_at' => date('Y-m-d H:i:s'),
+                        'status' => 1
+                    );
+                    $insertId = $this->common_model->insertRecord('tbl_contact_us', $post);
+                    
+                    $certificateNo = 'FEST-' . date('Y') . '-' . str_pad($insertId, 4, '0', STR_PAD_LEFT);
+                    $this->common_model->updateRecord('tbl_contact_us', ['fes_cert_no'=>$certificateNo],['id'=>$insertId]);
+                    
+                    if($insertId){
+                        // $verifyUrl = base_url('internship/verify-email/' . $token);
+                        // $mailData = array(
+                        //     'name' => $_POST['name'] ?? 'Student',
+
+                        //     'heading' => 'Verify Your Email Address',
+
+                        //     'content' => '
+                        //         <p style="color:#555;font-size:15px;">
+                        //             Thank you for registering with <strong>'.WEBSITE_NAME.'</strong>.
+                        //         </p>
+
+                        //         <p style="color:#555;font-size:15px;">
+                        //             Your registration has been received successfully. To complete your
+                        //             registration, please verify your email address by clicking the button below.
+                        //         </p>
+
+                        //         <p style="color:#555;font-size:15px;">
+                        //             <strong>Important:</strong> Please verify your email address before
+                        //             logging in to your account.
+                        //         </p>
+
+                        //         <div style="text-align:center;margin:25px 0;">
+                        //             <a href="' . $verifyUrl . '"
+                        //             style="
+                        //                     display:inline-block;
+                        //                     padding:12px 25px;
+                        //                     background:#80082b;
+                        //                     color:#ffffff;
+                        //                     text-decoration:none;
+                        //                     border-radius:5px;
+                        //                     font-size:15px;
+                        //                     font-weight:600;
+                        //             ">
+                        //                 Verify Email Address
+                        //             </a>
+                        //         </div>
+
+                        //         <p style="color:#777;font-size:14px;">
+                        //             If you did not create this account, you can safely ignore this email.
+                        //         </p>
+                        //     ',
+
+                        //     'details' => [
+                        //         'Name' => $_POST['name'] ?? 'Student',
+                        //         'Email/Username' => $_POST['email'] ?? '',
+                        //         'Verification Status' => 'Pending Verification'
+                        //     ]
+                        // );
+
+                        // $mailConfig['subject'] = 'Verify Your Email - '.WEBSITE_NAME;
+                        // $mailConfig['mailto'] = $_POST['email'] ?? 'test@yopmail.com';
+
+                        // $mailConfig['attachment'] = [];
+
+                        // $this->mail_to_user($mailConfig, $mailData);
+                        session()->setFlashdata(['message'=>'Your festival certificate request has been submitted successfully! You can now download your certificate.','type'=>'success']);
+                        
+                    }else{
+                        session()->setFlashdata(['message'=>'Something went wrong!','type'=>'danger']);
+                    }
+                }else{
+                    session()->setFlashdata(['message'=>'Verification Failed!','type'=>'danger']);
+                    return redirect()->to(base_url('festival-certificate'))->withInput();
+                }
+                return redirect()->to(base_url('/festival-certificate/'.$certificateNo));
+            }
+        }
+        if($fes_cert_no != null){
+            $data['fesData'] = $this->common_model->getOneRecord('tbl_contact_us',['fes_cert_no'=>$fes_cert_no]);
+        }
+
+        $today = date('Y-m-d');
+        $data['record'] = $this->common_model->getOneRecord('tbl_festival',['date_from <='=>$today, 'date_to >='=>$today]);
+        $data['siteKey'] = $siteKey;
+        $data['secretKey'] = $secretKey;
+        $data['states'] = $this->common_model->getAllRecordOrderByDesc('states','',['name', 'ASC']);
+        echo view('include/header', $data);
+        echo view('festival_certificate', $data);
+        echo view('include/footer', $data);
+    }
+    public function getDistricts()
+    {
+        $stateName = $this->request->getPost('state');
+        $stateId = $this->common_model->getOneRecord('states',['name'=>$stateName])->id;
+
+        if (empty($stateName) || empty($stateId)) {
+            return $this->response->setJSON([]);
+        }
+        $districts = $this->common_model->getAllRecordOrderByDesc('cities',['state_id'=>$stateId],['city', 'ASC']);
+
+        return $this->response->setJSON($districts);
+    }
+    public function gallery(){
+        $data['title'] = 'Hubtech | Photo Gallery';
+        
+        echo view('include/header', $data);
+        echo view('gallery', $data);
+        echo view('include/footer', $data);
+    }
     
 
 /*************Testing************** */

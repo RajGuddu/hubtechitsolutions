@@ -48,18 +48,6 @@
         $course_category = $common_model->getAllRecord('tbl_course_category',['status'=>'1']);
         $settings = $common_model->get_setting(1);
         ?>
-        <style>
-            .header-top .header-info .dropdown-menu li a {
-    color: #333 !important;
-    display: block;
-    padding: 8px 15px;
-}
-
-.header-top .header-info .dropdown-menu li a:hover {
-    color: #fff !important;
-    background: #0d6efd;
-}
-        </style>
         <header class="edu-header header-style-1 header-fullwidth">
             <div class="header-top-bar">
                 <div class="container-fluid">
@@ -90,7 +78,7 @@
             <div id="edu-sticky-placeholder"></div>
             <div class="header-mainmenu">
                 <div class="container-fluid">
-                    <div class="header-navbar">
+                    <div class="header-navbar ">
                         <div class="header-brand">
                             <div class="logo">
                                 <a href="<?=base_url();?>">
@@ -100,16 +88,13 @@
                             </div>
                             
                         </div>
-                        <div class="header-mainnav">
+                        <div class="header-mainnav compact-mainnav">
                             <nav class="mainmenu-nav">
                                 <ul class="mainmenu">
-                                    <li><a href="<?=base_url()?>">Home</a>
-                    
-                                    </li>
-                                    <li><a href="<?=base_url('about-us')?>">About Us</a>
-									</li>
+                                    <li><a href="<?=base_url()?>">Home</a></li>
+                                    <li><a href="<?=base_url('about-us')?>">About Us</a></li>
      
-                                    <li class="has-droupdown"><a href="#">Our Courses</a>
+                                    <li class="has-droupdown"><a href="<?=base_url('courses')?>">Our Courses</a>
                                         <ul class="submenu">
                                             <?php if(!empty($course_category)){
                                             foreach($course_category as $cate){ ?>
@@ -155,14 +140,14 @@
                                        
 									   </ul>
                                     </li>
-                                    <!-- <li><a href="#">Blog</a></li>
-									<li><a href="#">FAQ</a></li> -->
+
                                     <li><a href="<?=base_url('contact-us'); ?>">Contact</a></li>
+                                    <li><a href="<?=base_url('gallery'); ?>">Gallery</a></li>
                                 </ul>
                             </nav>
                         </div>
-                        <div class="header-right">
-                            <ul class="header-action">
+                        <div class="header-right compact-headerright">
+                            <ul class="header-action ">
                                 <!-- <li class="search-bar">
                                     <div class="input-group">
                                         <input type="text" class="form-control" placeholder="Search">
@@ -174,7 +159,11 @@
                                         <i class="icon-2"></i>
                                     </a>
                                 </li> -->
-                                
+                                <li class="header-btn">
+                                    <a href="<?=base_url('festival-certificate'); ?>" class="edu-btn btn-medium">
+                                        Get Festive Certificate
+                                    </a>
+                                </li>
                                 <li class="header-btn">
                                     <a href="<?=base_url('enroll-internship'); ?>" class="edu-btn btn-medium">Apply Internship <i class="icon-4"></i></a>
                                 </li>

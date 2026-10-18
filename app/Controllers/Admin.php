@@ -1056,14 +1056,47 @@ class Admin extends BaseController
     /*************************************Enquiry & Enrollment************************* */
     public function contact_us_listing(){
         $this->data['page_title'] = 'Contact Us List';
-        $this->data['page_type'] = 'Contact';
-        $this->data['count_new'] = $this->adminmodel->count_enquiry_and_enrollment_list('contact', 1);
-        $this->data['count_admitted'] = $this->adminmodel->count_enquiry_and_enrollment_list('contact', 2);
-        $this->data['count_cancelled'] = $this->adminmodel->count_enquiry_and_enrollment_list('contact', 3);
-        $this->data['listing'] = $this->adminmodel->enquiry_and_enrollment_list('contact');
+
+        //update followup to today list
+        $this->commonmodel->updateRecord('tbl_contact_us',['status'=>3],['status'=>2, 'next_followup_date <='=>date('Y-m-d')]);
+
+        $this->data['count_new'] = $this->adminmodel->count_enquiry_and_enrollment_list(1);
+        $this->data['count_followup'] = $this->adminmodel->count_enquiry_and_enrollment_list(2);
+        $this->data['count_today'] = $this->adminmodel->count_enquiry_and_enrollment_list(3);
+        $this->data['count_converted'] = $this->adminmodel->count_enquiry_and_enrollment_list(4);
+        $this->data['count_notinterest'] = $this->adminmodel->count_enquiry_and_enrollment_list(5);
+        $this->data['count_all'] = $this->adminmodel->count_enquiry_and_enrollment_list('all');
+        $this->data['listing'] = $this->adminmodel->enquiry_and_enrollment_list();
         return view('admin/enquiry/enq_enroll_list', $this->data);
     }
-    public function enrolled_listing(){
+    public function contact_followup_history($contactId){
+        $records = $this->adminmodel->get_contact_followup_history($contactId);
+        $history = [];
+        if(!empty($records)){
+            foreach($records as $list){
+
+                $history[] = [
+                    'status_label'       => $list->status_label,
+                    'remark'             => $list->remark,
+                    'date'               => ($list->date != '0000-00-00')
+                                            ? date('d-m-Y', strtotime($list->date))
+                                            : '--',
+                    'next_followup_date' => ($list->next_followup_date != '0000-00-00')
+                                            ? date('d-m-Y', strtotime($list->next_followup_date))
+                                            : '--',
+                    'admin_name'         => $list->call_by
+                    ];
+            }
+        }
+    
+        return $this->response
+            ->setContentType('application/json')
+            ->setBody(json_encode([
+                'success' => true,
+                'history' => $history
+            ]));
+    }
+    /*public function enrolled_listing(){
         $this->data['page_title'] = 'Course Enrollment List';
         $this->data['page_type'] = 'Enrolled';
         $this->data['count_new'] = $this->adminmodel->count_enquiry_and_enrollment_list('Enrolled', 1);
@@ -1071,27 +1104,40 @@ class Admin extends BaseController
         $this->data['count_cancelled'] = $this->adminmodel->count_enquiry_and_enrollment_list('Enrolled', 3);
         $this->data['listing'] = $this->adminmodel->enquiry_and_enrollment_list('Enrolled');
         return view('admin/enquiry/enq_enroll_list', $this->data);
-    }
-    public function enq_status($id=false){
+    }*/
+    public function enq_status($id){
         if($this->request->getMethod() == 'post'){
-            $status = $this->request->getVar('status');
-            $data['status'] = $status;
-            $back_url = $this->request->getVar('back_url');
-            if($status == 1 || $status == 3){
-                $message = 'Record updated successfully.';
-            }else{
-                $message = 'Record updated successfully.';
-                
-            }
-            $updated = $this->commonmodel->updateRecord('tbl_contact_us', $data, ['id'=>$id]);
+            $status = $this->request->getPost('status');
+            $next_followup_date = !empty($_POST['next_followup_date'])
+                                            ? date('Y-m-d', strtotime($_POST['next_followup_date']))
+                                            : '';
+            $remark = $this->request->getPost('remark');
+
+            $post = [];
+            $post['status'] = $status;
+            $post['next_followup_date'] = $next_followup_date;
+            $updated = $this->commonmodel->updateRecord('tbl_contact_us', $post, ['id'=>$id]);
+
+            //insert into history
+            $history = [];
+            $history['contact_id'] = $id;
+            $history['status_label'] = esc(strip_tags(get_contact_status($status)));
+            $history['remark'] = $remark;
+            $history['date'] = date('Y-m-d');
+            $history['next_followup_date'] = $next_followup_date;
+            $history['call_by'] = session('user_id');
+            $this->commonmodel->insertRecord('tbl_contact_followup_history', $history);
+            
             if($updated){
-                $this->session->setFlashdata(['message'=>$message, 'type'=>'success']);
+                $this->session->setFlashdata(['message'=>'Record updated successfully.', 'type'=>'success']);
+            }else{
+                $this->session->setFlashdata(['message'=>'Something went wrong!', 'type'=>'danger']);
             }
-            return redirect()->to($back_url);
         }
-        $this->data['page_title'] = 'Change Status of Enquiry & Enrollment';
-        $this->data['value'] = $this->commonmodel->getOneRecord('tbl_contact_us', ['id'=>$id]);
-        return view('admin/enquiry/change_status', $this->data);
+        return redirect()->to(base_url('admin/contact_us_listing'));
+        // $this->data['page_title'] = 'Change Status of Enquiry & Enrollment';
+        // $this->data['value'] = $this->commonmodel->getOneRecord('tbl_contact_us', ['id'=>$id]);
+        // return view('admin/enquiry/change_status', $this->data);
     }
     /***********************************Institution Management*************************** */
     public function admissions(){

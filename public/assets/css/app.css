@@ -3250,6 +3250,23 @@ Scroll Down Button Animation
     margin-right: -20px;
     margin-left: -20px;
 }
+.breadcrumb-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.edu-breadcrumb-area::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+}
+.breadcrumb-content {
+    position: relative;
+    z-index: 2;
+}
 
 @media only screen and (max-width: 767px) {
     .edu-breadcrumb-area .course-meta {
@@ -5307,7 +5324,7 @@ body.sal-disabled [data-sal|='flip'] {
 ---------------------*/
 .about-image-gallery {
     position: relative;
-    padding: 90px 0 60px;
+    padding: 20px 0 20px;
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
@@ -6766,7 +6783,7 @@ body.sal-disabled [data-sal|='flip'] {
 .brand-area-2 {
     position: relative;
     background: #F9F7F4;
-    padding: 75px 0;
+    padding: 20px 0;
     overflow: hidden;
 }
 
@@ -6898,7 +6915,7 @@ body.sal-disabled [data-sal|='flip'] {
   Call To Action Styles
 ---------------------*/
 .edu-cta-banner-area {
-    padding: 102px 0;
+    padding: 20px 0;
     background-color: #f0f4f5;
     position: relative;
     z-index: 1;
@@ -6927,7 +6944,7 @@ body.sal-disabled [data-sal|='flip'] {
 
 @media only screen and (max-width: 767px) {
     .edu-cta-banner-area {
-        padding: 80px 0 70px;
+        padding: 20px 0 20px;
     }
 }
 
@@ -10700,7 +10717,7 @@ body.sal-disabled [data-sal|='flip'] {
 
 .course-view-all {
     text-align: center;
-    margin-top: 60px;
+    margin-top: 20px;
 }
 
 .course-view-all .view-text {
@@ -13910,7 +13927,7 @@ body .tpd-size-medium .tpd-content {
 
 @media only screen and (max-width: 575px) {
     .features-grid-wrap {
-        grid-template-columns: repeat(1, 1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
@@ -13931,7 +13948,7 @@ body .tpd-size-medium .tpd-content {
 
 @media only screen and (max-width: 991px) {
     .features-area-3 .features-grid-wrap {
-        grid-template-columns: repeat(1, 1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
@@ -28052,7 +28069,7 @@ blockquote .author {
     Spacing
 -------------------------*/
 .edu-section-gap {
-    padding: 115px 0 120px;
+    padding: 20px 0 20px;
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
@@ -28068,7 +28085,7 @@ blockquote .author {
 }
 
 .gap-tb-text {
-    padding: 115px 0 112px;
+    padding: 20px 0 20px;
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
@@ -28079,7 +28096,7 @@ blockquote .author {
 
 @media only screen and (max-width: 767px) {
     .gap-tb-text {
-        padding: 75px 0 72px;
+        padding: 20px 0 20px;
     }
 }
 
@@ -28148,7 +28165,7 @@ blockquote .author {
 }
 
 .gap-bottom-equal {
-    padding-bottom: 120px;
+    padding-bottom: 60px;
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
@@ -28159,7 +28176,7 @@ blockquote .author {
 
 @media only screen and (max-width: 767px) {
     .gap-bottom-equal {
-        padding-bottom: 80px;
+        padding-bottom: 20px;
     }
 }
 

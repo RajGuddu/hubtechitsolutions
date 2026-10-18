@@ -5,6 +5,9 @@
             
         <!-- Mobile Sticky Buttons -->
         <div class="mobile-action-bar d-md-none">
+            <a href="<?= base_url('festival-certificate') ?>" class="mobile-login-btn">
+                Festive Certificate
+            </a>
             <a href="<?= base_url('enroll-internship') ?>" class="mobile-apply-btn">
                 Apply Internship
             </a>
@@ -132,10 +135,43 @@
     <script src="<?=base_url('public/assets/js/vendor/tipped.min.js') ?>"></script>
     <script src="<?=base_url('public/assets/js/vendor/smooth-scroll.min.js') ?>"></script>
     <script src="<?=base_url('public/assets/js/vendor/isInViewport.jquery.min.js') ?>"></script>
+    <!-- Owl Carousel -->
 
     <!-- Site Scripts -->
     <script src="<?=base_url('public/assets/js/app.js') ?>"></script>
     <script src="<?=base_url('public/assets/js/sweetalert.min.js')?>"></script>
+    <script>
+    var gallerySwiper = new Swiper(".gallerySwiper", {
+        loop: true,
+        speed: 800,
+        autoplay: {
+            delay: 3000,
+            disableOnInteraction: false
+        },
+
+        slidesPerView: 1,
+        spaceBetween: 20,
+
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev"
+        },
+
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true
+        },
+
+        breakpoints: {
+            768: {
+                slidesPerView: 2
+            },
+            992: {
+                slidesPerView: 3
+            }
+        }
+    });
+</script>
     <script>
         var swalflag = '<?=$swalflag?>';
         $(document).ready(function(){

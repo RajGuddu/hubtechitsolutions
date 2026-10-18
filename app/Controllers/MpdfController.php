@@ -204,6 +204,64 @@ class MpdfController extends BaseController
             ->setHeader('Content-Disposition', 'inline; filename="'.$fileName.'"')
             ->setBody($pdf);
     }
+    public function get_festival_certificate($fes_cert_no, $stream=null){ //festival certificate front page
+        ini_set('pcre.backtrack_limit', '5000000');
+        ini_set('pcre.recursion_limit', '5000000');
+        $fesData = $this->service_model->get_one_contact_details_for_festival($fes_cert_no);
+        $acimage = FCPATH.CERT_PATH.'Festival_Certificate.png';
+
+        $dpimage = FCPATH.IMAGE_PATH.$fesData->image;
+        $data['dpimage'] = $this->createimage($dpimage);
+        $data['acimage'] = $this->createimage($acimage);
+        $data['record'] = $fesData;
+
+        $html = view('pdfhtml/fes_cert', $data);
+        
+        // echo $html;exit;
+        $defaultFontConfig = (new \Mpdf\Config\FontVariables())->getDefaults();
+        $fontData = $defaultFontConfig['fontdata'];
+        $mpdf = new Mpdf([
+            'fontdata' => $fontData + [
+                'khand' => [
+                    'R' => 'Khand-SemiBold.ttf',
+                    'I' => 'Khand-SemiBold.ttf',
+                ],
+                'free-sans' => [
+                    'R' => 'FreeSansBold.ttf',
+                    'I' => 'FreeSansBold.ttf',
+                ],
+                
+            ],
+            'mode' => 'utf-8',
+            'format' => [150, 200],
+            'margin_top' => 1,
+            'margin_bottom' => 1,
+            'margin_left' => 1,
+            'margin_right' => 1,
+            'orientation' => 'L'
+        ]);
+
+        $mpdf->WriteHTML($html);
+
+        // return $mpdf->Output('', 'S'); // PDF string return
+        // $mpdf->Output('fes_cert.pdf', 'I'); exit;
+        $fileName = $fes_cert_no.'.pdf';
+        if($stream != null && $stream == 'D'){
+            return $this->response
+            ->setContentType('application/pdf')
+            ->setHeader(
+                'Content-Disposition',
+                'attachment; filename="'.$fileName.'"'
+            )
+            ->setBody($mpdf->Output('', 'S'));
+        }else{
+            $pdf = $mpdf->Output($fileName, \Mpdf\Output\Destination::STRING_RETURN);
+            return $this->response
+                ->setContentType('application/pdf')
+                ->setHeader('Content-Disposition', 'inline; filename="'.$fileName.'"')
+                ->setBody($pdf);
+        }
+    }
 
     /****************Creating PDF************** */
     public function generate_pdf($html){
@@ -282,6 +340,56 @@ class MpdfController extends BaseController
 
         // return $mpdf->Output('', 'S'); // PDF string return
         $mpdf->Output('intern_cert.pdf', 'I'); exit;
+    }
+    public function fl_pdf(){ //festival certificate
+        ini_set('pcre.backtrack_limit', '5000000');
+        ini_set('pcre.recursion_limit', '5000000');
+        $fesData = $this->service_model->get_one_contact_details_for_festival('FEST-2026-0016');
+        $acimage = FCPATH.CERT_PATH.'Festival_Certificate.png';
+
+        $dpimage = FCPATH.IMAGE_PATH.$fesData->image;
+        $data['dpimage'] = $this->createimage($dpimage);
+        $data['acimage'] = $this->createimage($acimage);
+        $data['record'] = $fesData;
+
+        /*$qr = Builder::create()
+            ->data(base_url('intern-certificate-verification?cert_no=' . $student->cert_no))
+            ->size(150)
+            ->margin(0)
+            ->build();
+
+        $data['qr_image'] = 'data:image/png;base64,' . base64_encode($qr->getString());*/
+
+        $html = view('pdfhtml/fes_cert', $data);
+        
+        // echo $html;exit;
+        $defaultFontConfig = (new \Mpdf\Config\FontVariables())->getDefaults();
+        $fontData = $defaultFontConfig['fontdata'];
+        $mpdf = new Mpdf([
+            'fontdata' => $fontData + [
+                'khand' => [
+                    'R' => 'Khand-SemiBold.ttf',
+                    'I' => 'Khand-SemiBold.ttf',
+                ],
+                'free-sans' => [
+                    'R' => 'FreeSansBold.ttf',
+                    'I' => 'FreeSansBold.ttf',
+                ],
+                
+            ],
+            'mode' => 'utf-8',
+            'format' => [150, 200],
+            'margin_top' => 1,
+            'margin_bottom' => 1,
+            'margin_left' => 1,
+            'margin_right' => 1,
+            'orientation' => 'L'
+        ]);
+
+        $mpdf->WriteHTML($html);
+
+        // return $mpdf->Output('', 'S'); // PDF string return
+        $mpdf->Output('fes_cert.pdf', 'I'); exit;
     }
     public function v_c_pdf(){ //vocational computer certificate
         ini_set('pcre.backtrack_limit', '5000000');

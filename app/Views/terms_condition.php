@@ -1,5 +1,6 @@
-<div class="edu-breadcrumb-area breadcrumb-style-2 bg-image bg-image--19">
-    <div class="container">
+<div class="edu-breadcrumb-area breadcrumb-style-2 ">
+    <img src="<?= base_url('public/assets/images/bg/bg-image-19.webp') ?>" class="breadcrumb-bg" alt="">
+    <div class="container breadcrumb-content">
         <div class="breadcrumb-inner">
             <div class="page-title">
                 <h1 class="title">A Large Range of Course Learning Paths</h1>

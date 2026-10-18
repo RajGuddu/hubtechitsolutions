@@ -54,6 +54,14 @@ $routes->match(['get','post'],'enroll-internship', 'Home::enroll_internship');
 $routes->match(['get','post'],'enrollment-payment-verify', 'Home::enrollment_payment_verify');
 $routes->get('intern-pay-success', 'Home::internPaySuccess');
 
+$routes->match(['get','post'],'festival-certificate', 'Home::festival_certificate');
+$routes->get('festival-certificate/(:any)', 'Home::festival_certificate/$1');
+$routes->get('get-festival-certificate/(:any)', 'MpdfController::get_festival_certificate/$1');
+$routes->get('get-festival-certificate/(:any)/(:any)', 'MpdfController::get_festival_certificate/$1/$2');
+$routes->get('gallery', 'Home::gallery');
+$routes->post('get-districts', 'Home::getDistricts'); //ajax 
+
+
 $routes->match(['get','post'],'intern-certificate-verification', 'Home::intern_certificate_verification');
 $routes->get('vocational-certificate-verification', 'Home::vocational_certificate_verification');
 $routes->match(['get','post'],'download-intern-letter/(:num)', 'Home::download_intern_letter/$1');
@@ -72,6 +80,7 @@ $routes->get('c_p_pdf', 'MpdfController::c_p_pdf'); //cover page
 $routes->get('a_c_pdf', 'MpdfController::a_c_pdf'); // attendance cert
 $routes->get('i_c_pdf', 'MpdfController::i_c_pdf'); // intern cert
 $routes->get('v_c_pdf', 'MpdfController::v_c_pdf'); // vocational Computer cert
+$routes->get('fl_pdf', 'MpdfController::fl_pdf'); // festival cert
 $routes->get('update', 'Test::update');
 // $routes->get('add', 'Test::add');
 // $routes->get('refund', 'Test::refund');
@@ -184,10 +193,16 @@ $routes->group('', ['filter' => 'AuthCheck'], function($routes){
     $routes->get('/admin/instructor', 'Admin::instructor');
     $routes->match(['get','post'],'/admin/instructor_cu', 'Admin::instructor_cu');
     $routes->match(['get','post'],'/admin/instructor_cu/(:num)', 'Admin::instructor_cu/$1');
-    /*****************************enquiry & enrollment************************ */
+    /*****************************festival enquiry & enrollment************************ */
+    $routes->match(['get','post'], '/admin/festivals', 'Admin\Festival::index');
+    $routes->match(['get','post'], '/admin/festivals/(:num)', 'Admin\Festival::index/$1');
+    $routes->get('/admin/delete_festival/(:num)', 'Admin\Festival::delete_festival/$1');
+
     $routes->get('/admin/contact_us_listing', 'Admin::contact_us_listing');
-    $routes->get('/admin/enrolled_listing', 'Admin::enrolled_listing');
+    $routes->get('/admin/contact_followup_history/(:num)', 'Admin::contact_followup_history/$1');
     $routes->match(['get','post'],'/admin/enq_status/(:num)', 'Admin::enq_status/$1');
+
+    // $routes->get('/admin/enrolled_listing', 'Admin::enrolled_listing');
     /*****************************Institution management*************************** */
     $routes->get('/admin/admissions', 'Admin::admissions');
     $routes->match(['get','post'],'/admin/admissions_cu', 'Admin::admissions_cu');

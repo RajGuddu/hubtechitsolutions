@@ -3,8 +3,9 @@
         <!--=       Breadcrumb Area Start      =-->
         <!--=====================================-->
         <?php //print_r($course); exit; ?>
-        <div class="edu-breadcrumb-area breadcrumb-style-2 bg-image bg-image--19">
-            <div class="container">
+        <div class="edu-breadcrumb-area breadcrumb-style-2 ">
+            <img src="<?= base_url('public/assets/images/bg/bg-image-19.webp') ?>" class="breadcrumb-bg" alt="">
+            <div class="container breadcrumb-content">
                 <div class="breadcrumb-inner">
                     <div class="page-title">
                         <h1 class="title"><?=ucwords($course->course_full_name)?></h1>

@@ -1,70 +1,7 @@
-<style>
-    .student-photo {
-        position: relative;
-        display: inline-block;
-        width: 90px;
-        height: 110px;
-        margin-bottom: 24px;
-    }
 
-    .student-img {
-        display: block;
-        width: 90px;
-        height: 110px;
-        object-fit: cover;
-        border: 1px solid #ddd;
-        padding: 3px;
-        border-radius: 10px;
-        background: #fff;
-    }
-
-    .verified-stamp {
-        position: absolute;
-        width: 55px;
-        height: 55px;
-        object-fit: contain;
-
-        /* Photo ke bottom par half overlap */
-        left: 50%;
-        bottom: -19px;
-        top: auto;
-        right: auto;
-        transform: translateX(-50%);
-
-        z-index: 10;
-    }
-
-    @media (max-width: 576px) {
-
-        .student-photo {
-            width: 80px;
-            height: 100px;
-            margin-bottom: 22px;
-        }
-
-        .student-img {
-            width: 80px;
-            height: 100px;
-        }
-
-        .verified-stamp {
-            width: 48px;
-            height: 48px;
-            left: 50%;
-            bottom: -10px;
-            top: auto;
-            right: auto;
-            transform: translateX(-50%);
-        }
-
-        .table td,
-        .table th {
-            font-size: 14px;
-        }
-    }
-</style>
-<div class="edu-breadcrumb-area breadcrumb-style-2 bg-image bg-image--19">
-    <div class="container">
+<div class="edu-breadcrumb-area breadcrumb-style-2 ">
+    <img src="<?= base_url('public/assets/images/bg/bg-image-19.webp') ?>" class="breadcrumb-bg" alt="">
+    <div class="container breadcrumb-content">
         <div class="breadcrumb-inner">
             <div class="page-title">
                 <h1 class="title">Internship Verification</h1>

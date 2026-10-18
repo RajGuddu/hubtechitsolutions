@@ -1,9 +1,9 @@
         <!--=====================================-->
         <!--=       Breadcrumb Area Start      =-->
         <!--=====================================-->
-
-        <div class="edu-breadcrumb-area breadcrumb-style-2 bg-image bg-image--19">
-            <div class="container">
+        <div class="edu-breadcrumb-area breadcrumb-style-2 ">
+            <img src="<?= base_url('public/assets/images/bg/bg-image-19.webp') ?>" class="breadcrumb-bg" alt="">
+            <div class="container breadcrumb-content">
                 <div class="breadcrumb-inner">
                     <div class="page-title">
                         <h1 class="title">A Large Range of Course Learning Paths</h1>
@@ -45,7 +45,7 @@
                     <?php if(!empty($courses)){
                     foreach($courses as $list){ ?>
                     <!-- Start Single Course  -->
-                    <div class="col-md-6 col-lg-4 col-xl-3 sal-animate" data-sal-delay="100" data-sal="slide-up" data-sal-duration="800">
+                    <div class="col-md-6 col-lg-4 col-xl-4 sal-animate" data-sal-delay="100" data-sal="slide-up" data-sal-duration="800">
                         <div class="edu-course course-style-1 course-box-shadow hover-button-bg-white">
                             <div class="inner">
                                 <div class="thumbnail">

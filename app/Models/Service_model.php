@@ -327,6 +327,20 @@ class Service_model extends Model
         // echo '<pre>';print_r($result); exit;
         return $result;
     }
+    //contact for festival data
+    public function get_one_contact_details_for_festival($fes_cert_no){ //festival contact data
+        $builder = $this->db->table('tbl_contact_us c');
+        $builder->select('c.*,f.cert_title,f.festival_title,f.image');
+        $builder->join('tbl_festival f', 'c.fes_id = f.id', 'left');
+        
+        $builder->where('c.submit_from', 'FC');
+        $builder->where('c.fes_cert_no', $fes_cert_no);
+        
+        $query = $builder->get();
+        $result = $query->getRow();
+        
+        return $result;
+    }
     //vocational course
     public function get_one_vocational_applicant($va_id){ //vocational student
         $builder = $this->db->table('tbl_vocational_applications va');

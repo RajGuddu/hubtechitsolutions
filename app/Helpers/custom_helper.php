@@ -200,4 +200,53 @@
             }
         }
     }
+    if(!function_exists('get_contact_status')){
+        function get_contact_status($status){
+            switch ($status){
+                case 1:
+                    return '<span class="badge bg-primary text-light mb-1 d-inline-block">New</span>';
+                    break;
+                case 2:
+                    return '<span class="badge bg-secondary text-light mb-1 d-inline-block">Follow Up</span>';
+                    break;
+                case 3:
+                    return '<span class="badge bg-warning text-light mb-1 d-inline-block">Today</span>';
+                    break;
+                case 4:
+                    return '<span class="badge bg-success text-light mb-1 d-inline-block">Converted</span>';
+                    break;
+                case 5:
+                    return '<span class="badge bg-danger text-light mb-1 d-inline-block">Not Interested</span>';
+                    break;
+                default:
+                    return '<span class="badge bg-warning text-light mb-1 d-inline-block">Not Define</span>';
+                    break;
+            }
+        }
+    }
+    
+    if(!function_exists('get_contact_submit_from')){
+        function get_contact_submit_from($contactFrom){
+            switch ($contactFrom){
+                case 'CU':
+                    return 'Contact-Us';
+                    break;
+                case 'CD':
+                    return 'Course Details';
+                    break;
+                case 'IP':
+                    return 'Internship';
+                    break;
+                case 'HP':
+                    return 'Home';
+                    break;
+                case 'FC':
+                    return 'Festival';
+                    break;
+                default:
+                    return 'Not Define';
+                    break;
+            }
+        }
+    }
 ?>
